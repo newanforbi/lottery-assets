@@ -81,9 +81,15 @@ Domain-dependent files, all in `public/`:
 | `sitemap.xml` | The single page. |
 
 All the icons are circular crops of the Lottery Assets emblem, masked at 4× and
-downsampled so the edge stays smooth. The circle is centred at (628, 452) with radius 385
-in the source artwork — that framing keeps essentially the whole emblem while clearing the
-wordmark underneath it.
+downsampled so the edge stays smooth. They are cut from the wordmark-free artwork, which
+lets the circle sit on the emblem's true centre: **(660, 522), radius 401**, enclosing the
+whole mark with no clipping and 5% breathing room. Cropping the same circle from the
+version with the wordmark is not possible — it would reach y=923, and the lettering starts
+at y=852.
+
+If you ever recompute this from source art, erode the brightness mask before measuring.
+A single stray JPEG pixel one level above the threshold sits far enough from the emblem to
+inflate the enclosing radius from 381 to 598 on its own.
 
 The absolute URLs in `index.html` (`canonical`, `og:url`, `og:image`) are hardcoded to
 `https://lotteryassets.com/` — they must be absolute for link unfurling to work, so they need
