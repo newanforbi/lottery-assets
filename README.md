@@ -103,7 +103,16 @@ and verified against 8 angles.
 
 That disc is **clipped at the emblem's bottom (y=786)**. The ring's lower arc is occluded by
 the stand, so an unclipped disc would reach y=827 and paint 41px of black below the artwork.
-Final alpha is the filled silhouette unioned with that clipped disc.
+
+One last piece: the arrow's tip extends ~89px **past** the ring, so out there it is white
+sitting directly on the tab colour and vanishes on a light theme. It gets a **14px black
+outline**, dilated from the tip and masked to currently-transparent pixels only, so it can
+never paint over the ring. That takes the tip's footprint from a mean brightness of 228 on
+white (invisible) to ~158, consistently at 512/64/32px. 20px reads slightly stronger but
+looks heavy at full size; 8px is too faint by 32px.
+
+Final alpha is the filled silhouette, unioned with the clipped ring disc, unioned with the
+arrow-tip outline.
 
 Filling the interior also brings the arrow back. It is near-white, so on a transparent
 icon over a light tab bar it vanishes into the background — but against the restored black
