@@ -1,7 +1,7 @@
 {
   "name": "Lottery Assets",
   "short_name": "Lottery Assets",
-  "description": "Chain the historical legs that fit the calendar and see where a starting stake lands.",
+  "description": "Lottery Assets — a chronological rotation lottery. Chain the legs that fit and see where a starting stake lands.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0A0B0F",
