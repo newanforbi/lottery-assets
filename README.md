@@ -108,6 +108,7 @@ src/
 public/
   favicon.ico              # 16/32/48/64 multi-resolution
   favicon-32.png           # Modern tab icon
+  emblem-source.png        # Unrimmed master for favicon regeneration
   icon-192.png             # PWA icon
   icon-512.png             # PWA icon (large)
   apple-touch-icon.png     # 180x180 iOS home screen
@@ -169,8 +170,25 @@ changes.
 The tab icons are the emblem's **filled silhouette**: transparent outside its
 outer boundary, with the interior kept opaque so a light tab bar cannot bleed
 through the gaps between the ring, the ball, and the stand. No shape crop &mdash;
-the alpha follows the mark itself. Cut square (730px, centred on the emblem at
-646, 490) and downsampled with LANCZOS for edge antialiasing.
+the alpha follows the mark itself.
+
+For small sizes (16&ndash;64px), visibility is improved on top of that pipeline:
+
+- **Tighter crop + slight scale-up** so the mark fills more of the tab tile
+- **Gold-ring thickening** before downscale so the metal rim survives LANCZOS
+- **Dual exterior rim** &mdash; a pale-gold halo (reads on dark chrome) outside a
+  near-black stroke (reads on light tabs)
+- **Contrast / saturation / unsharp** on the 16&ndash;48px frames only
+
+Cut square from the wordmark-free artwork and downsample with LANCZOS for edge
+antialiasing. Source artwork lives at `public/emblem-source.png`. Regenerate with:
+
+```bash
+python3 scripts/generate-favicons.py --src public/emblem-source.png
+```
+
+That refreshes `favicon-32.png`, multi-size `favicon.ico`, `apple-touch-icon.png`,
+and the PWA icons together so the rim treatment stays consistent.
 
 ### Sealing the interior
 
