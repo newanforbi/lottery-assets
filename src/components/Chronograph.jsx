@@ -115,7 +115,7 @@ function CashSpan({ from, to }) {
   );
 }
 
-export default function Board({ chain, setChain, capital, solving }) {
+export default function Chronograph({ chain, setChain, capital, solving }) {
   const compact = useMediaQuery("(max-width: 720px)");
   const [hovered, setHovered] = useState(null);
 
@@ -265,7 +265,7 @@ export default function Board({ chain, setChain, capital, solving }) {
           >
             Click any bar to start a chain. Bars that overlap what you already hold will fade out —
             one pool of capital can only be in one position at a time, which is the whole constraint
-            this board exists to make visible.
+            the chronograph exists to make visible.
           </div>
         ) : (
           <div

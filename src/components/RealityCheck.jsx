@@ -67,7 +67,7 @@ export default function RealityCheck({ chain, capital, onSolve }) {
           <span style={{ fontFamily: SANS, fontSize: 12.5, color: "rgba(255,255,255,0.6)" }}>
             No chain selected — showing the optimal one.
           </span>
-          <Button onClick={onSolve} color="#00E5FF">Put it on the board</Button>
+          <Button onClick={onSolve} color="#00E5FF">Put it on the chronograph</Button>
         </div>
       )}
 
@@ -146,7 +146,7 @@ export default function RealityCheck({ chain, capital, onSolve }) {
 
       <Panel title="The honest reading">
         <p style={{ fontFamily: SANS, fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: 0 }}>
-          These assets are on the board because they went up. The ones that went to zero over the same
+          These assets are on the chronograph because they went up. The ones that went to zero over the same
           four years aren't here, and there were far more of them. Picking the nine winners in advance,
           then timing eight turning points across them, is not a strategy — it's the definition of
           survivorship bias with a calculator attached. The number this tab produces at realistic
