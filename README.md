@@ -80,16 +80,36 @@ Domain-dependent files, all in `public/`:
 | `robots.txt` | Allows everything, points at the sitemap. |
 | `sitemap.xml` | The single page. |
 
-All the icons are circular crops of the Lottery Assets emblem, masked at 4× and
-downsampled so the edge stays smooth. They are cut from the wordmark-free artwork, which
-lets the circle sit on the emblem's true centre: **(660, 522), radius 401**, enclosing the
-whole mark with no clipping and 5% breathing room. Cropping the same circle from the
-version with the wordmark is not possible — it would reach y=923, and the lettering starts
-at y=852.
+The tab icons are circular crops of the emblem at **(660, 522), radius 381** — the
+minimum circle enclosing the whole mark, so it fills as much of a 16px tab icon as it can
+without clipping. Masks are built at 4× and downsampled so the edge stays smooth.
+`apple-touch-icon.png` is a full-bleed **square** instead: iOS applies its own rounded mask
+and composites transparency onto black, so a circle there would sit inside a black
+rounded square.
 
-If you ever recompute this from source art, erode the brightness mask before measuring.
-A single stray JPEG pixel one level above the threshold sits far enough from the emblem to
-inflate the enclosing radius from 381 to 598 on its own.
+Square, rounded-square and transparent variants were all built and compared at 16/32/48px
+against light, dark and mid-tone browser chrome. Two findings settled it:
+
+- **Transparent backgrounds are not usable for this mark.** 14.5% of the emblem is
+  near-white — the growth arrow and the glass highlight — and on a white tab bar those
+  pixels sit a mean channel distance of 9 from the background, i.e. invisible. Going
+  transparent silently deletes the arrow for anyone on a light theme. The opaque disc
+  guarantees every element reads on any chrome.
+- **Square and rounded-square read as a dark blob** on light chrome without buying any
+  legibility over the circle.
+
+Two traps if you regenerate from source art:
+
+- **Erode the brightness mask before measuring.** A single stray JPEG pixel one level above
+  the threshold sits far enough from the emblem to inflate the enclosing radius from 381 to
+  598 on its own.
+- **Keep every connected component, not just the largest.** The outer gold ring is a
+  separate component from the ball; taking only the largest silently drops it and shrinks
+  the bbox from x 308–978 to x 364–978.
+
+`ImageDraw.floodfill` is a no-op in Pillow 12.3 — it fills zero pixels even on a trivial
+all-one-value image. Use `scipy.ndimage` (`label` / `binary_fill_holes`) for any
+connectivity work here.
 
 The absolute URLs in `index.html` (`canonical`, `og:url`, `og:image`) are hardcoded to
 `https://lotteryassets.com/` — they must be absolute for link unfurling to work, so they need
