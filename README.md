@@ -1,4 +1,4 @@
-# The Board — lottery assets
+# Lottery Assets
 
 A chronological rotation puzzle. Nine assets, 15 tradeable legs, Oct 2022 → Aug 2026.
 Enter a starting capital, chain the legs that fit the calendar, and see where it lands.
@@ -40,7 +40,7 @@ quietly break them.
 
 | | |
 |---|---|
-| **The Board** | The timeline. Click legs to chain them; conflicts dim out. `Solve` animates the optimum, `Deal me a hand` draws a random valid chain. |
+| **Board** | The timeline. Click legs to chain them; conflicts dim out. `Solve` animates the optimum, `Deal me a hand` draws a random valid chain. |
 | **Ladder** | Step-by-step capital progression for the selected chain, including the idle stretches in cash. |
 | **Leaderboard** | Every valid chain ranked, plus the original nine paths checked against the calendar. |
 | **Assets** | Per-asset pivots and legs. |
@@ -72,10 +72,18 @@ Domain-dependent files, all in `public/`:
 
 | file | what it does |
 |---|---|
-| `favicon.svg` | Tab icon — three chained legs stepping up and right. |
+| `favicon.ico` | 16/32/48/64 multi-resolution, for older browsers and pinned tabs. |
+| `favicon-32.png`, `icon-192.png`, `icon-512.png` | Modern tab and PWA icons. |
+| `apple-touch-icon.png` | 180×180 for iOS home screens. |
+| `site.webmanifest` | PWA metadata — name, theme colour, icon set. |
 | `og-image.png` | 1200×630 link preview, generated to match the site. Regenerate it if the optimal chain or the headline number changes. |
 | `robots.txt` | Allows everything, points at the sitemap. |
 | `sitemap.xml` | The single page. |
+
+All the icons are circular crops of the Lottery Assets emblem, masked at 4× and
+downsampled so the edge stays smooth. The circle is centred at (628, 452) with radius 385
+in the source artwork — that framing keeps essentially the whole emblem while clearing the
+wordmark underneath it.
 
 The absolute URLs in `index.html` (`canonical`, `og:url`, `og:image`) are hardcoded to
 `https://lotteryassets.com/` — they must be absolute for link unfurling to work, so they need

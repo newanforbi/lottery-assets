@@ -10,7 +10,7 @@ import AssetCards from "./components/AssetCards.jsx";
 import RealityCheck from "./components/RealityCheck.jsx";
 
 const NAV = [
-  { key: "board", label: "THE BOARD" },
+  { key: "board", label: "BOARD" },
   { key: "ladder", label: "LADDER" },
   { key: "leaderboard", label: "LEADERBOARD" },
   { key: "assets", label: "ASSETS" },
@@ -102,7 +102,7 @@ export default function App() {
               WebkitTextFillColor: "transparent",
             }}
           >
-            The Board
+            Lottery Assets
           </h1>
           <p style={{ fontSize: 14, color: "rgba(255,255,255,0.45)", margin: "0 0 22px", maxWidth: 660, lineHeight: 1.6 }}>
             Every one of these assets went vertical at some point. The catch is that you only get one
@@ -126,7 +126,9 @@ export default function App() {
           >
             <div style={{ flex: "0 1 auto" }}>
               <Eyebrow size={9} style={{ marginBottom: 6 }}>Starting capital</Eyebrow>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              {/* Wraps so the preset row drops to its own line rather than
+                  pushing the page sideways on ~320px phones. */}
+              <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
                 <div
                   style={{
                     display: "flex", alignItems: "center", gap: 2,
