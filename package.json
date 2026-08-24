@@ -3,11 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "description": "Lottery Assets — chronological rotation lottery for nine historical crypto and equity legs",
+  "homepage": "https://lotteryassets.com",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node --test src/engine/solver.test.js"
+    "test": "node --test src/engine/solver.test.js",
+    "icons": "python3 scripts/generate-favicons.py --src public/emblem-source.png"
   },
   "dependencies": {
     "react": "^18.3.1",
