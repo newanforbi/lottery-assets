@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { GalaxyBackground, ShootingStars } from "./ui/Cosmos.jsx";
+import { GalaxyBackground } from "./ui/Cosmos.jsx";
 import { MONO, DISPLAY, SANS, Eyebrow, Button, Odometer, useMediaQuery } from "./ui/atoms.jsx";
 import { formatCurrency, formatMultiple } from "./ui/format.js";
 import { solveOptimal, randomChain, chainValue, sortChain } from "./engine/solver.js";
@@ -79,7 +79,6 @@ export default function App() {
   return (
     <>
       <GalaxyBackground />
-      <ShootingStars />
       <div
         style={{
           minHeight: "100vh",
