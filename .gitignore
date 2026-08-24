@@ -1,3 +1,5 @@
+# Lottery Assets — local ignores
+
 # build output
 dist/
 
@@ -23,3 +25,8 @@ node_modules/
 # OS
 .DS_Store
 Thumbs.db
+
+# Python tooling (favicon regeneration)
+__pycache__/
+*.pyc
+.venv/
