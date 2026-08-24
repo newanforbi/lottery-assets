@@ -71,7 +71,7 @@ export const ASSETS = [
     colorDim: "rgba(35,240,198,0.12)",
     note: "Suppressed by litigation for two years, then repriced in ten weeks.",
     pivots: [
-      { date: "2022-11-02", px: 0.33 },
+      { date: "2024-10-09", px: 0.55 },
       { date: "2025-01-08", px: 3.14 },
     ],
   },
