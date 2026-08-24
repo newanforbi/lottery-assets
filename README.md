@@ -57,9 +57,29 @@ npm run build
 
 ## Deploying
 
+Live at **[lotteryassets.com](https://lotteryassets.com)**.
+
 Vercel auto-detects Vite — framework preset **Vite**, build `npm run build`, output `dist`.
 No configuration file needed; the app is a single page with tab state, so there are no
 routes to rewrite.
+
+To point the domain at it: add `lotteryassets.com` under the project's **Settings → Domains**,
+then follow the DNS records Vercel shows (an `A` record for the apex, or its nameservers if
+you move DNS across). Adding `www.lotteryassets.com` alongside it gives you a redirect to the
+apex for free. Certificates are issued automatically once DNS resolves.
+
+Domain-dependent files, all in `public/`:
+
+| file | what it does |
+|---|---|
+| `favicon.svg` | Tab icon — three chained legs stepping up and right. |
+| `og-image.png` | 1200×630 link preview, generated to match the site. Regenerate it if the optimal chain or the headline number changes. |
+| `robots.txt` | Allows everything, points at the sitemap. |
+| `sitemap.xml` | The single page. |
+
+The absolute URLs in `index.html` (`canonical`, `og:url`, `og:image`) are hardcoded to
+`https://lotteryassets.com/` — they must be absolute for link unfurling to work, so they need
+editing if the domain ever changes.
 
 ## A caveat worth stating plainly
 
