@@ -8,6 +8,7 @@ import Ladder from "./components/Ladder.jsx";
 import Leaderboard from "./components/Leaderboard.jsx";
 import AssetCards from "./components/AssetCards.jsx";
 import RealityCheck from "./components/RealityCheck.jsx";
+import Learn from "./components/Learn.jsx";
 
 const NAV = [
   { key: "board", label: "BOARD" },
@@ -15,6 +16,7 @@ const NAV = [
   { key: "leaderboard", label: "LEADERBOARD" },
   { key: "assets", label: "ASSETS" },
   { key: "reality", label: "REALITY CHECK" },
+  { key: "learn", label: "LEARN" },
 ];
 
 const PRESETS = [1000, 10000, 50000, 100000];
@@ -245,6 +247,7 @@ export default function App() {
           {tab === "leaderboard" && <Leaderboard capital={capital} setChain={setChain} setTab={setTab} />}
           {tab === "assets" && <AssetCards chain={chain} setChain={setChain} />}
           {tab === "reality" && <RealityCheck chain={chain} capital={capital} onSolve={solve} />}
+          {tab === "learn" && <Learn />}
 
           <div
             style={{
