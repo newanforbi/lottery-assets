@@ -17,7 +17,7 @@ const NAV = [
   { key: "reality", label: "REALITY CHECK" },
 ];
 
-const PRESETS = [1000, 10000, 100000];
+const PRESETS = [1000, 10000, 50000, 100000];
 
 export default function App() {
   const [tab, setTab] = useState("board");
