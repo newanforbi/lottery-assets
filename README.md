@@ -80,28 +80,27 @@ Domain-dependent files, all in `public/`:
 | `robots.txt` | Allows everything, points at the sitemap. |
 | `sitemap.xml` | The single page. |
 
-The tab icons are circular crops of the emblem at **(660, 522), radius 381** — the
-minimum circle enclosing the whole mark, so it fills as much of a 16px tab icon as it can
-without clipping. Masks are built at 4× and downsampled so the edge stays smooth.
-`apple-touch-icon.png` is a full-bleed **square** instead: iOS applies its own rounded mask
-and composites transparency onto black, so a circle there would sit inside a black
-rounded square.
+The tab icons are the emblem's **filled silhouette**: transparent outside its outer
+boundary, with the interior kept opaque so a light tab bar cannot bleed through the gaps
+between the ring, the ball and the stand. No shape crop — the alpha follows the mark
+itself. Cut square (686px, centred on the emblem at 643, 490) and downsampled with LANCZOS,
+which supplies the edge antialiasing.
 
-Square, rounded-square and transparent variants were all built and compared at 16/32/48px
-against light, dark and mid-tone browser chrome. Two findings settled it:
+Getting the interior sealed takes a morphological closing before the hole fill. The
+outline has real gaps — the ring passes behind the ball, and its dark lower edge meets the
+dark ground — so `binary_fill_holes` alone leaks and leaves white showing inside the ring.
+A **disk closing of radius 22** bridges those gaps; below that the ring interior stays
+unsealed, and above it the fill grows by under 2% while the outer silhouette starts to
+bloat.
 
-- **Transparent backgrounds are not usable for this mark.** 14.5% of the emblem is
-  near-white — the growth arrow and the glass highlight — and on a white tab bar those
-  pixels sit a mean channel distance of 9 from the background, i.e. invisible. Going
-  transparent silently deletes the arrow for anyone on a light theme. The opaque disc
-  guarantees every element reads on any chrome.
-- **Square and rounded-square read as a dark blob** on light chrome without buying any
-  legibility over the circle.
+Filling the interior also brings the arrow back. It is near-white, so on a transparent
+icon over a light tab bar it vanishes into the background — but against the restored black
+interior it reads normally at every size.
 
 Two traps if you regenerate from source art:
 
 - **Erode the brightness mask before measuring.** A single stray JPEG pixel one level above
-  the threshold sits far enough from the emblem to inflate the enclosing radius from 381 to
+  the threshold sits far enough from the emblem to inflate an enclosing radius from 381 to
   598 on its own.
 - **Keep every connected component, not just the largest.** The outer gold ring is a
   separate component from the ball; taking only the largest silently drops it and shrinks
