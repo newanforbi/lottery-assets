@@ -23,7 +23,7 @@ export const ASSET_ABOUT = [
       {
         title: "Why it shows up here",
         body: [
-          "AIOZ's first leg — roughly a penny to ninety cents across six months — is the single most violent move in this entire set. That is not a product review; it is a statement about how thinly traded infrastructure tokens behave when a narrative catches and liquidity is still scarce. The second leg is calmer but still large. On the chronograph, AIOZ is the opener that makes almost every high-ranking chain possible: start elsewhere and you usually never catch up.",
+          "AIOZ's first leg — roughly a penny to ninety cents across six months — is the single most violent move in this entire set. That is not a product review; it is a statement about how thinly traded infrastructure tokens behave when a narrative catches and liquidity is still scarce. The second leg is calmer but still large. On the board, AIOZ is the opener that makes almost every high-ranking chain possible: start elsewhere and you usually never catch up.",
         ],
       },
       {
@@ -55,7 +55,7 @@ export const ASSET_ABOUT = [
       {
         title: "Why it shows up here",
         body: [
-          "Render contributes only one leg in this dataset, but it is a monster: from well under a dollar after the 2022 crypto winter into the low teens by early 2025 — roughly 31×. The catch on the chronograph is duration. That leg occupies nearly twenty-nine months, which is the costliest real estate in the set: while you are holding Render, you cannot hold almost anything else that mattered in 2023–2024.",
+          "Render contributes only one leg in this dataset, but it is a monster: from well under a dollar after the 2022 crypto winter into the low teens by early 2025 — roughly 31×. The catch on the board is duration. That leg occupies nearly twenty-nine months, which is the costliest real estate in the set: while you are holding Render, you cannot hold almost anything else that mattered in 2023–2024.",
         ],
       },
       {
@@ -87,7 +87,7 @@ export const ASSET_ABOUT = [
       {
         title: "Why it shows up here",
         body: [
-          "Injective's single leg in this set runs from the late-2022 bear-market trough into early 2024 — roughly $1.25 to the high forties, on the order of 38×. It is one of the best opening moves available if you did not catch AIOZ, and it overlaps heavily with Solana's and Strategy's first legs, which is why the chronograph forces a choice among them.",
+          "Injective's single leg in this set runs from the late-2022 bear-market trough into early 2024 — roughly $1.25 to the high forties, on the order of 38×. It is one of the best opening moves available if you did not catch AIOZ, and it overlaps heavily with Solana's and Strategy's first legs, which is why the board forces a choice among them.",
         ],
       },
       {
@@ -119,7 +119,7 @@ export const ASSET_ABOUT = [
       {
         title: "Why it shows up here",
         body: [
-          "Solana contributes two legs: the post-FTX rebound into March 2024, then a pullback and a second push into January 2025. Both are large, liquid, and heavily overlapped with other openers (INJ, MSTR-1, XRP's long hold). On the chronograph, SOL is rarely \"wrong\" as a story — it is often just busy at the same time as something that compounds better in a multi-leg chain.",
+          "Solana contributes two legs: the post-FTX rebound into March 2024, then a pullback and a second push into January 2025. Both are large, liquid, and heavily overlapped with other openers (INJ, MSTR-1, XRP's long hold). On the board, SOL is rarely \"wrong\" as a story — it is often just busy at the same time as something that compounds better in a multi-leg chain.",
         ],
       },
       {
@@ -151,7 +151,7 @@ export const ASSET_ABOUT = [
       {
         title: "Why it shows up here",
         body: [
-          "XRP's single chronograph leg runs from early November 2022 into early January 2025 — about $0.33 to $3.14. The multiple is large, but the occupancy is enormous: holding XRP for that entire window locks you out of most of the violent 2023–2024 openers. It is a classic \"one big correct trade\" that loses to sequenced shorter legs in a capital-constrained model.",
+          "XRP's single board leg runs from early November 2022 into early January 2025 — about $0.33 to $3.14. The multiple is large, but the occupancy is enormous: holding XRP for that entire window locks you out of most of the violent 2023–2024 openers. It is a classic \"one big correct trade\" that loses to sequenced shorter legs in a capital-constrained model.",
         ],
       },
       {
@@ -183,7 +183,7 @@ export const ASSET_ABOUT = [
       {
         title: "Why it shows up here",
         body: [
-          "Strategy contributes two legs: the bounce from the December 2022 low into March 2024, then a summer dip and a ferocious second leg into November 2024 as Bitcoin and the corporate-treasury narrative went parabolic together. MSTR-2 is the famous also-ran on the chronograph — strong, but beaten in the same autumn window by SuperVerse's second leg, which is the swap that creates the true optimum.",
+          "Strategy contributes two legs: the bounce from the December 2022 low into March 2024, then a summer dip and a ferocious second leg into November 2024 as Bitcoin and the corporate-treasury narrative went parabolic together. MSTR-2 is the famous also-ran on the board — strong, but beaten in the same autumn window by SuperVerse's second leg, which is the swap that creates the true optimum.",
         ],
       },
       {
@@ -221,7 +221,7 @@ export const ASSET_ABOUT = [
       {
         title: "What you are actually holding",
         body: [
-          "A mid-liquidity gaming/metaverse token whose returns in this set came from speculative repricing, not from a claim on mature studio cash flows. It is exactly the kind of asset that looks genius on a hindsight chronograph and brutal if the narrative season ends while you are still in it.",
+          "A mid-liquidity gaming/metaverse token whose returns in this set came from speculative repricing, not from a claim on mature studio cash flows. It is exactly the kind of asset that looks genius on a hindsight board and brutal if the narrative season ends while you are still in it.",
         ],
       },
     ],
@@ -253,7 +253,7 @@ export const ASSET_ABOUT = [
       {
         title: "What you are actually holding",
         body: [
-          "You are holding a bearer instrument whose value is almost entirely reflexive. There is no cash flow, no protocol fee switch that must flip, and no legal claim on frog-related IP. The chronograph includes PEPE because it did, in fact, go vertical — which is the entire methodological warning of this site in a single ticker.",
+          "You are holding a bearer instrument whose value is almost entirely reflexive. There is no cash flow, no protocol fee switch that must flip, and no legal claim on frog-related IP. The board includes PEPE because it did, in fact, go vertical — which is the entire methodological warning of this site in a single ticker.",
         ],
       },
     ],
@@ -273,7 +273,7 @@ export const ASSET_ABOUT = [
         title: "Why privacy returned as a trade",
         body: [
           "For long stretches ZEC traded as a neglected \"old coin\" — cypherpunk heritage without Solana-style retail heat. Privacy narratives periodically revive when markets refocus on surveillance, exchange KYC fatigue, or the idea that confidential settlement is under-owned financial infrastructure. When that happens, the free float of attention-sensitive privacy coins can reprice violently because the prior base was so depressed.",
-          "Zcash's appearance at the far right of this chronograph is exactly that shape: a multi-month explosion, a sharp drawdown, and another violent leg higher into August 2026 — with the final pivot marked open because it was still live when the dataset was captured.",
+          "Zcash's appearance at the far right of this board is exactly that shape: a multi-month explosion, a sharp drawdown, and another violent leg higher into August 2026 — with the final pivot marked open because it was still live when the dataset was captured.",
         ],
       },
       {

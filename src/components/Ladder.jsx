@@ -6,7 +6,7 @@ function EmptyState({ onSolve }) {
   return (
     <Panel title="Capital ladder">
       <p style={{ fontFamily: SANS, fontSize: 13, color: "rgba(255,255,255,0.45)", lineHeight: 1.6, margin: "0 0 16px" }}>
-        Nothing chained yet. Pick legs on the chronograph, or drop in the optimal chain and read the
+        Nothing chained yet. Pick legs on the board, or drop in the optimal chain and read the
         progression from here.
       </p>
       <Button onClick={onSolve} color="#00E5FF" filled>Solve and show me</Button>
