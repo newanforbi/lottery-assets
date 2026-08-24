@@ -86,12 +86,24 @@ between the ring, the ball and the stand. No shape crop — the alpha follows th
 itself. Cut square (686px, centred on the emblem at 643, 490) and downsampled with LANCZOS,
 which supplies the edge antialiasing.
 
-Getting the interior sealed takes a morphological closing before the hole fill. The
-outline has real gaps — the ring passes behind the ball, and its dark lower edge meets the
-dark ground — so `binary_fill_holes` alone leaks and leaves white showing inside the ring.
-A **disk closing of radius 22** bridges those gaps; below that the ring interior stays
-unsealed, and above it the fill grows by under 2% while the outer silhouette starts to
-bloat.
+Sealing the interior takes two steps, because two different kinds of gap leak.
+
+**Enclosed gaps** — where the ring passes behind the ball and its dark lower edge meets the
+dark ground — are bridged by a **disk closing of radius 22** before `binary_fill_holes`.
+Below that the ring interior stays unsealed; above it the fill grows by under 2% while the
+outer silhouette starts to bloat.
+
+**The open concavity** between the stand and the bar chart, around the ball-and-stick
+handle, is not a hole at all — it connects to the exterior, so no hole fill can reach it and
+closing barely dents it (radius 70 only took it from 49k to 44k transparent pixels, and cost
+minutes of compute). It is instead covered by filling the **gold ring's disc**, fitted from
+the artwork at **centre (624.5, 510.5), radius 316.5**. The fit is taken from the ring's
+own extremes — the left edge and top of the emblem are ring, nothing else reaches them —
+and verified against 8 angles.
+
+That disc is **clipped at the emblem's bottom (y=786)**. The ring's lower arc is occluded by
+the stand, so an unclipped disc would reach y=827 and paint 41px of black below the artwork.
+Final alpha is the filled silhouette unioned with that clipped disc.
 
 Filling the interior also brings the arrow back. It is near-white, so on a transparent
 icon over a light tab bar it vanishes into the background — but against the restored black
