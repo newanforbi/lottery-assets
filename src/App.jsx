@@ -97,6 +97,10 @@ export default function App() {
               fontWeight: 700,
               margin: "0 0 8px",
               lineHeight: 1.1,
+              // background-clip:text sizes the gradient to the ELEMENT box. As a
+              // full-width block the text covered only ~26% of it, so the glyphs
+              // sampled just the cold cyan end and never reached the amber.
+              width: "fit-content",
               background: "linear-gradient(135deg, #00E5FF, #FF4FD8, #F4B728)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
