@@ -69,9 +69,9 @@ export const ASSETS = [
     ticker: "XRP",
     color: "#23F0C6",
     colorDim: "rgba(35,240,198,0.12)",
-    note: "Suppressed by litigation for two years, then repriced in ten weeks.",
+    note: "Repriced off the October 2024 trough — a shorter hold, still a sharp leg.",
     pivots: [
-      { date: "2022-11-02", px: 0.33 },
+      { date: "2024-10-09", px: 0.55 },
       { date: "2025-01-08", px: 3.14 },
     ],
   },
@@ -95,7 +95,7 @@ export const ASSETS = [
     ticker: "SUPER",
     color: "#FF4FD8",
     colorDim: "rgba(255,79,216,0.12)",
-    note: "Its second leg quietly beats Strategy's in the same window — the key to the optimum.",
+    note: "Its second leg beats Strategy's in the same window — outrun now by XRP's autumn leg.",
     pivots: [
       { date: "2023-10-11", px: 0.07 },
       { date: "2024-03-06", px: 1.43 },

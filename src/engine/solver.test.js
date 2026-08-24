@@ -47,11 +47,11 @@ test("the other eight published paths are executable", () => {
   }
 });
 
-test("optimum is AIOZ-1 -> SUPER-2 -> ZEC-1 -> ZEC-2 at ~39,307x", () => {
+test("optimum is AIOZ-1 -> XRP-1 -> ZEC-1 -> ZEC-2 at ~45,753x", () => {
   const { chain, value } = solveOptimal();
-  assert.deepEqual(chain.map((l) => l.id), ["AIOZ-1", "SUPER-2", "ZEC-1", "ZEC-2"]);
-  near(value, 39307);
-  near(chainValue(chain, 10000).final, 393070831);
+  assert.deepEqual(chain.map((l) => l.id), ["AIOZ-1", "XRP-1", "ZEC-1", "ZEC-2"]);
+  near(value, 45753);
+  near(chainValue(chain, 10000).final, 457530284);
 });
 
 test("optimum beats the published #1 path", () => {
@@ -82,16 +82,16 @@ test("capital progression compounds through the chain", () => {
     assert.equal(steps[i].capitalIn, steps[i - 1].capitalOut);
     assert.ok(steps[i].idleDays > 0, "capital sits in cash between legs");
   }
-  near(final, 393070831);
-  near(multiple, 39307);
+  near(final, 457530284);
+  near(multiple, 45753);
 });
 
 test("friction degrades returns as modelled", () => {
   const chain = solveOptimal().chain;
-  near(chainValue(chain, 10000, { capture: 1, slippage: 0.015, taxRate: 0 }).final, 348305764);
-  near(chainValue(chain, 10000, { capture: 1, slippage: 0.015, taxRate: 0.3 }).final, 103505665);
-  near(chainValue(chain, 10000, { capture: 0.8, slippage: 0.015, taxRate: 0.3 }).final, 13591264);
-  near(chainValue(chain, 10000, { capture: 0.65, slippage: 0.015, taxRate: 0.3 }).final, 3044613);
+  near(chainValue(chain, 10000, { capture: 1, slippage: 0.015, taxRate: 0 }).final, 405424220);
+  near(chainValue(chain, 10000, { capture: 1, slippage: 0.015, taxRate: 0.3 }).final, 119077129);
+  near(chainValue(chain, 10000, { capture: 0.8, slippage: 0.015, taxRate: 0.3 }).final, 15153471);
+  near(chainValue(chain, 10000, { capture: 0.65, slippage: 0.015, taxRate: 0.3 }).final, 3317573);
 });
 
 test("zero friction is a no-op", () => {

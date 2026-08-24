@@ -31,10 +31,12 @@ fades out.
 Running the search over chains that actually obey the calendar turned up a result
 the original hand-built analysis missed, and one row it got wrong:
 
-- **The optimum is `AIOZ-1 → SUPER-2 → ZEC-1 → ZEC-2` at 39,307&times;** &mdash;
-  $393.1M on $10K. Ahead of the published best of 28,276&times;. One swap does
-  it: SuperVerse's second leg returns 4.91&times; against Strategy's 3.53&times;,
-  and both fit the same autumn-2024 window.
+- **The optimum is `AIOZ-1 → XRP-1 → ZEC-1 → ZEC-2` at 45,753&times;** &mdash;
+  $457.5M on $10K. Ahead of the published best of 28,276&times;, and ahead of the
+  previous calendar optimum that used SuperVerse's second leg (39,307&times;).
+  With XRP's buy moved to Oct 9 2024 at $0.55, its ~5.71&times; autumn leg fits
+  between AIOZ's exit and Zcash's entry and outruns both SuperVerse (4.91&times;)
+  and Strategy (3.53&times;) in that window.
 - **`AIOZ 1st → Render` is not executable.** Render's leg runs Oct 12 2022 &ndash;
   Mar 17 2025, which entirely contains AIOZ's Sep 2023 &ndash; Mar 2024 leg. The
   arithmetic behind the published 2,811&times; is right; the trade is impossible.
@@ -49,9 +51,9 @@ Every other figure from the original analysis reproduces exactly.
 | RENDER | Render | 1 | A 31&times; move, but it occupies 29 months &mdash; the costliest real estate in the lottery |
 | INJ | Injective | 1 | The best opening leg that isn't AIOZ |
 | SOL | Solana | 2 | Emerged from the FTX collapse at a generational low |
-| XRP | XRP | 1 | Suppressed by litigation for two years, then repriced in ten weeks |
+| XRP | XRP | 1 | Oct 9 2024 trough at $0.55 into early 2025 &mdash; the middle leg of the current optimum |
 | MSTR | Strategy | 2 | The only equity &mdash; leveraged bitcoin exposure in a brokerage account |
-| SUPER | SuperVerse | 2 | Its second leg quietly beats Strategy's in the same window &mdash; the key to the optimum |
+| SUPER | SuperVerse | 2 | Its second leg beats Strategy's in the same window; XRP's shorter autumn leg now outruns both |
 | PEPE | Pepe | 2 | The best opening leg available to anyone who missed AIOZ |
 | ZEC | Zcash | 2 | Two legs at the far end of the lottery; ZEC-2 is still open |
 
@@ -67,7 +69,7 @@ corrected pivot propagates everywhere instead of drifting out of sync.
 | **Leaderboard** | Every valid chain ranked, plus the original nine paths checked against the calendar. |
 | **Assets** | Per-asset pivots and legs with individual multipliers. |
 | **About the Assets** | Deep dossiers on what each of the nine assets actually is — product, market structure, and why it appears in Lottery Assets. |
-| **Reality Check** | Sliders for move capture, slippage, and per-rotation tax. At 65% capture the $393M becomes $3.0M. |
+| **Reality Check** | Sliders for move capture, slippage, and per-rotation tax. At 65% capture the $457.5M becomes $3.3M. |
 | **Learn** | Educational guide covering what cryptocurrency is, where to buy it (Coinbase, Kraken, Binance), how to self-custody, security basics, taxes, and key concepts. |
 
 ## Tech stack
