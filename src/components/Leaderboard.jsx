@@ -35,7 +35,7 @@ export default function Leaderboard({ capital, setChain, setTab }) {
   const single = useMemo(() => bestSingle(), []);
   const publishedTop = chainMultiple(getLegs(CLAIMED_PATHS[0].legs));
 
-  const load = (chain) => { setChain(chain); setTab("board"); };
+  const load = (chain) => { setChain(chain); setTab("lottery"); };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -72,7 +72,7 @@ export default function Leaderboard({ capital, setChain, setTab }) {
               <button
                 key={entry.chain.map((l) => l.id).join("|")}
                 onClick={() => load(entry.chain)}
-                title="Load this chain onto the board"
+                title="Load this chain into the lottery"
                 style={{
                   display: "flex", alignItems: "center", gap: compact ? 10 : 14, textAlign: "left",
                   padding: compact ? "10px 10px" : "11px 14px", borderRadius: 7, cursor: "pointer",

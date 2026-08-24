@@ -3,7 +3,7 @@ import { GalaxyBackground, ShootingStars } from "./ui/Cosmos.jsx";
 import { MONO, DISPLAY, SANS, Eyebrow, Button, Odometer, useMediaQuery } from "./ui/atoms.jsx";
 import { formatCurrency, formatMultiple } from "./ui/format.js";
 import { solveOptimal, randomChain, chainValue, sortChain } from "./engine/solver.js";
-import Board from "./components/Board.jsx";
+import Lottery from "./components/Lottery.jsx";
 import Ladder from "./components/Ladder.jsx";
 import Leaderboard from "./components/Leaderboard.jsx";
 import AssetCards from "./components/AssetCards.jsx";
@@ -12,7 +12,7 @@ import RealityCheck from "./components/RealityCheck.jsx";
 import Learn from "./components/Learn.jsx";
 
 const NAV = [
-  { key: "board", label: "BOARD" },
+  { key: "lottery", label: "LOTTERY" },
   { key: "ladder", label: "LADDER" },
   { key: "leaderboard", label: "LEADERBOARD" },
   { key: "assets", label: "ASSETS" },
@@ -24,7 +24,7 @@ const NAV = [
 const PRESETS = [1000, 5000, 10000, 50000, 100000];
 
 export default function App() {
-  const [tab, setTab] = useState("board");
+  const [tab, setTab] = useState("lottery");
   const [capital, setCapital] = useState(10000);
   const [capitalText, setCapitalText] = useState("10,000");
   const [chain, setChain] = useState([]);
@@ -113,9 +113,9 @@ export default function App() {
             Lottery Assets
           </h1>
           <p style={{ fontSize: 14, color: "rgba(255,255,255,0.45)", margin: "0 0 22px", maxWidth: 660, lineHeight: 1.6 }}>
-            Every one of these assets went vertical at some point. The catch is that you only get one
-            pool of capital, and two trades that overlap in time can never both be yours. Chain the
-            legs that fit and see where a starting stake lands.
+            Lottery Assets is a chronological rotation lottery: nine names that went vertical, one
+            pool of capital, and a hard rule that overlapping trades can never both be yours. Chain
+            the legs that fit and see where a starting stake lands.
           </p>
 
           {/* Capital + actions */}
@@ -244,7 +244,7 @@ export default function App() {
           aria-labelledby={`tab-${tab}`}
           style={{ padding: compact ? "18px 16px 60px" : "22px 28px 70px", maxWidth: 1080, margin: "0 auto" }}
         >
-          {tab === "board" && <Board chain={chain} setChain={setChain} capital={capital} solving={solving} />}
+          {tab === "lottery" && <Lottery chain={chain} setChain={setChain} capital={capital} solving={solving} />}
           {tab === "ladder" && <Ladder chain={chain} capital={capital} onSolve={solve} />}
           {tab === "leaderboard" && <Leaderboard capital={capital} setChain={setChain} setTab={setTab} />}
           {tab === "assets" && <AssetCards chain={chain} setChain={setChain} />}

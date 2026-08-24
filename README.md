@@ -2,12 +2,11 @@
 
 **[lotteryassets.com](https://lotteryassets.com)**
 
-A chronological rotation calculator built on a deceptively simple constraint: you
-only have one pool of capital, and two trades that overlap in time can never both
-be yours.
-
-Nine assets, 15 tradeable legs, Oct 2022 &ndash; Aug 2026. Enter a starting
-stake, chain the legs that fit the calendar, and see where it lands.
+**Lottery Assets** is a chronological rotation lottery: nine assets that went
+vertical, fifteen tradeable buy-low / sell-high legs, and one pool of capital
+that can only be in one position at a time. Overlapping legs are mutually
+exclusive — chain the ones that fit the calendar (Oct 2022 &ndash; Aug 2026) and
+see where a starting stake lands.
 
 ---
 
@@ -24,7 +23,7 @@ most" into [weighted interval scheduling](https://en.wikipedia.org/wiki/Weighted
 and a simple leaderboard of raw multipliers can't express it because it has no
 way to say *these two trades cannot coexist*.
 
-The board makes it visible instead. Click a leg and everything colliding with it
+The lottery makes it visible instead. Click a leg and everything colliding with it
 fades out.
 
 ## What the solver found
@@ -47,14 +46,14 @@ Every other figure from the original analysis reproduces exactly.
 | Ticker | Name | Legs | Notes |
 |--------|------|------|-------|
 | AIOZ | AIOZ Network | 2 | The single most violent leg in the set &mdash; 90&times; in six months |
-| RENDER | Render | 1 | A 31&times; move, but it occupies 29 months &mdash; the costliest real estate on the board |
+| RENDER | Render | 1 | A 31&times; move, but it occupies 29 months &mdash; the costliest real estate in the lottery |
 | INJ | Injective | 1 | The best opening leg that isn't AIOZ |
 | SOL | Solana | 2 | Emerged from the FTX collapse at a generational low |
 | XRP | XRP | 1 | Suppressed by litigation for two years, then repriced in ten weeks |
 | MSTR | Strategy | 2 | The only equity &mdash; leveraged bitcoin exposure in a brokerage account |
 | SUPER | SuperVerse | 2 | Its second leg quietly beats Strategy's in the same window &mdash; the key to the optimum |
 | PEPE | Pepe | 2 | The best opening leg available to anyone who missed AIOZ |
-| ZEC | Zcash | 2 | Two legs at the far end of the board; ZEC-2 is still open |
+| ZEC | Zcash | 2 | Two legs at the far end of the lottery; ZEC-2 is still open |
 
 Multipliers are derived from the price pivots at runtime, never hardcoded. A
 corrected pivot propagates everywhere instead of drifting out of sync.
@@ -63,11 +62,11 @@ corrected pivot propagates everywhere instead of drifting out of sync.
 
 | Tab | What it does |
 |-----|-------------|
-| **Board** | The timeline. Click legs to chain them; conflicts dim out. *Solve* animates the optimum, *Deal me a hand* draws a random valid chain. Starting-capital presets: $1K, $5K, $10K, $50K, $100K. |
+| **Lottery** | The timeline. Click legs to chain them; conflicts dim out. *Solve* animates the optimum, *Deal me a hand* draws a random valid chain. Starting-capital presets: $1K, $5K, $10K, $50K, $100K. |
 | **Ladder** | Step-by-step capital progression for the selected chain, including the idle stretches in cash. |
 | **Leaderboard** | Every valid chain ranked, plus the original nine paths checked against the calendar. |
 | **Assets** | Per-asset pivots and legs with individual multipliers. |
-| **About the Assets** | Deep dossiers on what each of the nine assets actually is — product, market structure, and why it appears on the board. |
+| **About the Assets** | Deep dossiers on what each of the nine assets actually is — product, market structure, and why it appears in Lottery Assets. |
 | **Reality Check** | Sliders for move capture, slippage, and per-rotation tax. At 65% capture the $393M becomes $3.0M. |
 | **Learn** | Educational guide covering what cryptocurrency is, where to buy it (Coinbase, Kraken, Binance), how to self-custody, security basics, taxes, and key concepts. |
 
@@ -95,7 +94,7 @@ src/
     solver.js              # buildLegs, conflicts, chainValue, solveOptimal, allChains
     solver.test.js         # 15 tests: multipliers, chain validity, friction model
   components/
-    Board.jsx              # Interactive timeline with conflict dimming
+    Lottery.jsx            # Interactive lottery timeline with conflict dimming
     Ladder.jsx             # Step-by-step capital walk
     Leaderboard.jsx        # Ranked valid chains + original 9 paths
     AssetCards.jsx         # Per-asset breakdown
@@ -234,7 +233,7 @@ The engine (`src/engine/solver.js`) implements:
 ## A caveat worth stating plainly
 
 These nine assets are here because they went up. The ones that went to zero
-over the same four years aren't on the board, and there were many more of them.
+over the same four years aren't in the lottery, and there were many more of them.
 Picking these winners in advance and then timing eight turning points across them
 isn't a strategy &mdash; it's the definition of survivorship bias with a
 calculator attached. The Reality Check tab exists to put a number on the

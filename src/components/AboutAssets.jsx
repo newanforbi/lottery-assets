@@ -24,7 +24,7 @@ export default function AboutAssets() {
       <Panel accent="#00E5FF" title="About the Assets">
         <p style={{ fontFamily: SANS, fontSize: 13.5, color: "rgba(255,255,255,0.6)", lineHeight: 1.75, margin: 0 }}>
           The Assets tab shows pivots and multipliers. This page is the other half: what each name
-          on the board actually is — the product, the market structure, and the story that made
+          in Lottery Assets actually is — the product, the market structure, and the story that made
           the price path possible. None of this turns hindsight into a strategy; it only makes the
           lottery tickets legible.
         </p>
@@ -141,7 +141,7 @@ export default function AboutAssets() {
 
       <div style={{ fontFamily: MONO, fontSize: 9.5, color: "rgba(255,255,255,0.22)", lineHeight: 1.7 }}>
         These dossiers describe economic design and market context. They are not recommendations to buy,
-        hold, or trade any asset on the board.
+        hold, or trade any asset in Lottery Assets.
       </div>
     </div>
   );
