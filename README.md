@@ -104,15 +104,24 @@ and verified against 8 angles.
 That disc is **clipped at the emblem's bottom (y=786)**. The ring's lower arc is occluded by
 the stand, so an unclipped disc would reach y=827 and paint 41px of black below the artwork.
 
-One last piece: the arrow's tip extends ~89px **past** the ring, so out there it is white
-sitting directly on the tab colour and vanishes on a light theme. It gets a **14px black
-outline**, dilated from the tip and masked to currently-transparent pixels only, so it can
-never paint over the ring. That takes the tip's footprint from a mean brightness of 228 on
-white (invisible) to ~158, consistently at 512/64/32px. 20px reads slightly stronger but
-looks heavy at full size; 8px is too faint by 32px.
+Finally the whole mark gets a **14px black rim** around its exterior. Two problems it
+solves: the arrow's tip extends ~89px past the ring, where it is white on bare tab colour
+and vanishes on a light theme; and the gold ring dissolves into a tan or amber tab. The rim
+is dilated from the opaque mask and intersected with currently-transparent pixels, so it
+only ever grows into empty space — it cannot paint over the ring, the bars or the arrow.
+
+Measured at 32px as the share of painted area clearing 1.6:1 contrast, across twelve tab
+colours: light, mid and saturated grounds gain +1.5 to +4.4 points (gold +4.4, white +4.1).
+Dark grounds *appear* to lose ~7 points, but that is a measurement artifact — a black rim on
+dark chrome is invisible, so it adds low-contrast area without removing anything. The 316,882
+pixels that were opaque before the rim are byte-identical after it: max RGB change 0, zero
+alpha change.
+
+The rim needs headroom, so the crop grew from 686px to **730px** (centred on 646, 490). At
+686 the right margin was 1px and the rim would have been clipped.
 
 Final alpha is the filled silhouette, unioned with the clipped ring disc, unioned with the
-arrow-tip outline.
+exterior rim.
 
 Filling the interior also brings the arrow back. It is near-white, so on a transparent
 icon over a light tab bar it vanishes into the background — but against the restored black
