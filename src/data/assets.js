@@ -31,7 +31,7 @@ export const ASSETS = [
     ticker: "RENDER",
     color: "#F5426C",
     colorDim: "rgba(245,66,108,0.12)",
-    note: "A 31× move, but it occupies 29 months — the costliest real estate on the board.",
+    note: "A 31× move, but it occupies 29 months — the costliest real estate in the lottery.",
     pivots: [
       { date: "2022-10-12", px: 0.42 },
       { date: "2025-03-17", px: 13.12 },
@@ -123,7 +123,7 @@ export const ASSETS = [
     ticker: "ZEC",
     color: "#F4B728",
     colorDim: "rgba(244,183,40,0.12)",
-    note: "Two legs at the far end of the board — and the only ones still running.",
+    note: "Two legs at the far end of the lottery — and the only ones still running.",
     pivots: [
       { date: "2025-04-09", px: 31.17 },
       { date: "2025-11-12", px: 674.0 },
