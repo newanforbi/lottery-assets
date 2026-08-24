@@ -119,7 +119,7 @@ export const ASSET_ABOUT = [
       {
         title: "Why it shows up here",
         body: [
-          "Solana contributes two legs: the post-FTX rebound into March 2024, then a pullback and a second push into January 2025. Both are large, liquid, and heavily overlapped with other openers (INJ, MSTR-1, XRP's long hold). In the lottery, SOL is rarely \"wrong\" as a story — it is often just busy at the same time as something that compounds better in a multi-leg chain.",
+          "Solana contributes two legs: the post-FTX rebound into March 2024, then a pullback and a second push into January 2025. Both are large, liquid, and heavily overlapped with other openers (INJ, MSTR-1) and with later autumn legs. In the lottery, SOL is rarely \"wrong\" as a story — it is often just busy at the same time as something that compounds better in a multi-leg chain.",
         ],
       },
       {
@@ -142,22 +142,22 @@ export const ASSET_ABOUT = [
         ],
       },
       {
-        title: "The lawsuit that defined a cycle",
+        title: "The lawsuit that framed the cycle",
         body: [
           "In December 2020 the U.S. Securities and Exchange Commission sued Ripple, alleging that XRP sales were unregistered securities offerings. For years afterward, U.S. exchanges delisted or restricted XRP, institutional desks treated it as radioactive, and the token traded under a legal overhang that had little to do with ledger software and everything to do with distribution risk.",
-          "Court developments in 2023 — notably a ruling that certain programmatic exchange sales of XRP were not investment contracts — triggered a violent repricing as the market reassessed U.S. access and headline risk. That legal saga is the fundamental story behind the long, suppressed base and the sharp leg higher in this dataset.",
+          "Court developments in 2023 — notably a ruling that certain programmatic exchange sales of XRP were not investment contracts — triggered a violent repricing as the market reassessed U.S. access and headline risk. That legal saga still frames how the market talks about XRP; the pivots in this dataset pick up the move from the October 2024 trough rather than the multi-year suppressed base.",
         ],
       },
       {
         title: "Why it shows up here",
         body: [
-          "XRP's single lottery leg runs from early November 2022 into early January 2025 — about $0.33 to $3.14. The multiple is large, but the occupancy is enormous: holding XRP for that entire window locks you out of most of the violent 2023–2024 openers. It is a classic \"one big correct trade\" that loses to sequenced shorter legs in a capital-constrained model.",
+          "XRP's single lottery leg now runs from Oct 9 2024 at $0.55 into early January 2025 at $3.14 — roughly 5.71× over about three months. Shortening the entry frees the 2023–early-2024 calendar for openers like AIOZ, which is why XRP becomes the middle leg of the current optimum (AIOZ-1 → XRP-1 → ZEC-1 → ZEC-2) instead of a capital-trapping multi-year hold.",
         ],
       },
       {
         title: "What you are actually holding",
         body: [
-          "XRP is a transferable ledger token used for fees and bridging narratives on the XRP Ledger; it is not equity in Ripple the company (though the market often conflates the two). Regulatory treatment still varies by jurisdiction. The pivots here encode a litigation-and-sentiment cycle as much as a payments-adoption cycle.",
+          "XRP is a transferable ledger token used for fees and bridging narratives on the XRP Ledger; it is not equity in Ripple the company (though the market often conflates the two). Regulatory treatment still varies by jurisdiction. The pivots here encode a post-litigation sentiment and liquidity cycle as much as a payments-adoption cycle.",
         ],
       },
     ],
@@ -183,7 +183,7 @@ export const ASSET_ABOUT = [
       {
         title: "Why it shows up here",
         body: [
-          "Strategy contributes two legs: the bounce from the December 2022 low into March 2024, then a summer dip and a ferocious second leg into November 2024 as Bitcoin and the corporate-treasury narrative went parabolic together. MSTR-2 is the famous also-ran in the lottery — strong, but beaten in the same autumn window by SuperVerse's second leg, which is the swap that creates the true optimum.",
+          "Strategy contributes two legs: the bounce from the December 2022 low into March 2024, then a summer dip and a ferocious second leg into November 2024 as Bitcoin and the corporate-treasury narrative went parabolic together. MSTR-2 is a strong autumn also-ran — beaten first by SuperVerse's second leg on the old calendar, and now by XRP's Oct 2024 trough leg in the current optimum.",
         ],
       },
       {
@@ -196,7 +196,7 @@ export const ASSET_ABOUT = [
   },
   {
     id: "SUPER",
-    essence: "A gaming and metaverse ecosystem token — formerly SuperFarm — whose second leg quietly unlocks the optimal chain.",
+    essence: "A gaming and metaverse ecosystem token — formerly SuperFarm — whose second leg once unlocked the calendar optimum.",
     sections: [
       {
         title: "What it is",
@@ -215,7 +215,7 @@ export const ASSET_ABOUT = [
       {
         title: "Why it shows up here",
         body: [
-          "Two legs appear in the data. The first is a classic 2023–early-2024 run. The second — summer 2024 low into early December — is the sleeper. At roughly 4.91× it beats Strategy's overlapping second leg (~3.53×) while fitting the same calendar gap between AIOZ's exit and Zcash's entry. That single comparison is why the solver's optimum is AIOZ-1 → SUPER-2 → ZEC-1 → ZEC-2 rather than the hand-built path that preferred MSTR-2.",
+          "Two legs appear in the data. The first is a classic 2023–early-2024 run. The second — summer 2024 low into early December — quietly beats Strategy's overlapping second leg (~3.53× vs ~4.91×). It was the previous calendar optimum's middle leg (AIOZ-1 → SUPER-2 → ZEC full). With XRP's buy moved to Oct 9 2024, XRP's ~5.71× autumn leg now takes that slot instead.",
         ],
       },
       {
@@ -279,7 +279,7 @@ export const ASSET_ABOUT = [
       {
         title: "Why it shows up here",
         body: [
-          "ZEC provides the closing engine of the optimal chain. After earlier capital has compounded through AIOZ and SUPER-2, both ZEC legs fit sequentially at the end of the calendar and multiply the stack again. Without Zcash's late window, the headline 39,307× does not exist. That is also why ZEC-2's \"still open\" flag matters: part of the fairy tale is marked to a live print rather than a settled exit.",
+          "ZEC provides the closing engine of the optimal chain. After earlier capital has compounded through AIOZ and XRP, both ZEC legs fit sequentially at the end of the calendar and multiply the stack again. Without Zcash's late window, the headline 45,753× does not exist. That is also why ZEC-2's \"still open\" flag matters: part of the fairy tale is marked to a live print rather than a settled exit.",
         ],
       },
       {

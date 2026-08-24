@@ -49,10 +49,11 @@ export default function Leaderboard({ capital, setChain, setTab }) {
           </span>{" "}
           at <span style={{ color: "#F4B728", fontFamily: MONO }}>{formatMultiple(optimal.value)}</span>, ahead of
           the published best at <span style={{ fontFamily: MONO }}>{formatMultiple(publishedTop)}</span>.
-          The difference is one swap: SuperVerse's second leg returns{" "}
-          <span style={{ fontFamily: MONO, color: "#FF4FD8" }}>4.91×</span> against Strategy's{" "}
-          <span style={{ fontFamily: MONO, color: "#FF7A45" }}>3.53×</span>, and both fit the same
-          autumn-2024 window.
+          The difference is the autumn-2024 middle leg: XRP from the Oct 9 trough returns{" "}
+          <span style={{ fontFamily: MONO, color: "#23F0C6" }}>5.71×</span>, beating SuperVerse's{" "}
+          <span style={{ fontFamily: MONO, color: "#FF4FD8" }}>4.91×</span> and Strategy's{" "}
+          <span style={{ fontFamily: MONO, color: "#FF7A45" }}>3.53×</span> in the same gap between
+          AIOZ's exit and Zcash's entry.
         </p>
         <p style={{ fontFamily: SANS, fontSize: 13.5, color: "rgba(255,255,255,0.6)", lineHeight: 1.7, margin: 0 }}>
           For scale: the best single buy-and-hold in the whole set is{" "}

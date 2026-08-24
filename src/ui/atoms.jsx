@@ -102,7 +102,7 @@ export function Button({ onClick, children, color = "#fff", filled, disabled, st
 /**
  * Counts from its previous value to the next one. The numbers on this site swing
  * across six orders of magnitude, so the roll is eased in log space — otherwise a
- * jump from $10k to $393M spends the whole animation looking like it is still at zero.
+ * jump from $10k to $457M spends the whole animation looking like it is still at zero.
  */
 export function Odometer({ value, format, duration = 700, style }) {
   const [display, setDisplay] = useState(value);
