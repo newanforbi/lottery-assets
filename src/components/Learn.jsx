@@ -1,9 +1,10 @@
 import { MONO, SANS, Eyebrow, Panel, useMediaQuery } from "../ui/atoms.jsx";
+import { useTheme } from "../ui/theme.jsx";
 
-function Section({ icon, title, children, color = "rgba(255,255,255,0.55)" }) {
+function Section({ icon, title, children, color = "var(--ink-55)" }) {
   return (
     <Panel title={title} accent={color}>
-      <div style={{ fontFamily: SANS, fontSize: 13.5, color: "rgba(255,255,255,0.6)", lineHeight: 1.8 }}>
+      <div style={{ fontFamily: SANS, fontSize: 13.5, color: "var(--ink-60)", lineHeight: 1.8 }}>
         {children}
       </div>
     </Panel>
@@ -11,24 +12,26 @@ function Section({ icon, title, children, color = "rgba(255,255,255,0.55)" }) {
 }
 
 function Exchange({ name, url, note, color }) {
+  const { ac } = useTheme();
+  const c = ac(color);
   return (
     <div
       style={{
         flex: "1 1 220px",
         padding: "18px 20px",
-        background: "rgba(255,255,255,0.02)",
-        border: "1px solid rgba(255,255,255,0.06)",
+        background: "var(--fill-02)",
+        border: "1px solid var(--line-06)",
         borderRadius: 10,
-        borderTop: `2px solid ${color}`,
+        borderTop: `2px solid ${c}`,
       }}
     >
-      <div style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, color, marginBottom: 8 }}>
+      <div style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, color: c, marginBottom: 8 }}>
         {name}
       </div>
-      <p style={{ fontFamily: SANS, fontSize: 12.5, color: "rgba(255,255,255,0.5)", lineHeight: 1.7, margin: "0 0 10px" }}>
+      <p style={{ fontFamily: SANS, fontSize: 12.5, color: "var(--ink-50)", lineHeight: 1.7, margin: "0 0 10px" }}>
         {note}
       </p>
-      <span style={{ fontFamily: MONO, fontSize: 10, color: "rgba(255,255,255,0.3)" }}>
+      <span style={{ fontFamily: MONO, fontSize: 10, color: "var(--ink-30)" }}>
         {url}
       </span>
     </div>
@@ -36,17 +39,19 @@ function Exchange({ name, url, note, color }) {
 }
 
 function Tip({ children }) {
+  const { ac, isLight } = useTheme();
+  const amber = ac("#F4B728");
   return (
     <div
       style={{
         padding: "12px 16px",
-        background: "rgba(244,183,40,0.06)",
-        border: "1px solid rgba(244,183,40,0.15)",
+        background: `${amber}10`,
+        border: `1px solid ${amber}26`,
         borderRadius: 8,
         marginTop: 14,
       }}
     >
-      <div style={{ fontFamily: SANS, fontSize: 12.5, color: "rgba(244,183,40,0.85)", lineHeight: 1.7 }}>
+      <div style={{ fontFamily: SANS, fontSize: 12.5, color: isLight ? amber : `${amber}D9`, lineHeight: 1.7 }}>
         {children}
       </div>
     </div>
@@ -54,6 +59,7 @@ function Tip({ children }) {
 }
 
 export default function Learn() {
+  const { ac } = useTheme();
   const compact = useMediaQuery("(max-width: 720px)");
 
   return (
@@ -68,8 +74,8 @@ export default function Learn() {
           beyond the protocol's rules.
         </p>
         <p style={{ margin: "0 0 14px" }}>
-          <strong style={{ color: "rgba(255,255,255,0.75)" }}>Bitcoin</strong> was the first,
-          launched in 2009 as a peer-to-peer electronic cash system. <strong style={{ color: "rgba(255,255,255,0.75)" }}>Ethereum</strong> followed
+          <strong style={{ color: "var(--ink-75)" }}>Bitcoin</strong> was the first,
+          launched in 2009 as a peer-to-peer electronic cash system. <strong style={{ color: "var(--ink-75)" }}>Ethereum</strong> followed
           in 2015 and added programmable smart contracts — code that executes automatically when
           conditions are met, enabling decentralised finance (DeFi), NFTs, and thousands of
           application-layer tokens.
@@ -110,11 +116,11 @@ export default function Learn() {
           />
         </div>
 
-        <Eyebrow size={9} style={{ marginBottom: 8, color: "rgba(255,255,255,0.35)" }}>Things to know before your first trade</Eyebrow>
+        <Eyebrow size={9} style={{ marginBottom: 8, color: "var(--ink-35)" }}>Things to know before your first trade</Eyebrow>
         <ul style={{ margin: 0, paddingLeft: 20, display: "flex", flexDirection: "column", gap: 6 }}>
-          <li><strong style={{ color: "rgba(255,255,255,0.7)" }}>Limit orders over market orders.</strong> A market order fills instantly at whatever price is available; a limit order lets you set the price and avoid slippage.</li>
-          <li><strong style={{ color: "rgba(255,255,255,0.7)" }}>Maker vs. taker fees.</strong> Placing an order that sits on the book (maker) is cheaper than filling an existing one (taker). The difference adds up fast on active trading.</li>
-          <li><strong style={{ color: "rgba(255,255,255,0.7)" }}>Withdrawal fees vary by network.</strong> Sending ETH on Ethereum mainnet costs more than sending it on Arbitrum or Base. Choose the cheapest network your destination supports.</li>
+          <li><strong style={{ color: "var(--ink-70)" }}>Limit orders over market orders.</strong> A market order fills instantly at whatever price is available; a limit order lets you set the price and avoid slippage.</li>
+          <li><strong style={{ color: "var(--ink-70)" }}>Maker vs. taker fees.</strong> Placing an order that sits on the book (maker) is cheaper than filling an existing one (taker). The difference adds up fast on active trading.</li>
+          <li><strong style={{ color: "var(--ink-70)" }}>Withdrawal fees vary by network.</strong> Sending ETH on Ethereum mainnet costs more than sending it on Arbitrum or Base. Choose the cheapest network your destination supports.</li>
         </ul>
       </Section>
 
@@ -125,19 +131,19 @@ export default function Learn() {
           funds go with it — unless they are already in a wallet you control.
         </p>
 
-        <Eyebrow size={9} style={{ marginBottom: 10, color: "rgba(255,255,255,0.35)" }}>Wallet types</Eyebrow>
+        <Eyebrow size={9} style={{ marginBottom: 10, color: "var(--ink-35)" }}>Wallet types</Eyebrow>
         <div style={{ display: "flex", gap: compact ? 12 : 16, flexWrap: "wrap", marginBottom: 16 }}>
-          <div style={{ flex: "1 1 200px", padding: "14px 16px", background: "rgba(244,183,40,0.04)", border: "1px solid rgba(244,183,40,0.12)", borderRadius: 8 }}>
-            <div style={{ fontFamily: MONO, fontSize: 12, fontWeight: 600, color: "#F4B728", marginBottom: 6 }}>Hardware wallets</div>
-            <p style={{ fontFamily: SANS, fontSize: 12, color: "rgba(255,255,255,0.5)", lineHeight: 1.7, margin: 0 }}>
+          <div style={{ flex: "1 1 200px", padding: "14px 16px", background: `${ac("#F4B728")}0A`, border: `1px solid ${ac("#F4B728")}1F`, borderRadius: 8 }}>
+            <div style={{ fontFamily: MONO, fontSize: 12, fontWeight: 600, color: ac("#F4B728"), marginBottom: 6 }}>Hardware wallets</div>
+            <p style={{ fontFamily: SANS, fontSize: 12, color: "var(--ink-50)", lineHeight: 1.7, margin: 0 }}>
               A dedicated device (Ledger, Trezor, Keystone) that keeps your private key offline.
               Transactions are signed on the device itself, so even if your computer is compromised
               the key never leaves the hardware. The gold standard for long-term storage.
             </p>
           </div>
-          <div style={{ flex: "1 1 200px", padding: "14px 16px", background: "rgba(0,229,255,0.04)", border: "1px solid rgba(0,229,255,0.12)", borderRadius: 8 }}>
-            <div style={{ fontFamily: MONO, fontSize: 12, fontWeight: 600, color: "#00E5FF", marginBottom: 6 }}>Software wallets</div>
-            <p style={{ fontFamily: SANS, fontSize: 12, color: "rgba(255,255,255,0.5)", lineHeight: 1.7, margin: 0 }}>
+          <div style={{ flex: "1 1 200px", padding: "14px 16px", background: `${ac("#00E5FF")}0A`, border: `1px solid ${ac("#00E5FF")}1F`, borderRadius: 8 }}>
+            <div style={{ fontFamily: MONO, fontSize: 12, fontWeight: 600, color: ac("#00E5FF"), marginBottom: 6 }}>Software wallets</div>
+            <p style={{ fontFamily: SANS, fontSize: 12, color: "var(--ink-50)", lineHeight: 1.7, margin: 0 }}>
               Browser extensions (MetaMask, Phantom, Rabby) or mobile apps. More convenient for
               daily use and DeFi interaction, but the key lives on your device — if it is malware-infected,
               the key can be extracted.
@@ -145,7 +151,7 @@ export default function Learn() {
           </div>
         </div>
 
-        <Eyebrow size={9} style={{ marginBottom: 10, color: "rgba(255,255,255,0.35)" }}>Seed phrase — the master key</Eyebrow>
+        <Eyebrow size={9} style={{ marginBottom: 10, color: "var(--ink-35)" }}>Seed phrase — the master key</Eyebrow>
         <p style={{ margin: "0 0 10px" }}>
           When you create a wallet you get a 12- or 24-word seed phrase (BIP-39 mnemonic). This phrase
           <em> is</em> your wallet. Anyone who has it can reconstruct every private key and drain every
@@ -169,19 +175,19 @@ export default function Learn() {
         </p>
         <ul style={{ margin: 0, paddingLeft: 20, display: "flex", flexDirection: "column", gap: 8 }}>
           <li>
-            <strong style={{ color: "rgba(255,255,255,0.7)" }}>Phishing.</strong> Fake sites that look identical to a real exchange or wallet.
+            <strong style={{ color: "var(--ink-70)" }}>Phishing.</strong> Fake sites that look identical to a real exchange or wallet.
             Always type the URL directly or use a bookmark — never follow a link from email, DM, or search ads.
           </li>
           <li>
-            <strong style={{ color: "rgba(255,255,255,0.7)" }}>Approval scams.</strong> A malicious dApp asks you to "approve" a token spend with an unlimited
+            <strong style={{ color: "var(--ink-70)" }}>Approval scams.</strong> A malicious dApp asks you to "approve" a token spend with an unlimited
             allowance, then drains your wallet. Read what you are signing. Revoke stale approvals periodically.
           </li>
           <li>
-            <strong style={{ color: "rgba(255,255,255,0.7)" }}>SIM swaps.</strong> An attacker ports your phone number to their SIM and intercepts SMS 2FA codes.
+            <strong style={{ color: "var(--ink-70)" }}>SIM swaps.</strong> An attacker ports your phone number to their SIM and intercepts SMS 2FA codes.
             Use an authenticator app (Authy, Google Authenticator) or a hardware key (YubiKey) instead of SMS.
           </li>
           <li>
-            <strong style={{ color: "rgba(255,255,255,0.7)" }}>Clipboard malware.</strong> Malware that replaces a copied wallet address with the attacker's.
+            <strong style={{ color: "var(--ink-70)" }}>Clipboard malware.</strong> Malware that replaces a copied wallet address with the attacker's.
             Always verify the first and last several characters of a pasted address before sending.
           </li>
         </ul>
@@ -211,9 +217,9 @@ export default function Learn() {
             { term: "Liquidity", def: "How easily you can buy or sell without moving the price. High-cap tokens on major exchanges are liquid; small-cap tokens on niche DEXs can slip 5–10% on a modest order." },
             { term: "Dollar-cost averaging", def: "Investing a fixed dollar amount on a schedule (weekly, monthly) regardless of price. It removes the timing decision and smooths out volatility — the opposite of trying to buy the bottom." },
           ].map((item) => (
-            <div key={item.term} style={{ padding: "14px 16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 8 }}>
-              <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, color: "#00E5FF", marginBottom: 6 }}>{item.term}</div>
-              <p style={{ fontFamily: SANS, fontSize: 12, color: "rgba(255,255,255,0.5)", lineHeight: 1.65, margin: 0 }}>{item.def}</p>
+            <div key={item.term} style={{ padding: "14px 16px", background: "var(--fill-02)", border: "1px solid var(--line-05)", borderRadius: 8 }}>
+              <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, color: ac("#00E5FF"), marginBottom: 6 }}>{item.term}</div>
+              <p style={{ fontFamily: SANS, fontSize: 12, color: "var(--ink-50)", lineHeight: 1.65, margin: 0 }}>{item.def}</p>
             </div>
           ))}
         </div>

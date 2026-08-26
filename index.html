@@ -45,9 +45,130 @@
     />
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { background: #0A0B0F; }
-      ::selection { background: rgba(157,78,221,0.35); }
+
+      /* ---------------------------------------------------------------
+         Theme tokens. Every surface, hairline and text colour on the site
+         is one of these, so a theme swap is a variable swap rather than a
+         sweep through inline styles.
+
+         The scale suffix is the DARK alpha (--ink-45 was rgba(255,255,255,0.45)),
+         which keeps the original dark palette byte-identical. Light mode
+         re-points the same names at dark ink over a warm paper background,
+         with the faint end nudged up: low-alpha dark-on-light washes out
+         far faster than low-alpha white-on-black.
+         --------------------------------------------------------------- */
+      :root {
+        color-scheme: dark;
+        --page-bg: #0A0B0F;
+        --select-bg: rgba(157,78,221,0.35);
+        --input-bg: rgba(0,0,0,0.3);
+
+        --ink: #ffffff;
+        --ink-80: rgba(255,255,255,0.80);
+        --ink-75: rgba(255,255,255,0.75);
+        --ink-72: rgba(255,255,255,0.72);
+        --ink-70: rgba(255,255,255,0.70);
+        --ink-60: rgba(255,255,255,0.60);
+        --ink-58: rgba(255,255,255,0.58);
+        --ink-55: rgba(255,255,255,0.55);
+        --ink-50: rgba(255,255,255,0.50);
+        --ink-45: rgba(255,255,255,0.45);
+        --ink-40: rgba(255,255,255,0.40);
+        --ink-35: rgba(255,255,255,0.35);
+        --ink-30: rgba(255,255,255,0.30);
+        --ink-28: rgba(255,255,255,0.28);
+        --ink-25: rgba(255,255,255,0.25);
+        --ink-22: rgba(255,255,255,0.22);
+        --ink-20: rgba(255,255,255,0.20);
+        --ink-18: rgba(255,255,255,0.18);
+
+        --fill-02:  rgba(255,255,255,0.02);
+        --fill-025: rgba(255,255,255,0.025);
+        --fill-03:  rgba(255,255,255,0.03);
+        --fill-04:  rgba(255,255,255,0.04);
+        --fill-10:  rgba(255,255,255,0.10);
+
+        --line-045: rgba(255,255,255,0.045);
+        --line-05:  rgba(255,255,255,0.05);
+        --line-055: rgba(255,255,255,0.055);
+        --line-06:  rgba(255,255,255,0.06);
+        --line-07:  rgba(255,255,255,0.07);
+        --line-08:  rgba(255,255,255,0.08);
+        --line-10:  rgba(255,255,255,0.10);
+        --line-12:  rgba(255,255,255,0.12);
+        --line-22:  rgba(255,255,255,0.22);
+        --line-25:  rgba(255,255,255,0.25);
+      }
+
+      :root[data-theme="light"] {
+        color-scheme: light;
+        --page-bg: #F7F7F4;
+        --select-bg: rgba(157,78,221,0.22);
+        --input-bg: rgba(255,255,255,0.92);
+
+        --ink: #14161C;
+        --ink-80: rgba(20,22,28,0.86);
+        --ink-75: rgba(20,22,28,0.82);
+        --ink-72: rgba(20,22,28,0.79);
+        --ink-70: rgba(20,22,28,0.78);
+        --ink-60: rgba(20,22,28,0.72);
+        --ink-58: rgba(20,22,28,0.70);
+        --ink-55: rgba(20,22,28,0.68);
+        --ink-50: rgba(20,22,28,0.64);
+        --ink-45: rgba(20,22,28,0.60);
+        --ink-40: rgba(20,22,28,0.55);
+        --ink-35: rgba(20,22,28,0.50);
+        --ink-30: rgba(20,22,28,0.46);
+        --ink-28: rgba(20,22,28,0.44);
+        --ink-25: rgba(20,22,28,0.40);
+        --ink-22: rgba(20,22,28,0.37);
+        --ink-20: rgba(20,22,28,0.35);
+        --ink-18: rgba(20,22,28,0.33);
+
+        /* Panels sit ABOVE the paper here rather than below it, so the low
+           fills go white and only the pressed/active ones go to ink. */
+        --fill-02:  rgba(255,255,255,0.85);
+        --fill-025: rgba(255,255,255,0.90);
+        --fill-03:  rgba(255,255,255,0.96);
+        --fill-04:  rgba(20,22,28,0.05);
+        --fill-10:  rgba(20,22,28,0.09);
+
+        --line-045: rgba(20,22,28,0.07);
+        --line-05:  rgba(20,22,28,0.08);
+        --line-055: rgba(20,22,28,0.09);
+        --line-06:  rgba(20,22,28,0.10);
+        --line-07:  rgba(20,22,28,0.11);
+        --line-08:  rgba(20,22,28,0.13);
+        --line-10:  rgba(20,22,28,0.16);
+        --line-12:  rgba(20,22,28,0.18);
+        --line-22:  rgba(20,22,28,0.28);
+        --line-25:  rgba(20,22,28,0.32);
+      }
+
+      body { background: var(--page-bg); }
+      ::selection { background: var(--select-bg); }
     </style>
+
+    <!--
+      Resolve the theme before first paint. Doing this in React would flash the
+      dark page at anyone who chose light, since the app only mounts after the
+      bundle parses.
+    -->
+    <script>
+      (function () {
+        try {
+          // Dark stays the default for a first visit — it is the designed
+          // identity of the site, and the OS preference alone shouldn't flip
+          // the starfield off for someone who never asked. Once a visitor picks
+          // a side, that choice sticks.
+          var saved = localStorage.getItem("la-theme");
+          var mode = saved === "light" || saved === "dark" ? saved : "dark";
+          document.documentElement.setAttribute("data-theme", mode);
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute("content", mode === "light" ? "#F7F7F4" : "#0A0B0F");
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

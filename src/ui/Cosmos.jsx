@@ -1,7 +1,18 @@
 import { useEffect, useRef, useCallback } from "react";
+import { useTheme } from "./theme.jsx";
+
+// Same four wash positions in both themes — only the ground and the ink change,
+// so switching themes keeps the page's underlying composition recognisable.
+const NEBULA_LAYOUT = [
+  { fx: 0.2, fy: 0.3, fr: 0.35, dark: "rgba(157,78,221,0.028)", light: "rgba(157,78,221,0.07)" },
+  { fx: 0.75, fy: 0.55, fr: 0.3, dark: "rgba(100,80,255,0.032)", light: "rgba(90,120,255,0.06)" },
+  { fx: 0.5, fy: 0.15, fr: 0.25, dark: "rgba(35,240,198,0.022)", light: "rgba(20,190,160,0.055)" },
+  { fx: 0.85, fy: 0.2, fr: 0.2, dark: "rgba(0,180,255,0.02)", light: "rgba(0,150,220,0.05)" },
+];
 
 function GalaxyBackground() {
   const canvasRef = useRef(null);
+  const { isLight } = useTheme();
 
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
@@ -12,26 +23,27 @@ function GalaxyBackground() {
 
     ctx.clearRect(0, 0, W, H);
 
-    // Deep space base
-    ctx.fillStyle = "#0A0B0F";
+    // Ground: deep space, or warm paper.
+    ctx.fillStyle = isLight ? "#F7F7F4" : "#0A0B0F";
     ctx.fillRect(0, 0, W, H);
 
-    // Nebula clouds
-    const nebulae = [
-      { x: W * 0.2, y: H * 0.3, r: W * 0.35, color: "rgba(157,78,221,0.028)" },
-      { x: W * 0.75, y: H * 0.55, r: W * 0.3, color: "rgba(100,80,255,0.032)" },
-      { x: W * 0.5, y: H * 0.15, r: W * 0.25, color: "rgba(35,240,198,0.022)" },
-      { x: W * 0.85, y: H * 0.2, r: W * 0.2, color: "rgba(0,180,255,0.02)" },
-    ];
-    nebulae.forEach(({ x, y, r, color }) => {
+    // Nebula clouds — the washes survive into light mode, a little stronger so
+    // they still register against paper.
+    NEBULA_LAYOUT.forEach(({ fx, fy, fr, dark, light }) => {
+      const x = W * fx;
+      const y = H * fy;
+      const r = W * fr;
       const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-      g.addColorStop(0, color);
+      g.addColorStop(0, isLight ? light : dark);
       g.addColorStop(1, "transparent");
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, W, H);
     });
 
-    // Stars
+    // Stars are a dark-sky effect only — dim specks on paper read as dust on a
+    // scan, so light mode stops at the washes.
+    if (isLight) return;
+
     const rng = (seed) => {
       let s = seed;
       return () => { s = (s * 16807 + 0) % 2147483647; return (s - 1) / 2147483646; };
@@ -61,7 +73,7 @@ function GalaxyBackground() {
         ctx.fill();
       }
     }
-  }, []);
+  }, [isLight]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -219,6 +231,8 @@ function ShootingStars() {
 }
 
 function GlowDot({ color, size = 8 }) {
+  const { ac, glow } = useTheme();
+  const c = ac(color);
   return (
     <span
       style={{
@@ -226,8 +240,8 @@ function GlowDot({ color, size = 8 }) {
         width: size,
         height: size,
         borderRadius: "50%",
-        background: color,
-        boxShadow: `0 0 ${size}px ${color}, 0 0 ${size * 2}px ${color}40`,
+        background: c,
+        boxShadow: glow(`0 0 ${size}px ${c}, 0 0 ${size * 2}px ${c}40`),
       }}
     />
   );

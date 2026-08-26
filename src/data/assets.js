@@ -16,7 +16,6 @@ export const ASSETS = [
     name: "AIOZ Network",
     ticker: "AIOZ",
     color: "#00E5FF",
-    colorDim: "rgba(0,229,255,0.12)",
     note: "The single most violent leg in the set — 90× in six months.",
     pivots: [
       { date: "2023-09-13", px: 0.01 },
@@ -30,7 +29,6 @@ export const ASSETS = [
     name: "Render",
     ticker: "RENDER",
     color: "#F5426C",
-    colorDim: "rgba(245,66,108,0.12)",
     note: "A 31× move, but it occupies 29 months — the costliest real estate in the lottery.",
     pivots: [
       { date: "2022-10-12", px: 0.42 },
@@ -42,7 +40,6 @@ export const ASSETS = [
     name: "Injective",
     ticker: "INJ",
     color: "#22A3F0",
-    colorDim: "rgba(34,163,240,0.12)",
     note: "The best opening leg that isn't AIOZ.",
     pivots: [
       { date: "2022-12-21", px: 1.25 },
@@ -54,7 +51,6 @@ export const ASSETS = [
     name: "Solana",
     ticker: "SOL",
     color: "#9D4EDD",
-    colorDim: "rgba(157,78,221,0.12)",
     note: "Emerged from the FTX collapse at a generational low.",
     pivots: [
       { date: "2022-12-21", px: 9.76 },
@@ -68,7 +64,6 @@ export const ASSETS = [
     name: "XRP",
     ticker: "XRP",
     color: "#23F0C6",
-    colorDim: "rgba(35,240,198,0.12)",
     note: "Repriced off the October 2024 trough — a shorter hold, still a sharp leg.",
     pivots: [
       { date: "2024-10-09", px: 0.55 },
@@ -80,7 +75,6 @@ export const ASSETS = [
     name: "Strategy",
     ticker: "MSTR",
     color: "#FF7A45",
-    colorDim: "rgba(255,122,69,0.12)",
     note: "The only equity in the set — leveraged bitcoin exposure in a brokerage account.",
     pivots: [
       { date: "2022-12-21", px: 14.5 },
@@ -94,7 +88,6 @@ export const ASSETS = [
     name: "SuperVerse",
     ticker: "SUPER",
     color: "#FF4FD8",
-    colorDim: "rgba(255,79,216,0.12)",
     note: "Its second leg beats Strategy's in the same window — outrun now by XRP's autumn leg.",
     pivots: [
       { date: "2023-10-11", px: 0.07 },
@@ -108,7 +101,6 @@ export const ASSETS = [
     name: "Pepe",
     ticker: "PEPE",
     color: "#4BE04B",
-    colorDim: "rgba(75,224,75,0.12)",
     note: "The best opening leg available to anyone who missed AIOZ.",
     pivots: [
       { date: "2023-10-11", px: 0.000000635 },
@@ -122,7 +114,6 @@ export const ASSETS = [
     name: "Zcash",
     ticker: "ZEC",
     color: "#F4B728",
-    colorDim: "rgba(244,183,40,0.12)",
     note: "Two legs at the far end of the lottery — and the only ones still running.",
     pivots: [
       { date: "2025-04-09", px: 31.17 },

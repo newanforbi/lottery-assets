@@ -77,7 +77,8 @@ corrected pivot propagates everywhere instead of drifting out of sync.
 | | |
 |---|---|
 | **Framework** | Vite + React 18 |
-| **Styling** | Inline styles &mdash; carried over from [`alpha-hybrid`](https://github.com/newanforbi/alpha-hybrid)'s `LiquidityCascade.jsx` |
+| **Styling** | Inline styles &mdash; carried over from [`alpha-hybrid`](https://github.com/newanforbi/alpha-hybrid)'s `LiquidityCascade.jsx`, with theme tokens as CSS variables |
+| **Theming** | Dark (default) and light, toggled in the header and remembered in `localStorage` |
 | **Visuals** | Galaxy canvas with shooting-star particles (`src/ui/Cosmos.jsx`) |
 | **Type system** | JetBrains Mono, Space Grotesk, DM Sans via Google Fonts |
 | **Solver** | Weighted interval scheduling via DP, plus exhaustive enumeration for the leaderboard |
@@ -106,6 +107,7 @@ src/
   ui/
     Cosmos.jsx             # Galaxy background + shooting stars
     atoms.jsx              # Shared components (Panel, Stat, Eyebrow, Button, Odometer)
+    theme.jsx              # Theme provider, accent remapping, header toggle
     format.js              # Currency + multiplier formatting
 public/
   favicon.ico              # 16/32/48/64 multi-resolution
@@ -118,8 +120,31 @@ public/
   og-image.png             # 1200x630 link preview
   robots.txt               # Allows everything, points at sitemap
   sitemap.xml              # Single-page sitemap
-index.html                 # Entry HTML with OG/Twitter meta tags
+index.html                 # Entry HTML with OG/Twitter meta tags + theme tokens
 ```
+
+## Theming
+
+The site ships dark by default &mdash; the starfield is the design &mdash; with a light mode
+behind the toggle in the header. A first visit always lands on dark regardless of the OS
+setting; once someone picks a side it is stored under `la-theme` and restored before first
+paint by a small inline script in `index.html`, so switching never flashes.
+
+Two mechanisms carry the swap:
+
+- **Surfaces, hairlines and text** are CSS variables declared in `index.html` (`--ink-*`,
+  `--fill-*`, `--line-*`). The suffix is the original dark alpha, so `--ink-45` is exactly
+  the old `rgba(255,255,255,0.45)` and dark mode renders identically to before. Light mode
+  re-points the same names at dark ink over paper, and low fills flip to white because
+  panels sit *above* the page there rather than below it.
+- **Brand accents** cannot be variables: they are concatenated with hex alpha at render
+  time (`` `${leg.color}45` ``). `useTheme().ac(hex)` maps each of the nine asset colours
+  and the UI accents to a darkened twin of the same hue, since neon tuned for `#0A0B0F`
+  is illegible on white. `ac()` passes through anything it does not recognise, so applying
+  it twice is safe. `glow()` alongside it returns `"none"` in light mode &mdash; bloom needs a
+  dark field to bloom into.
+
+Adding a colour means adding a token, not an `rgba()` literal.
 
 ## Running locally
 

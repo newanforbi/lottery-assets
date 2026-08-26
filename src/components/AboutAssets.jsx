@@ -3,8 +3,10 @@ import { ASSETS } from "../data/assets.js";
 import { ASSET_ABOUT } from "../data/assetAbout.js";
 import { MONO, SANS, DISPLAY, Eyebrow, Panel, Chip, useMediaQuery } from "../ui/atoms.jsx";
 import { GlowDot } from "../ui/Cosmos.jsx";
+import { useTheme } from "../ui/theme.jsx";
 
 export default function AboutAssets() {
+  const { ac, glow } = useTheme();
   const compact = useMediaQuery("(max-width: 720px)");
   const pages = useMemo(
     () =>
@@ -22,7 +24,7 @@ export default function AboutAssets() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Panel accent="#00E5FF" title="About the Assets">
-        <p style={{ fontFamily: SANS, fontSize: 13.5, color: "rgba(255,255,255,0.6)", lineHeight: 1.75, margin: 0 }}>
+        <p style={{ fontFamily: SANS, fontSize: 13.5, color: "var(--ink-60)", lineHeight: 1.75, margin: 0 }}>
           The Assets tab shows pivots and multipliers. This page is the other half: what each name
           in Lottery Assets actually is — the product, the market structure, and the story that made
           the price path possible. None of this turns hindsight into a strategy; it only makes the
@@ -40,7 +42,7 @@ export default function AboutAssets() {
       >
         {pages.map((page) => {
           const on = page.id === activeId;
-          const color = page.meta.color;
+          const color = ac(page.meta.color);
           return (
             <button
               key={page.id}
@@ -51,9 +53,9 @@ export default function AboutAssets() {
                 display: "flex", alignItems: "center", gap: 7,
                 fontFamily: MONO, fontSize: 10, letterSpacing: 1.2,
                 padding: "8px 12px", borderRadius: 6, cursor: "pointer",
-                background: on ? `${color}18` : "rgba(255,255,255,0.025)",
-                border: `1px solid ${on ? color + "55" : "rgba(255,255,255,0.08)"}`,
-                color: on ? "#fff" : "rgba(255,255,255,0.4)",
+                background: on ? `${color}18` : "var(--fill-025)",
+                border: `1px solid ${on ? color + "55" : "var(--line-08)"}`,
+                color: on ? "var(--ink)" : "var(--ink-40)",
                 transition: "all 0.2s ease",
               }}
             >
@@ -61,7 +63,7 @@ export default function AboutAssets() {
                 aria-hidden
                 style={{
                   width: 7, height: 7, borderRadius: "50%",
-                  background: color, boxShadow: on ? `0 0 8px ${color}` : "none",
+                  background: color, boxShadow: on ? glow(`0 0 8px ${color}`) : "none",
                 }}
               />
               {page.meta.ticker}
@@ -73,8 +75,8 @@ export default function AboutAssets() {
       <article
         key={active.id}
         style={{
-          background: "rgba(255,255,255,0.02)",
-          border: `1px solid ${active.meta.color}28`,
+          background: "var(--fill-02)",
+          border: `1px solid ${ac(active.meta.color)}28`,
           borderRadius: 10,
           padding: compact ? "18px 16px" : "24px 24px",
           position: "relative",
@@ -85,7 +87,7 @@ export default function AboutAssets() {
           aria-hidden
           style={{
             position: "absolute", top: 0, left: 0, right: 0, height: 2,
-            background: `linear-gradient(90deg, transparent, ${active.meta.color}, transparent)`,
+            background: `linear-gradient(90deg, transparent, ${ac(active.meta.color)}, transparent)`,
           }}
         />
 
@@ -100,20 +102,20 @@ export default function AboutAssets() {
         <h2
           style={{
             fontFamily: DISPLAY, fontSize: compact ? 26 : 32, fontWeight: 700,
-            margin: "0 0 10px", color: "#fff", lineHeight: 1.15,
+            margin: "0 0 10px", color: "var(--ink)", lineHeight: 1.15,
           }}
         >
           {active.meta.name}
         </h2>
         <p
           style={{
-            fontFamily: SANS, fontSize: 15, color: "rgba(255,255,255,0.72)",
+            fontFamily: SANS, fontSize: 15, color: "var(--ink-72)",
             lineHeight: 1.65, margin: "0 0 8px", maxWidth: 720,
           }}
         >
           {active.essence}
         </p>
-        <p style={{ fontFamily: SANS, fontSize: 12.5, color: "rgba(255,255,255,0.4)", lineHeight: 1.6, margin: 0 }}>
+        <p style={{ fontFamily: SANS, fontSize: 12.5, color: "var(--ink-40)", lineHeight: 1.6, margin: 0 }}>
           {active.meta.note}
         </p>
 
@@ -127,7 +129,7 @@ export default function AboutAssets() {
                 <p
                   key={i}
                   style={{
-                    fontFamily: SANS, fontSize: 13.5, color: "rgba(255,255,255,0.58)",
+                    fontFamily: SANS, fontSize: 13.5, color: "var(--ink-58)",
                     lineHeight: 1.8, margin: i === section.body.length - 1 ? 0 : "0 0 12px",
                   }}
                 >
@@ -139,7 +141,7 @@ export default function AboutAssets() {
         </div>
       </article>
 
-      <div style={{ fontFamily: MONO, fontSize: 9.5, color: "rgba(255,255,255,0.22)", lineHeight: 1.7 }}>
+      <div style={{ fontFamily: MONO, fontSize: 9.5, color: "var(--ink-22)", lineHeight: 1.7 }}>
         These dossiers describe economic design and market context. They are not recommendations to buy,
         hold, or trade any asset in Lottery Assets.
       </div>

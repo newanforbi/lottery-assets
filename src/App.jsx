@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { GalaxyBackground } from "./ui/Cosmos.jsx";
 import { MONO, DISPLAY, SANS, Eyebrow, Button, Odometer, useMediaQuery } from "./ui/atoms.jsx";
+import { ThemeToggle, useTheme } from "./ui/theme.jsx";
 import { formatCurrency, formatMultiple } from "./ui/format.js";
 import { solveOptimal, randomChain, chainValue, sortChain } from "./engine/solver.js";
 import Lottery from "./components/Lottery.jsx";
@@ -24,6 +25,7 @@ const NAV = [
 const PRESETS = [1000, 5000, 10000, 50000, 100000];
 
 export default function App() {
+  const { ac, glow } = useTheme();
   const [tab, setTab] = useState("lottery");
   const [capital, setCapital] = useState(10000);
   const [capitalText, setCapitalText] = useState("10,000");
@@ -83,16 +85,19 @@ export default function App() {
         style={{
           minHeight: "100vh",
           background: "transparent",
-          color: "#fff",
+          color: "var(--ink)",
           fontFamily: SANS,
           position: "relative",
           zIndex: 2,
         }}
       >
         <div style={{ padding: compact ? "26px 16px 0" : "32px 28px 0", maxWidth: 1080, margin: "0 auto" }}>
-          <Eyebrow size={10} color="rgba(255,255,255,0.25)" style={{ letterSpacing: 2, marginBottom: 8 }}>
-            Nine assets · 15 tradeable legs · Oct 2022 → Aug 2026
-          </Eyebrow>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, marginBottom: 8 }}>
+            <Eyebrow size={10} color="var(--ink-25)" style={{ letterSpacing: 2 }}>
+              Nine assets · 15 tradeable legs · Oct 2022 → Aug 2026
+            </Eyebrow>
+            <ThemeToggle compact={compact} />
+          </div>
           <h1
             style={{
               fontFamily: DISPLAY,
@@ -104,14 +109,18 @@ export default function App() {
               // full-width block the text covered only ~26% of it, so the glyphs
               // sampled just the cold cyan end and never reached the amber.
               width: "fit-content",
-              background: "linear-gradient(135deg, #00E5FF, #FF4FD8, #F4B728)",
+              // backgroundImage, not the `background` shorthand: the shorthand resets
+              // background-clip, and on a theme switch React patches only the
+              // property that changed — which would strip the text clip and leave a
+              // solid gradient bar where the title should be.
+              backgroundImage: `linear-gradient(135deg, ${ac("#00E5FF")}, ${ac("#FF4FD8")}, ${ac("#F4B728")})`,
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
           >
             Lottery Assets
           </h1>
-          <p style={{ fontSize: 14, color: "rgba(255,255,255,0.45)", margin: "0 0 22px", maxWidth: 660, lineHeight: 1.6 }}>
+          <p style={{ fontSize: 14, color: "var(--ink-45)", margin: "0 0 22px", maxWidth: 660, lineHeight: 1.6 }}>
             Lottery Assets is a chronological rotation lottery: nine names that went vertical, one
             pool of capital, and a hard rule that overlapping trades can never both be yours. Chain
             the legs that fit and see where a starting stake lands.
@@ -125,8 +134,8 @@ export default function App() {
               flexWrap: "wrap",
               alignItems: "flex-end",
               padding: compact ? "14px 14px" : "16px 18px",
-              background: "rgba(255,255,255,0.025)",
-              border: "1px solid rgba(255,255,255,0.07)",
+              background: "var(--fill-025)",
+              border: "1px solid var(--line-07)",
               borderRadius: 10,
               marginBottom: 20,
             }}
@@ -139,11 +148,11 @@ export default function App() {
                 <div
                   style={{
                     display: "flex", alignItems: "center", gap: 2,
-                    background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.12)",
+                    background: "var(--input-bg)", border: "1px solid var(--line-12)",
                     borderRadius: 6, padding: "8px 12px",
                   }}
                 >
-                  <span style={{ fontFamily: MONO, fontSize: 18, color: "rgba(255,255,255,0.4)" }}>$</span>
+                  <span style={{ fontFamily: MONO, fontSize: 18, color: "var(--ink-40)" }}>$</span>
                   <input
                     value={capitalText}
                     onChange={(e) => onCapitalChange(e.target.value)}
@@ -152,7 +161,7 @@ export default function App() {
                     aria-label="Starting capital in dollars"
                     style={{
                       width: compact ? 110 : 140, background: "transparent", border: "none", outline: "none",
-                      fontFamily: MONO, fontSize: 18, color: "#fff", fontWeight: 600,
+                      fontFamily: MONO, fontSize: 18, color: "var(--ink)", fontWeight: 600,
                     }}
                   />
                 </div>
@@ -163,9 +172,9 @@ export default function App() {
                       onClick={() => setPreset(p)}
                       style={{
                         fontFamily: MONO, fontSize: 9, padding: "6px 8px", borderRadius: 4, cursor: "pointer",
-                        background: capital === p ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.03)",
-                        border: `1px solid ${capital === p ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.08)"}`,
-                        color: capital === p ? "#fff" : "rgba(255,255,255,0.4)",
+                        background: capital === p ? "var(--fill-10)" : "var(--fill-03)",
+                        border: `1px solid ${capital === p ? "var(--line-25)" : "var(--line-08)"}`,
+                        color: capital === p ? "var(--ink)" : "var(--ink-40)",
                       }}
                     >
                       {formatCurrency(p).replace(".0", "")}
@@ -185,13 +194,13 @@ export default function App() {
                   format={formatCurrency}
                   style={{
                     fontFamily: MONO, fontSize: compact ? 26 : 32, fontWeight: 600,
-                    color: chain.length ? "#F4B728" : "rgba(255,255,255,0.25)",
-                    textShadow: chain.length ? "0 0 24px rgba(244,183,40,0.35)" : "none",
+                    color: chain.length ? ac("#F4B728") : "var(--ink-25)",
+                    textShadow: chain.length ? glow("0 0 24px rgba(244,183,40,0.35)") : "none",
                     transition: "color 0.3s ease",
                   }}
                 />
                 {chain.length > 0 && (
-                  <span style={{ fontFamily: MONO, fontSize: 14, color: "rgba(255,255,255,0.4)" }}>
+                  <span style={{ fontFamily: MONO, fontSize: 14, color: "var(--ink-40)" }}>
                     {formatMultiple(result.multiple)}
                   </span>
                 )}
@@ -210,7 +219,7 @@ export default function App() {
             <div
               role="tablist"
               style={{
-                display: "flex", gap: 4, borderBottom: "1px solid rgba(255,255,255,0.06)",
+                display: "flex", gap: 4, borderBottom: "1px solid var(--line-06)",
                 overflowX: "auto", scrollbarWidth: "none",
               }}
             >
@@ -225,8 +234,8 @@ export default function App() {
                   style={{
                     fontFamily: MONO, fontSize: 10, letterSpacing: 1.5, padding: "10px 14px",
                     background: "none", border: "none", whiteSpace: "nowrap",
-                    color: tab === n.key ? "#fff" : "rgba(255,255,255,0.3)",
-                    borderBottom: tab === n.key ? "2px solid #fff" : "2px solid transparent",
+                    color: tab === n.key ? "var(--ink)" : "var(--ink-30)",
+                    borderBottom: tab === n.key ? "2px solid var(--ink)" : "2px solid transparent",
                     cursor: "pointer", transition: "all 0.2s ease",
                   }}
                 >
@@ -254,11 +263,11 @@ export default function App() {
           <div
             style={{
               marginTop: 30, padding: "14px 16px",
-              background: "rgba(255,60,60,0.06)", border: "1px solid rgba(255,60,60,0.12)", borderRadius: 8,
+              background: `${ac("#FF3C3C")}10`, border: `1px solid ${ac("#FF3C3C")}24`, borderRadius: 8,
             }}
           >
-            <Eyebrow size={9} color="rgba(255,60,60,0.6)" style={{ marginBottom: 4 }}>Risk disclosure</Eyebrow>
-            <p style={{ fontFamily: SANS, fontSize: 11, color: "rgba(255,255,255,0.35)", lineHeight: 1.6, margin: 0 }}>
+            <Eyebrow size={9} color={`${ac("#FF3C3C")}99`} style={{ marginBottom: 4 }}>Risk disclosure</Eyebrow>
+            <p style={{ fontFamily: SANS, fontSize: 11, color: "var(--ink-35)", lineHeight: 1.6, margin: 0 }}>
               Every number here is retrospective. The prices are historical pivots chosen with hindsight,
               and the returns assume you bought each bottom and sold each top on the exact day — which
               nobody did, and nobody could have. Real execution carries slippage, taxes, and the near
@@ -268,7 +277,7 @@ export default function App() {
             </p>
           </div>
 
-          <div style={{ marginTop: 18, fontFamily: MONO, fontSize: 9.5, color: "rgba(255,255,255,0.2)", lineHeight: 1.7 }}>
+          <div style={{ marginTop: 18, fontFamily: MONO, fontSize: 9.5, color: "var(--ink-20)", lineHeight: 1.7 }}>
             Multipliers are derived from the price pivots, never hardcoded. Chain validity requires a
             strict gap: a position must close before the next one opens.
           </div>

@@ -26,7 +26,6 @@ export function buildLegs(assets = ASSETS) {
         assetName: asset.name,
         ticker: asset.ticker,
         color: asset.color,
-        colorDim: asset.colorDim,
         index: i / 2 + 1,
         buyDate: buy.date,
         buyPx: buy.px,

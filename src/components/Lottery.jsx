@@ -3,6 +3,7 @@ import { ASSETS, TIMELINE_START, TIMELINE_END } from "../data/assets.js";
 import { LEGS, toTime, conflicts, canAdd, sortChain, chainValue } from "../engine/solver.js";
 import { formatCurrency, formatMultiple, formatPrice, formatDate, formatDateShort } from "../ui/format.js";
 import { MONO, SANS, DISPLAY, Eyebrow, Chip, useMediaQuery } from "../ui/atoms.jsx";
+import { useTheme } from "../ui/theme.jsx";
 
 const T0 = toTime(TIMELINE_START);
 const T1 = toTime(TIMELINE_END);
@@ -23,6 +24,8 @@ function buildTicks() {
 const TICKS = buildTicks();
 
 function LegBar({ leg, state, onClick, onHover, compact }) {
+  const { ac, glow, isLight } = useTheme();
+  const c = ac(leg.color);
   const left = pct(leg.buyTime);
   const width = pct(leg.sellTime) - left;
   const selected = state === "selected";
@@ -55,12 +58,16 @@ function LegBar({ leg, state, onClick, onHover, compact }) {
         borderRadius: 999,
         cursor: blocked ? "not-allowed" : "pointer",
         pointerEvents: blocked ? "none" : "auto",
-        opacity: blocked ? 0.12 : 1,
+        // Blocked legs fade rather than disappear; on paper the same 0.12 is
+        // almost invisible, so light mode holds them a little higher.
+        opacity: blocked ? (isLight ? 0.2 : 0.12) : 1,
         background: selected
-          ? `linear-gradient(90deg, ${leg.color}55, ${leg.color}30)`
-          : `linear-gradient(90deg, ${leg.color}22, ${leg.color}12)`,
-        border: `1px solid ${selected ? leg.color : leg.color + "45"}`,
-        boxShadow: selected ? `0 0 18px ${leg.color}55, inset 0 0 12px ${leg.color}20` : "none",
+          ? `linear-gradient(90deg, ${c}55, ${c}30)`
+          : `linear-gradient(90deg, ${c}22, ${c}12)`,
+        border: `1px solid ${selected ? c : c + "45"}`,
+        boxShadow: selected
+          ? glow(`0 0 18px ${c}55, inset 0 0 12px ${c}20`)
+          : "none",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -73,8 +80,8 @@ function LegBar({ leg, state, onClick, onHover, compact }) {
           aria-hidden
           style={{
             position: "absolute", right: 5, top: "50%", transform: "translateY(-50%)",
-            width: 5, height: 5, borderRadius: "50%", background: leg.color,
-            boxShadow: `0 0 8px ${leg.color}`,
+            width: 5, height: 5, borderRadius: "50%", background: c,
+            boxShadow: glow(`0 0 8px ${c}`),
           }}
         />
       )}
@@ -83,8 +90,8 @@ function LegBar({ leg, state, onClick, onHover, compact }) {
           fontFamily: MONO,
           fontSize: compact ? 9 : 10,
           fontWeight: 600,
-          color: selected ? "#fff" : leg.color,
-          textShadow: selected ? `0 0 8px ${leg.color}` : "none",
+          color: selected ? "var(--ink)" : c,
+          textShadow: selected ? glow(`0 0 8px ${c}`) : "none",
           whiteSpace: "nowrap",
           padding: "0 8px",
         }}
@@ -109,13 +116,14 @@ function CashSpan({ from, to }) {
         width: `${width}%`,
         top: "50%",
         height: 1,
-        borderTop: "1px dashed rgba(255,255,255,0.22)",
+        borderTop: "1px dashed var(--line-22)",
       }}
     />
   );
 }
 
 export default function Lottery({ chain, setChain, capital, solving }) {
+  const { ac, glow } = useTheme();
   const compact = useMediaQuery("(max-width: 720px)");
   const [hovered, setHovered] = useState(null);
 
@@ -144,8 +152,8 @@ export default function Lottery({ chain, setChain, capital, solving }) {
     <div>
       <div
         style={{
-          background: "rgba(255,255,255,0.02)",
-          border: "1px solid rgba(255,255,255,0.06)",
+          background: "var(--fill-02)",
+          border: "1px solid var(--line-06)",
           borderRadius: 10,
           padding: compact ? "16px 12px" : "20px 18px",
           overflowX: "auto",
@@ -166,7 +174,7 @@ export default function Lottery({ chain, setChain, capital, solving }) {
                     transform: "translateX(-50%)",
                     fontFamily: MONO,
                     fontSize: 9,
-                    color: tk.major ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.18)",
+                    color: tk.major ? "var(--ink-40)" : "var(--ink-18)",
                     whiteSpace: "nowrap",
                   }}
                 >
@@ -190,8 +198,8 @@ export default function Lottery({ chain, setChain, capital, solving }) {
                     fontSize: compact ? 9 : 10,
                     fontWeight: 600,
                     letterSpacing: 0.5,
-                    color: anySelected ? asset.color : "rgba(255,255,255,0.35)",
-                    textShadow: anySelected ? `0 0 10px ${asset.color}66` : "none",
+                    color: anySelected ? ac(asset.color) : "var(--ink-35)",
+                    textShadow: anySelected ? glow(`0 0 10px ${ac(asset.color)}66`) : "none",
                     textAlign: "right",
                     paddingRight: 10,
                     transition: "color 0.25s ease",
@@ -204,8 +212,8 @@ export default function Lottery({ chain, setChain, capital, solving }) {
                     flex: 1,
                     position: "relative",
                     height: compact ? 28 : 32,
-                    background: anySelected ? `${asset.color}08` : "rgba(255,255,255,0.02)",
-                    border: "1px solid rgba(255,255,255,0.045)",
+                    background: anySelected ? `${ac(asset.color)}10` : "var(--fill-02)",
+                    border: "1px solid var(--line-045)",
                     borderRadius: 6,
                     transition: "background 0.25s ease",
                   }}
@@ -214,7 +222,7 @@ export default function Lottery({ chain, setChain, capital, solving }) {
                     <div
                       key={tk.iso}
                       aria-hidden
-                      style={{ position: "absolute", left: `${pct(tk.t)}%`, top: 0, bottom: 0, width: 1, background: "rgba(255,255,255,0.05)" }}
+                      style={{ position: "absolute", left: `${pct(tk.t)}%`, top: 0, bottom: 0, width: 1, background: "var(--line-05)" }}
                     />
                   ))}
                   {legs.map((leg) => (
@@ -238,7 +246,7 @@ export default function Lottery({ chain, setChain, capital, solving }) {
               <div
                 style={{
                   width: compact ? 52 : 74, flexShrink: 0, textAlign: "right", paddingRight: 10,
-                  fontFamily: MONO, fontSize: 8, letterSpacing: 1, color: "rgba(255,255,255,0.25)",
+                  fontFamily: MONO, fontSize: 8, letterSpacing: 1, color: "var(--ink-25)",
                 }}
               >
                 CASH
@@ -259,8 +267,8 @@ export default function Lottery({ chain, setChain, capital, solving }) {
           <div
             style={{
               padding: "18px 20px", borderRadius: 10,
-              background: "rgba(255,255,255,0.02)", border: "1px dashed rgba(255,255,255,0.1)",
-              fontFamily: SANS, fontSize: 13, color: "rgba(255,255,255,0.45)", lineHeight: 1.6,
+              background: "var(--fill-02)", border: "1px dashed var(--line-10)",
+              fontFamily: SANS, fontSize: 13, color: "var(--ink-45)", lineHeight: 1.6,
             }}
           >
             Click any bar to start a chain. Bars that overlap what you already hold will fade out —
@@ -271,7 +279,7 @@ export default function Lottery({ chain, setChain, capital, solving }) {
           <div
             style={{
               padding: "16px 18px", borderRadius: 10,
-              background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
+              background: "var(--fill-02)", border: "1px solid var(--line-06)",
             }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12, flexWrap: "wrap", marginBottom: 12 }}>
@@ -283,7 +291,7 @@ export default function Lottery({ chain, setChain, capital, solving }) {
                 onClick={() => setChain([])}
                 style={{
                   fontFamily: MONO, fontSize: 9, letterSpacing: 1.2, background: "none",
-                  border: "none", color: "rgba(255,255,255,0.3)", cursor: "pointer", padding: 0,
+                  border: "none", color: "var(--ink-30)", cursor: "pointer", padding: 0,
                 }}
               >
                 CLEAR ✕
@@ -293,20 +301,20 @@ export default function Lottery({ chain, setChain, capital, solving }) {
             <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
               {sorted.map((leg, i) => (
                 <div key={leg.id} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  {i > 0 && <span style={{ fontFamily: MONO, fontSize: 12, color: "rgba(255,255,255,0.2)" }}>→</span>}
+                  {i > 0 && <span style={{ fontFamily: MONO, fontSize: 12, color: "var(--ink-20)" }}>→</span>}
                   <button
                     onClick={() => toggle(leg)}
                     title="Remove from chain"
                     style={{
                       display: "flex", flexDirection: "column", gap: 2, alignItems: "flex-start",
-                      background: `${leg.color}12`, border: `1px solid ${leg.color}45`,
+                      background: `${ac(leg.color)}12`, border: `1px solid ${ac(leg.color)}45`,
                       borderRadius: 6, padding: "7px 11px", cursor: "pointer",
                     }}
                   >
-                    <span style={{ fontFamily: MONO, fontSize: 11, color: leg.color, fontWeight: 600 }}>
+                    <span style={{ fontFamily: MONO, fontSize: 11, color: ac(leg.color), fontWeight: 600 }}>
                       {leg.ticker} {formatMultiple(leg.multiple)}
                     </span>
-                    <span style={{ fontFamily: MONO, fontSize: 8.5, color: "rgba(255,255,255,0.35)" }}>
+                    <span style={{ fontFamily: MONO, fontSize: 8.5, color: "var(--ink-35)" }}>
                       {formatDateShort(leg.buyDate)} → {formatDateShort(leg.sellDate)}
                     </span>
                   </button>
@@ -317,19 +325,19 @@ export default function Lottery({ chain, setChain, capital, solving }) {
             <div style={{ display: "flex", gap: 18, flexWrap: "wrap", marginTop: 14, alignItems: "baseline" }}>
               <div>
                 <Eyebrow size={9} style={{ marginBottom: 2 }}>Ends with</Eyebrow>
-                <span style={{ fontFamily: MONO, fontSize: 20, fontWeight: 600, color: "#F4B728" }}>
+                <span style={{ fontFamily: MONO, fontSize: 20, fontWeight: 600, color: ac("#F4B728") }}>
                   {formatCurrency(result.final)}
                 </span>
               </div>
               <div>
                 <Eyebrow size={9} style={{ marginBottom: 2 }}>Multiple</Eyebrow>
-                <span style={{ fontFamily: MONO, fontSize: 20, fontWeight: 600, color: "#fff" }}>
+                <span style={{ fontFamily: MONO, fontSize: 20, fontWeight: 600, color: "var(--ink)" }}>
                   {formatMultiple(result.multiple)}
                 </span>
               </div>
               <div>
                 <Eyebrow size={9} style={{ marginBottom: 2 }}>Days in market</Eyebrow>
-                <span style={{ fontFamily: MONO, fontSize: 20, fontWeight: 600, color: "rgba(255,255,255,0.6)" }}>
+                <span style={{ fontFamily: MONO, fontSize: 20, fontWeight: 600, color: "var(--ink-60)" }}>
                   {chain.reduce((a, l) => a + l.days, 0).toLocaleString("en-US")}
                 </span>
               </div>

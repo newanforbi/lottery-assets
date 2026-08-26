@@ -2,22 +2,25 @@ import { useState } from "react";
 import { chainValue, solveOptimal } from "../engine/solver.js";
 import { formatCurrency, formatFull, formatMultiple } from "../ui/format.js";
 import { MONO, SANS, Eyebrow, Panel, Stat, Button, useMediaQuery } from "../ui/atoms.jsx";
+import { useTheme } from "../ui/theme.jsx";
 
 function Slider({ label, hint, value, min, max, step, onChange, color, display }) {
+  const { ac } = useTheme();
+  const c = ac(color);
   return (
     <div style={{ flex: "1 1 220px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8, marginBottom: 6 }}>
-        <label style={{ fontFamily: SANS, fontSize: 12, color: "rgba(255,255,255,0.55)" }}>{label}</label>
-        <span style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, color }}>{display}</span>
+        <label style={{ fontFamily: SANS, fontSize: 12, color: "var(--ink-55)" }}>{label}</label>
+        <span style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, color: c }}>{display}</span>
       </div>
       <input
         type="range"
         min={min} max={max} step={step} value={value}
         onChange={(e) => onChange(Number(e.target.value))}
         aria-label={label}
-        style={{ width: "100%", accentColor: color }}
+        style={{ width: "100%", accentColor: c }}
       />
-      <div style={{ fontFamily: MONO, fontSize: 9.5, color: "rgba(255,255,255,0.28)", marginTop: 5, lineHeight: 1.5 }}>
+      <div style={{ fontFamily: MONO, fontSize: 9.5, color: "var(--ink-28)", marginTop: 5, lineHeight: 1.5 }}>
         {hint}
       </div>
     </div>
@@ -25,6 +28,7 @@ function Slider({ label, hint, value, min, max, step, onChange, color, display }
 }
 
 export default function RealityCheck({ chain, capital, onSolve }) {
+  const { ac } = useTheme();
   const compact = useMediaQuery("(max-width: 720px)");
   const [capture, setCapture] = useState(80);
   const [slippage, setSlippage] = useState(1.5);
@@ -48,7 +52,7 @@ export default function RealityCheck({ chain, capital, onSolve }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Panel accent="#FF3C3C" title="What perfect hindsight is worth">
-        <p style={{ fontFamily: SANS, fontSize: 13.5, color: "rgba(255,255,255,0.6)", lineHeight: 1.7, margin: 0 }}>
+        <p style={{ fontFamily: SANS, fontSize: 13.5, color: "var(--ink-60)", lineHeight: 1.7, margin: 0 }}>
           Every figure on this site assumes you bought each bottom and sold each top on the exact day.
           Nobody did that. The sliders below put a price on being human: a spread on both sides of every
           trade, tax on each realised gain, and — the one that really bites — catching only part of each
@@ -60,11 +64,11 @@ export default function RealityCheck({ chain, capital, onSolve }) {
         <div
           style={{
             padding: "12px 15px", borderRadius: 8,
-            background: "rgba(0,229,255,0.06)", border: "1px solid rgba(0,229,255,0.2)",
+            background: `${ac("#00E5FF")}0F`, border: `1px solid ${ac("#00E5FF")}33`,
             display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap",
           }}
         >
-          <span style={{ fontFamily: SANS, fontSize: 12.5, color: "rgba(255,255,255,0.6)" }}>
+          <span style={{ fontFamily: SANS, fontSize: 12.5, color: "var(--ink-60)" }}>
             No chain selected — showing the optimal one.
           </span>
           <Button onClick={onSolve} color="#00E5FF">Put it in the lottery</Button>
@@ -91,10 +95,10 @@ export default function RealityCheck({ chain, capital, onSolve }) {
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 10, marginTop: 22 }}>
-          <Stat label="Perfect hindsight" value={formatCurrency(perfect.final)} color="rgba(255,255,255,0.55)" sub={formatMultiple(perfect.multiple)} />
+          <Stat label="Perfect hindsight" value={formatCurrency(perfect.final)} color="var(--ink-55)" sub={formatMultiple(perfect.multiple)} />
           <Stat label="After friction" value={formatCurrency(real.final)} color="#FF4FD8" sub={formatMultiple(real.multiple)} />
           <Stat label="Share of the dream kept" value={`${kept < 0.1 ? kept.toFixed(3) : kept.toFixed(1)}%`} color="#FF7A45" />
-          <Stat label="Given up" value={formatCurrency(perfect.final - real.final)} color="rgba(255,60,60,0.75)" />
+          <Stat label="Given up" value={formatCurrency(perfect.final - real.final)} color={`${ac("#FF3C3C")}BF`} />
         </div>
       </Panel>
 
@@ -109,27 +113,27 @@ export default function RealityCheck({ chain, capital, onSolve }) {
             return (
               <div key={row.label}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10, marginBottom: 4, flexWrap: "wrap" }}>
-                  <span style={{ fontFamily: SANS, fontSize: 12, color: i === 0 ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.45)" }}>
+                  <span style={{ fontFamily: SANS, fontSize: 12, color: i === 0 ? "var(--ink-60)" : "var(--ink-45)" }}>
                     {row.label}
                   </span>
                   <span style={{ display: "flex", alignItems: "baseline", gap: 9 }}>
-                    <span style={{ fontFamily: MONO, fontSize: 13, fontWeight: 600, color: last ? "#FF4FD8" : i === 0 ? "#F4B728" : "rgba(255,255,255,0.7)" }}>
+                    <span style={{ fontFamily: MONO, fontSize: 13, fontWeight: 600, color: last ? ac("#FF4FD8") : i === 0 ? ac("#F4B728") : "var(--ink-70)" }}>
                       {formatCurrency(v)}
                     </span>
-                    <span style={{ fontFamily: MONO, fontSize: 9.5, color: "rgba(255,255,255,0.28)", minWidth: 54, textAlign: "right" }}>
+                    <span style={{ fontFamily: MONO, fontSize: 9.5, color: "var(--ink-28)", minWidth: 54, textAlign: "right" }}>
                       {formatMultiple(v / capital)}
                     </span>
                   </span>
                 </div>
-                <div style={{ height: 8, borderRadius: 4, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", overflow: "hidden" }}>
+                <div style={{ height: 8, borderRadius: 4, background: "var(--fill-03)", border: "1px solid var(--line-05)", overflow: "hidden" }}>
                   <div
                     style={{
                       height: "100%", width: `${width}%`, borderRadius: 4,
                       background: last
-                        ? "linear-gradient(90deg, rgba(255,79,216,0.3), #FF4FD8)"
+                        ? `linear-gradient(90deg, ${ac("#FF4FD8")}4D, ${ac("#FF4FD8")})`
                         : i === 0
-                        ? "linear-gradient(90deg, rgba(244,183,40,0.25), #F4B728)"
-                        : "linear-gradient(90deg, rgba(255,255,255,0.12), rgba(255,255,255,0.35))",
+                        ? `linear-gradient(90deg, ${ac("#F4B728")}40, ${ac("#F4B728")})`
+                        : "linear-gradient(90deg, var(--line-12), var(--ink-35))",
                       transition: "width 0.35s ease",
                     }}
                   />
@@ -138,14 +142,14 @@ export default function RealityCheck({ chain, capital, onSolve }) {
             );
           })}
         </div>
-        <div style={{ fontFamily: MONO, fontSize: 9.5, color: "rgba(255,255,255,0.25)", marginTop: 14, lineHeight: 1.7 }}>
+        <div style={{ fontFamily: MONO, fontSize: 9.5, color: "var(--ink-25)", marginTop: 14, lineHeight: 1.7 }}>
           Bars are log-scaled — on a linear axis every row but the first would be invisible, which is
           itself the point. Starting capital {formatFull(capital)}.
         </div>
       </Panel>
 
       <Panel title="The honest reading">
-        <p style={{ fontFamily: SANS, fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: 0 }}>
+        <p style={{ fontFamily: SANS, fontSize: 13, color: "var(--ink-55)", lineHeight: 1.7, margin: 0 }}>
           These assets are in Lottery Assets because they went up. The ones that went to zero over the same
           four years aren't here, and there were far more of them. Picking the nine winners in advance,
           then timing eight turning points across them, is not a strategy — it's the definition of

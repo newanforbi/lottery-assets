@@ -1,23 +1,26 @@
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "./theme.jsx";
 
 export const MONO = "'JetBrains Mono', monospace";
 export const DISPLAY = "'Space Grotesk', sans-serif";
 export const SANS = "'DM Sans', sans-serif";
 
-export const SURFACE = "rgba(255,255,255,0.02)";
-export const SURFACE_HI = "rgba(255,255,255,0.03)";
-export const HAIRLINE = "1px solid rgba(255,255,255,0.06)";
-export const HAIRLINE_SOFT = "1px solid rgba(255,255,255,0.05)";
+export const SURFACE = "var(--fill-02)";
+export const SURFACE_HI = "var(--fill-03)";
+export const HAIRLINE = "1px solid var(--line-06)";
+export const HAIRLINE_SOFT = "1px solid var(--line-05)";
 
-export function Eyebrow({ children, color = "rgba(255,255,255,0.4)", size = 11, style }) {
+export function Eyebrow({ children, color = "var(--ink-40)", size = 11, style }) {
+  const { ac } = useTheme();
   return (
-    <div style={{ fontFamily: MONO, fontSize: size, color, letterSpacing: 1.5, textTransform: "uppercase", ...style }}>
+    <div style={{ fontFamily: MONO, fontSize: size, color: ac(color), letterSpacing: 1.5, textTransform: "uppercase", ...style }}>
       {children}
     </div>
   );
 }
 
 export function Panel({ title, right, children, accent, style }) {
+  const { ac } = useTheme();
   return (
     <div
       style={{
@@ -34,7 +37,7 @@ export function Panel({ title, right, children, accent, style }) {
         <div
           style={{
             position: "absolute", top: 0, left: 0, right: 0, height: 2,
-            background: `linear-gradient(90deg, transparent, ${accent}, transparent)`,
+            background: `linear-gradient(90deg, transparent, ${ac(accent)}, transparent)`,
           }}
         />
       )}
@@ -49,24 +52,27 @@ export function Panel({ title, right, children, accent, style }) {
   );
 }
 
-export function Stat({ label, value, color = "#fff", sub, size = 18 }) {
+export function Stat({ label, value, color = "var(--ink)", sub, size = 18 }) {
+  const { ac } = useTheme();
   return (
     <div style={{ background: SURFACE_HI, borderRadius: 6, padding: "12px 14px", border: HAIRLINE_SOFT }}>
-      <Eyebrow size={9} color="rgba(255,255,255,0.35)" style={{ marginBottom: 4 }}>{label}</Eyebrow>
-      <div style={{ fontFamily: MONO, fontSize: size, color, fontWeight: 600, lineHeight: 1.2 }}>{value}</div>
-      {sub && <div style={{ fontFamily: MONO, fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 3 }}>{sub}</div>}
+      <Eyebrow size={9} color="var(--ink-35)" style={{ marginBottom: 4 }}>{label}</Eyebrow>
+      <div style={{ fontFamily: MONO, fontSize: size, color: ac(color), fontWeight: 600, lineHeight: 1.2 }}>{value}</div>
+      {sub && <div style={{ fontFamily: MONO, fontSize: 10, color: "var(--ink-30)", marginTop: 3 }}>{sub}</div>}
     </div>
   );
 }
 
 export function Chip({ color, children, dim }) {
+  const { ac } = useTheme();
+  const c = ac(color);
   return (
     <span
       style={{
         fontFamily: MONO, fontSize: 10, letterSpacing: 1, padding: "3px 8px", borderRadius: 4,
-        color: dim ? "rgba(255,255,255,0.4)" : color,
-        background: dim ? "rgba(255,255,255,0.04)" : `${color}18`,
-        border: `1px solid ${dim ? "rgba(255,255,255,0.08)" : color + "40"}`,
+        color: dim ? "var(--ink-40)" : c,
+        background: dim ? "var(--fill-04)" : `${c}18`,
+        border: `1px solid ${dim ? "var(--line-08)" : c + "40"}`,
         whiteSpace: "nowrap",
       }}
     >
@@ -75,8 +81,10 @@ export function Chip({ color, children, dim }) {
   );
 }
 
-export function Button({ onClick, children, color = "#fff", filled, disabled, style }) {
+export function Button({ onClick, children, color = "#FFFFFF", filled, disabled, style }) {
+  const { ac, glow } = useTheme();
   const [hover, setHover] = useState(false);
+  const c = ac(color);
   return (
     <button
       onClick={onClick}
@@ -86,10 +94,10 @@ export function Button({ onClick, children, color = "#fff", filled, disabled, st
       style={{
         fontFamily: MONO, fontSize: 10, letterSpacing: 1.5, textTransform: "uppercase",
         padding: "9px 16px", borderRadius: 6, cursor: disabled ? "not-allowed" : "pointer",
-        background: disabled ? "rgba(255,255,255,0.03)" : filled ? `${color}20` : hover ? `${color}14` : "rgba(255,255,255,0.03)",
-        border: `1px solid ${disabled ? "rgba(255,255,255,0.06)" : filled || hover ? color + "60" : "rgba(255,255,255,0.1)"}`,
-        color: disabled ? "rgba(255,255,255,0.2)" : filled || hover ? color : "rgba(255,255,255,0.6)",
-        boxShadow: filled ? `0 0 20px ${color}22` : "none",
+        background: disabled ? "var(--fill-03)" : filled ? `${c}20` : hover ? `${c}14` : "var(--fill-03)",
+        border: `1px solid ${disabled ? "var(--line-06)" : filled || hover ? c + "60" : "var(--line-10)"}`,
+        color: disabled ? "var(--ink-20)" : filled || hover ? c : "var(--ink-60)",
+        boxShadow: filled ? glow(`0 0 20px ${c}22`) : "none",
         transition: "all 0.2s ease",
         ...style,
       }}
