@@ -31,6 +31,16 @@ const LIGHT_ACCENTS = {
 
 const PAGE_BG = { dark: "#0A0B0F", light: "#F7F7F4" };
 
+/** The visitor's explicit choice, or null if they have never picked one. */
+function storedChoice() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved === "light" || saved === "dark" ? saved : null;
+  } catch (e) {
+    return null;
+  }
+}
+
 function initialMode() {
   if (typeof document === "undefined") return "dark";
   // The pre-paint script in index.html has already resolved this; read it back
@@ -44,23 +54,41 @@ const ThemeContext = createContext(null);
 export function ThemeProvider({ children }) {
   const [mode, setMode] = useState(initialMode);
 
+  // Reflect the mode onto the document. Deliberately NOT persisted here: writing
+  // on mount would turn the OS-derived default into a stored choice, and the
+  // site would stop following the OS after a single visit.
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", mode);
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute("content", PAGE_BG[mode]);
-    try {
-      localStorage.setItem(STORAGE_KEY, mode);
-    } catch (e) {
-      /* private mode — the theme just won't persist */
-    }
   }, [mode]);
+
+  // Track the OS live, but only for visitors who have not picked a side — once
+  // someone has, flipping the system theme must not override them.
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-color-scheme: light)");
+    const handler = (e) => {
+      if (!storedChoice()) setMode(e.matches ? "light" : "dark");
+    };
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  const choose = (next) => {
+    setMode(next);
+    try {
+      localStorage.setItem(STORAGE_KEY, next);
+    } catch (e) {
+      /* private mode — the choice just won't outlive the tab */
+    }
+  };
 
   const value = useMemo(
     () => ({
       mode,
       isLight: mode === "light",
-      toggle: () => setMode((m) => (m === "dark" ? "light" : "dark")),
-      setMode,
+      toggle: () => choose(mode === "dark" ? "light" : "dark"),
+      setMode: choose,
       /** Map a brand hex to the current theme. Hex-alpha suffixes still apply. */
       ac: (hex) => (mode === "light" ? LIGHT_ACCENTS[String(hex).toUpperCase()] ?? hex : hex),
       /**

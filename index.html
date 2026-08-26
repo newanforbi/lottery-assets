@@ -157,12 +157,17 @@
     <script>
       (function () {
         try {
-          // Dark stays the default for a first visit — it is the designed
-          // identity of the site, and the OS preference alone shouldn't flip
-          // the starfield off for someone who never asked. Once a visitor picks
-          // a side, that choice sticks.
+          // Follow the OS until a visitor picks a side; from then on their
+          // choice wins. Nothing is written to storage by simply loading the
+          // page, so an unopinionated visitor keeps tracking the OS rather than
+          // getting pinned to whatever it happened to say on their first visit.
           var saved = localStorage.getItem("la-theme");
-          var mode = saved === "light" || saved === "dark" ? saved : "dark";
+          var mode =
+            saved === "light" || saved === "dark"
+              ? saved
+              : window.matchMedia("(prefers-color-scheme: light)").matches
+              ? "light"
+              : "dark";
           document.documentElement.setAttribute("data-theme", mode);
           var meta = document.querySelector('meta[name="theme-color"]');
           if (meta) meta.setAttribute("content", mode === "light" ? "#F7F7F4" : "#0A0B0F");

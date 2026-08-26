@@ -78,7 +78,7 @@ corrected pivot propagates everywhere instead of drifting out of sync.
 |---|---|
 | **Framework** | Vite + React 18 |
 | **Styling** | Inline styles &mdash; carried over from [`alpha-hybrid`](https://github.com/newanforbi/alpha-hybrid)'s `LiquidityCascade.jsx`, with theme tokens as CSS variables |
-| **Theming** | Dark (default) and light, toggled in the header and remembered in `localStorage` |
+| **Theming** | Dark and light, following the OS until toggled in the header; the choice is remembered in `localStorage` |
 | **Visuals** | Galaxy canvas with shooting-star particles (`src/ui/Cosmos.jsx`) |
 | **Type system** | JetBrains Mono, Space Grotesk, DM Sans via Google Fonts |
 | **Solver** | Weighted interval scheduling via DP, plus exhaustive enumeration for the leaderboard |
@@ -125,10 +125,12 @@ index.html                 # Entry HTML with OG/Twitter meta tags + theme tokens
 
 ## Theming
 
-The site ships dark by default &mdash; the starfield is the design &mdash; with a light mode
-behind the toggle in the header. A first visit always lands on dark regardless of the OS
-setting; once someone picks a side it is stored under `la-theme` and restored before first
-paint by a small inline script in `index.html`, so switching never flashes.
+The site follows the operating system's `prefers-color-scheme` until a visitor picks a
+side with the toggle in the header. Only an explicit choice is written to `la-theme`, so
+someone who never touches the toggle keeps tracking the OS &mdash; including live, if they
+flip their system theme with the tab open &mdash; rather than being pinned to whatever it
+said on their first visit. A stored choice always wins, and is restored before first paint
+by a small inline script in `index.html`, so switching never flashes.
 
 Two mechanisms carry the swap:
 
