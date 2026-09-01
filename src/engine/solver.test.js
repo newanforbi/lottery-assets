@@ -10,9 +10,9 @@ const near = (actual, expected, tol = 0.01) =>
   assert.ok(Math.abs(actual - expected) / expected < tol,
     `expected ~${expected}, got ${actual}`);
 
-test("builds 16 legs from 10 assets", () => {
-  assert.equal(LEGS.length, 16);
-  assert.equal(new Set(LEGS.map((l) => l.id)).size, 16);
+test("builds 17 legs from 11 assets", () => {
+  assert.equal(LEGS.length, 17);
+  assert.equal(new Set(LEGS.map((l) => l.id)).size, 17);
 });
 
 test("leg multipliers derive from pivots", () => {
@@ -26,6 +26,7 @@ test("leg multipliers derive from pivots", () => {
   near(by["RNDR-1"], 31.238);
   near(by["SUI-1"], 7.903);
   near(by["XRP-1"], 5.709);
+  near(by["XLM-1"], 5.444);
 });
 
 // Every figure from the original hand-built analysis must reproduce exactly.

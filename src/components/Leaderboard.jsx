@@ -51,7 +51,8 @@ export default function Leaderboard({ capital, setChain, setTab }) {
           the published best at <span style={{ fontFamily: MONO }}>{formatMultiple(publishedTop)}</span>.
           The difference is the autumn-2024 middle leg: Sui from the July 31 trough returns{" "}
           <span style={{ fontFamily: MONO, color: "#4DA2FF" }}>7.90×</span>, beating XRP's{" "}
-          <span style={{ fontFamily: MONO, color: "#23F0C6" }}>5.71×</span>, SuperVerse's{" "}
+          <span style={{ fontFamily: MONO, color: "#23F0C6" }}>5.71×</span>, Stellar's{" "}
+          <span style={{ fontFamily: MONO, color: "#14B6E7" }}>5.44×</span>, SuperVerse's{" "}
           <span style={{ fontFamily: MONO, color: "#FF4FD8" }}>4.91×</span>, and Strategy's{" "}
           <span style={{ fontFamily: MONO, color: "#FF7A45" }}>3.53×</span> in the gap between
           AIOZ's exit and Zcash's entry.

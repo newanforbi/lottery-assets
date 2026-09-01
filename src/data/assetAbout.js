@@ -291,6 +291,38 @@ export const ASSET_ABOUT = [
     ],
   },
   {
+    id: "XLM",
+    essence: "Stellar's native lumen — a payments-network token with a sharp eight-week autumn pop that still loses the calendar fight to Sui.",
+    sections: [
+      {
+        title: "What it is",
+        body: [
+          "Stellar is a payment-focused blockchain launched in 2014 by Jed McCaleb and Joyce Kim, with the Stellar Development Foundation as its long-running steward. Its native unit is the lumen (XLM): used for fees, anti-spam minimum balances, and as a bridge asset in Stellar's pathfinding model for cross-currency transfers.",
+          "The product pitch has always been remittances and cheap multi-currency settlement — closer to XRP's narrative lane than to smart-contract L1s. In market practice XLM also trades as a liquid large-cap beta name: deep books, long history, and headline sensitivity around partnerships, ETF chatter, and risk-on waves.",
+        ],
+      },
+      {
+        title: "How the token works",
+        body: [
+          "Stellar's consensus is Stellar Consensus Protocol (SCP), a federated Byzantine agreement design rather than proof-of-work or bonded proof-of-stake. Lumens pay tiny fees and sit in accounts as reserve; inflation mechanics have changed over the project's life, so older \"inflation coupon\" mental models no longer apply.",
+          "For this lottery, none of that plumbing matters as much as the price path: a compressed Oct–Nov 2024 run from nine cents to forty-nine cents that looks great in isolation and awkward once you notice it sits entirely inside Sui's longer autumn hold.",
+        ],
+      },
+      {
+        title: "Why it shows up here",
+        body: [
+          "XLM contributes one leg: Oct 2 2024 at $0.09 to Nov 27 2024 at $0.49 — about 5.44× in 56 days. That beats SUPER-2 and MSTR-2 on multiple, but it overlaps SUI-1 and XRP-1, and there is no follow-on leg in the set between late November and Zcash's April open. Best XLM chain is AIOZ-1 → XLM-1 → ZEC full at roughly 43,632× — real, ranked, and still behind the Sui optimum at 63,337×.",
+        ],
+      },
+      {
+        title: "What you are actually holding",
+        body: [
+          "You are holding lumens — the fee/reserve asset of the Stellar network — not equity in the Stellar Development Foundation. Liquidity is usually excellent relative to mid-cap alts; the trade-off is that XLM often moves as a crowded beta instrument. The pivots here assume buying the early-October trough and selling the late-November spike with perfect hindsight.",
+        ],
+      },
+    ],
+  },
+  {
     id: "ZEC",
     essence: "A privacy coin built on zero-knowledge proofs — old cypherpunk tech that suddenly traded like a new narrative.",
     sections: [
