@@ -130,6 +130,18 @@ export const ASSETS = [
     ],
   },
   {
+    id: "XLM",
+    name: "Stellar",
+    ticker: "XLM",
+    color: "#14B6E7",
+    colorDim: "rgba(20,182,231,0.12)",
+    note: "A sharp eight-week lumen run — ~5.44×, but it sits inside SUI's autumn window.",
+    pivots: [
+      { date: "2024-10-02", px: 0.09 },
+      { date: "2024-11-27", px: 0.49 },
+    ],
+  },
+  {
     id: "ZEC",
     name: "Zcash",
     ticker: "ZEC",
