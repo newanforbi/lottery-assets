@@ -2,8 +2,8 @@
 
 **[lotteryassets.com](https://lotteryassets.com)**
 
-**Lottery Assets** is a chronological rotation lottery: eleven assets that went
-vertical, seventeen tradeable buy-low / sell-high legs, and one pool of capital
+**Lottery Assets** is a chronological rotation lottery: twelve assets that went
+vertical, eighteen tradeable buy-low / sell-high legs, and one pool of capital
 that can only be in one position at a time. Overlapping legs are mutually
 exclusive — chain the ones that fit the calendar (Oct 2022 &ndash; Aug 2026) and
 see where a starting stake lands.
@@ -38,7 +38,9 @@ the original hand-built analysis missed, and one row it got wrong:
   AIOZ's exit and Zcash's entry, outrunning XRP (5.71&times;), Stellar/XLM
   (5.44&times;), SuperVerse (4.91&times;), and Strategy (3.53&times;) in that
   autumn window. XLM's eight-week pop is real but fully inside SUI's hold, so
-  it does not change the optimum.
+  it does not change the optimum. ZIGChain's ~34.7&times; Aug 2023&ndash;Dec 2024
+  grind overlaps AIOZ and almost every other opener; best ZIG path is only
+  ~3,089&times; with Zcash full.
 - **`AIOZ 1st → Render` is not executable.** Render's leg runs Oct 12 2022 &ndash;
   Mar 17 2025, which entirely contains AIOZ's Sep 2023 &ndash; Mar 2024 leg. The
   arithmetic behind the published 2,811&times; is right; the trade is impossible.
@@ -59,6 +61,7 @@ Every other figure from the original analysis reproduces exactly.
 | PEPE | Pepe | 2 | The best opening leg available to anyone who missed AIOZ |
 | SUI | Sui | 1 | July 31 2024 at $0.62 to Jan 1 2025 at $4.90 &mdash; ~7.90&times; and the current autumn optimum |
 | XLM | Stellar | 1 | Oct 2 → Nov 27 2024, $0.09 → $0.49 (~5.44&times;) &mdash; clean pop inside SUI's window |
+| ZIG | ZIGChain | 1 | Aug 24 2023 → Dec 4 2024, $0.0049 → $0.17 (~34.7&times;) &mdash; long hold that blocks AIOZ |
 | ZEC | Zcash | 2 | Two legs at the far end of the lottery; ZEC-2 is still open |
 
 Multipliers are derived from the price pivots at runtime, never hardcoded. A
@@ -72,7 +75,7 @@ corrected pivot propagates everywhere instead of drifting out of sync.
 | **Ladder** | Step-by-step capital progression for the selected chain, including the idle stretches in cash. |
 | **Leaderboard** | Every valid chain ranked, plus the original nine paths checked against the calendar. |
 | **Assets** | Per-asset pivots and legs with individual multipliers. |
-| **About the Assets** | Deep dossiers on what each of the eleven assets actually is — product, market structure, and why it appears in Lottery Assets. |
+| **About the Assets** | Deep dossiers on what each of the twelve assets actually is — product, market structure, and why it appears in Lottery Assets. |
 | **Reality Check** | Sliders for move capture, slippage, and per-rotation tax. At 65% capture the $633.4M becomes $4.0M. |
 | **Learn** | Educational guide covering what cryptocurrency is, where to buy it (Coinbase, Kraken, Binance), how to self-custody, security basics, taxes, and key concepts. |
 
@@ -94,7 +97,7 @@ src/
   App.jsx                  # Root component, tab nav, capital input, solve/deal
   main.jsx                 # React entry point
   data/
-    assets.js              # Price pivots for all 11 assets + claimed paths
+    assets.js              # Price pivots for all 12 assets + claimed paths
     assetAbout.js          # Long-form copy for About the Assets
   engine/
     solver.js              # buildLegs, conflicts, chainValue, solveOptimal, allChains
@@ -239,7 +242,7 @@ The engine (`src/engine/solver.js`) implements:
 - **`solveOptimal`** &mdash; Maximum-product chain via weighted interval
   scheduling DP. Sorts by sell date, then for each leg takes the best chain that
   finished strictly before it opens.
-- **`allChains`** &mdash; Exhaustive enumeration of every valid chain. 17 legs
+- **`allChains`** &mdash; Exhaustive enumeration of every valid chain. 18 legs
   with heavy overlap keeps the search space small enough to enumerate in under a
   millisecond.
 - **`chainValue`** &mdash; Walks a chain step by step, applying optional
@@ -256,7 +259,7 @@ The engine (`src/engine/solver.js`) implements:
 
 ## A caveat worth stating plainly
 
-These eleven assets are here because they went up. The ones that went to zero
+These twelve assets are here because they went up. The ones that went to zero
 over the same four years aren't in the lottery, and there were many more of them.
 Picking these winners in advance and then timing eight turning points across them
 isn't a strategy &mdash; it's the definition of survivorship bias with a

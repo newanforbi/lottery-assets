@@ -323,6 +323,38 @@ export const ASSET_ABOUT = [
     ],
   },
   {
+    id: "ZIG",
+    essence: "A long DeFi / RWA-adjacent token grind — ~35× over fifteen months that locks out the openers the lottery actually needs.",
+    sections: [
+      {
+        title: "What it is",
+        body: [
+          "ZIGChain (ticker ZIG; historically associated with the Zignaly / ZIG ecosystem) sits in the crowded lane of crypto projects pitching portfolio tooling, copy-trading roots, and later chain / RWA ambitions. Like many mid-cap names, the marketed product surface has shifted with the cycle; what the lottery cares about is the price path, not the pitch deck.",
+          "In this set it plays the role of a multi-season hold: bought in the late-2023 trough and carried deep into the 2024 risk-on year. That is a very different animal from the short autumn middles (SUI, XRP, XLM) that fit between AIOZ and Zcash.",
+        ],
+      },
+      {
+        title: "Why the multiple misleads",
+        body: [
+          "From $0.0049 on Aug 24 2023 to $0.17 on Dec 4 2024 is roughly 34.7× — larger than SUI's autumn leg and in the same ballpark as Render. The catch is occupancy: 468 days that overlap AIOZ-1, INJ, SOL-1, PEPE, SUI, XRP, SUPER, and almost every other tradeable bar before Zcash.",
+          "Alone, ZIG loses to AIOZ-1's 90× opener. Chained into Zcash full it reaches about 3,089× — real, and still an order of magnitude behind AIOZ → SUI → ZEC at 63,337×. Same exit day as SUPER-2 and PEPE-2 (Dec 4), so it is competing for a crowded sell print after blocking the board.",
+        ],
+      },
+      {
+        title: "Why it shows up here",
+        body: [
+          "ZIG is in the set as a cautionary lane: survivorship bias loves a 35× coin, and the lottery exists to show why you still would not pick it if capital can only be in one place. Best ZIG chain is ZIG-1 → ZEC-1 → ZEC-2. It never enters the optimum.",
+        ],
+      },
+      {
+        title: "What you are actually holding",
+        body: [
+          "A mid-liquidity ecosystem token whose returns in this window came from a long speculative repricing, not from a claim on mature protocol cash flows. Holding it through this pivot pair means sitting out AIOZ, Sui, and the rest of the 2023–2024 rotation puzzle — which is exactly why the solver leaves it on the bench.",
+        ],
+      },
+    ],
+  },
+  {
     id: "ZEC",
     essence: "A privacy coin built on zero-knowledge proofs — old cypherpunk tech that suddenly traded like a new narrative.",
     sections: [
