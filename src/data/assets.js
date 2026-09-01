@@ -142,6 +142,18 @@ export const ASSETS = [
     ],
   },
   {
+    id: "ZIG",
+    name: "ZIGChain",
+    ticker: "ZIG",
+    color: "#C4F542",
+    colorDim: "rgba(196,245,66,0.12)",
+    note: "A 35× grind over 15 months — blocks AIOZ and almost everything else until Dec 2024.",
+    pivots: [
+      { date: "2023-08-24", px: 0.0049 },
+      { date: "2024-12-04", px: 0.17 },
+    ],
+  },
+  {
     id: "ZEC",
     name: "Zcash",
     ticker: "ZEC",
