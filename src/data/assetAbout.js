@@ -151,7 +151,7 @@ export const ASSET_ABOUT = [
       {
         title: "Why it shows up here",
         body: [
-          "XRP's single lottery leg now runs from Oct 9 2024 at $0.55 into early January 2025 at $3.14 — roughly 5.71× over about three months. Shortening the entry frees the 2023–early-2024 calendar for openers like AIOZ, which is why XRP becomes the middle leg of the current optimum (AIOZ-1 → XRP-1 → ZEC-1 → ZEC-2) instead of a capital-trapping multi-year hold.",
+          "XRP's single lottery leg now runs from Oct 9 2024 at $0.55 into early January 2025 at $3.14 — roughly 5.71× over about three months. Shortening the entry frees the 2023–early-2024 calendar for openers like AIOZ, which is why XRP briefly held the autumn middle-leg slot. Sui's overlapping July–New Year run (~7.90×) now outranks it in the current optimum.",
         ],
       },
       {
@@ -183,7 +183,7 @@ export const ASSET_ABOUT = [
       {
         title: "Why it shows up here",
         body: [
-          "Strategy contributes two legs: the bounce from the December 2022 low into March 2024, then a summer dip and a ferocious second leg into November 2024 as Bitcoin and the corporate-treasury narrative went parabolic together. MSTR-2 is a strong autumn also-ran — beaten first by SuperVerse's second leg on the old calendar, and now by XRP's Oct 2024 trough leg in the current optimum.",
+          "Strategy contributes two legs: the bounce from the December 2022 low into March 2024, then a summer dip and a ferocious second leg into November 2024 as Bitcoin and the corporate-treasury narrative went parabolic together. MSTR-2 is a strong autumn also-ran — beaten by SuperVerse, then XRP, and now by Sui's ~7.90× July–New Year leg in the current optimum.",
         ],
       },
       {
@@ -215,7 +215,7 @@ export const ASSET_ABOUT = [
       {
         title: "Why it shows up here",
         body: [
-          "Two legs appear in the data. The first is a classic 2023–early-2024 run. The second — summer 2024 low into early December — quietly beats Strategy's overlapping second leg (~3.53× vs ~4.91×). It was the previous calendar optimum's middle leg (AIOZ-1 → SUPER-2 → ZEC full). With XRP's buy moved to Oct 9 2024, XRP's ~5.71× autumn leg now takes that slot instead.",
+          "Two legs appear in the data. The first is a classic 2023–early-2024 run. The second — summer 2024 low into early December — quietly beats Strategy's overlapping second leg (~3.53× vs ~4.91×). It was an earlier calendar optimum's middle leg (AIOZ-1 → SUPER-2 → ZEC full). XRP's Oct trough and then Sui's July–New Year leg (~7.90×) successively took that autumn slot.",
         ],
       },
       {
@@ -259,6 +259,38 @@ export const ASSET_ABOUT = [
     ],
   },
   {
+    id: "SUI",
+    essence: "A Move-based Layer 1 from Mysten Labs — object-centric design, parallel execution, and a summer-2024-to-New-Year price run that currently owns the autumn slot.",
+    sections: [
+      {
+        title: "What it is",
+        body: [
+          "Sui is a Layer-1 blockchain launched by Mysten Labs, a team with deep roots in Meta's Diem / Move ecosystem. It uses the Move programming language and an object-centric data model: on-chain state is organised as objects that transactions can access in parallel when they do not conflict, aiming for high throughput without forcing every transaction through a single global queue.",
+          "In market narrative terms Sui sits with the post-Solana cohort of consumer-facing L1s — gaming, social experiments, DeFi, and meme liquidity — while selling a more formal systems story around Move's resource safety and horizontal scaling. SUI is the native asset for fees, staking, and governance-flavoured participation.",
+        ],
+      },
+      {
+        title: "How the token fits the story",
+        body: [
+          "Validators stake SUI to secure the network; users pay gas in SUI; ecosystem incentives and unlock schedules have been central to how traders talk about float and overhang. Like other L1 tokens, price discovery is dominated by crypto beta, listing events, unlock calendars, and whether the chain is winning attention share — not by a neat discounted-cash-flow of protocol fees.",
+          "The July 2024 to January 2025 window in this dataset is exactly that kind of narrative season: a trough near $0.62, a push into the New Year near $4.90, and enough liquidity that the leg is imaginable as a rotation vehicle even if perfect timing was not.",
+        ],
+      },
+      {
+        title: "Why it shows up here",
+        body: [
+          "SUI contributes one leg: Jul 31 2024 at $0.62 to Jan 1 2025 at $4.90 — about 7.90× over 154 days. It starts the same day as SuperVerse's second leg and overlaps XRP's autumn run, so the lottery forces a choice. At ~7.90× it beats XRP (~5.71×), SUPER-2 (~4.91×), and MSTR-2 (~3.53×), which is why the current optimum is AIOZ-1 → SUI-1 → ZEC-1 → ZEC-2 at roughly 63,337×.",
+        ],
+      },
+      {
+        title: "What you are actually holding",
+        body: [
+          "You are holding the native gas/staking token of a Move-based L1 — a leveraged claim on whether Sui keeps developer and retail attention, not equity in Mysten Labs. Unlock schedules, validator economics, and sector rotation can dominate fundamentals for long stretches. The pivots here assume buying the July trough and selling into the New Year print with perfect hindsight.",
+        ],
+      },
+    ],
+  },
+  {
     id: "ZEC",
     essence: "A privacy coin built on zero-knowledge proofs — old cypherpunk tech that suddenly traded like a new narrative.",
     sections: [
@@ -279,7 +311,7 @@ export const ASSET_ABOUT = [
       {
         title: "Why it shows up here",
         body: [
-          "ZEC provides the closing engine of the optimal chain. After earlier capital has compounded through AIOZ and XRP, both ZEC legs fit sequentially at the end of the calendar and multiply the stack again. Without Zcash's late window, the headline 45,753× does not exist. That is also why ZEC-2's \"still open\" flag matters: part of the fairy tale is marked to a live print rather than a settled exit.",
+          "ZEC provides the closing engine of the optimal chain. After earlier capital has compounded through AIOZ and Sui, both ZEC legs fit sequentially at the end of the calendar and multiply the stack again. Without Zcash's late window, the headline 63,337× does not exist. That is also why ZEC-2's \"still open\" flag matters: part of the fairy tale is marked to a live print rather than a settled exit.",
         ],
       },
       {

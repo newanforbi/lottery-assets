@@ -69,7 +69,7 @@ export const ASSETS = [
     ticker: "XRP",
     color: "#23F0C6",
     colorDim: "rgba(35,240,198,0.12)",
-    note: "Repriced off the October 2024 trough — a shorter hold, still a sharp leg.",
+    note: "Repriced off the October 2024 trough — sharp, but outrun by SUI in the same autumn window.",
     pivots: [
       { date: "2024-10-09", px: 0.55 },
       { date: "2025-01-08", px: 3.14 },
@@ -95,7 +95,7 @@ export const ASSETS = [
     ticker: "SUPER",
     color: "#FF4FD8",
     colorDim: "rgba(255,79,216,0.12)",
-    note: "Its second leg beats Strategy's in the same window — outrun now by XRP's autumn leg.",
+    note: "Its second leg beats Strategy's in the same window — outrun now by SUI and XRP.",
     pivots: [
       { date: "2023-10-11", px: 0.07 },
       { date: "2024-03-06", px: 1.43 },
@@ -115,6 +115,18 @@ export const ASSETS = [
       { date: "2024-05-22", px: 0.00001474 },
       { date: "2024-09-04", px: 0.000007246 },
       { date: "2024-12-04", px: 0.00002513 },
+    ],
+  },
+  {
+    id: "SUI",
+    name: "Sui",
+    ticker: "SUI",
+    color: "#4DA2FF",
+    colorDim: "rgba(77,162,255,0.12)",
+    note: "July 2024 trough to New Year high — ~7.90× and the current autumn optimum.",
+    pivots: [
+      { date: "2024-07-31", px: 0.62 },
+      { date: "2025-01-01", px: 4.90 },
     ],
   },
   {

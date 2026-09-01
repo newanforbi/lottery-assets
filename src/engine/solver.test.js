@@ -10,9 +10,9 @@ const near = (actual, expected, tol = 0.01) =>
   assert.ok(Math.abs(actual - expected) / expected < tol,
     `expected ~${expected}, got ${actual}`);
 
-test("builds 15 legs from 9 assets", () => {
-  assert.equal(LEGS.length, 15);
-  assert.equal(new Set(LEGS.map((l) => l.id)).size, 15);
+test("builds 16 legs from 10 assets", () => {
+  assert.equal(LEGS.length, 16);
+  assert.equal(new Set(LEGS.map((l) => l.id)).size, 16);
 });
 
 test("leg multipliers derive from pivots", () => {
@@ -24,6 +24,8 @@ test("leg multipliers derive from pivots", () => {
   near(by["ZEC-2"], 4.118);
   near(by["PEPE-1"], 23.213);   // survives the 1e-7 price scale
   near(by["RNDR-1"], 31.238);
+  near(by["SUI-1"], 7.903);
+  near(by["XRP-1"], 5.709);
 });
 
 // Every figure from the original hand-built analysis must reproduce exactly.
@@ -47,11 +49,16 @@ test("the other eight published paths are executable", () => {
   }
 });
 
-test("optimum is AIOZ-1 -> XRP-1 -> ZEC-1 -> ZEC-2 at ~45,753x", () => {
+test("optimum is AIOZ-1 -> SUI-1 -> ZEC-1 -> ZEC-2 at ~63,337x", () => {
   const { chain, value } = solveOptimal();
-  assert.deepEqual(chain.map((l) => l.id), ["AIOZ-1", "XRP-1", "ZEC-1", "ZEC-2"]);
-  near(value, 45753);
-  near(chainValue(chain, 10000).final, 457530284);
+  assert.deepEqual(chain.map((l) => l.id), ["AIOZ-1", "SUI-1", "ZEC-1", "ZEC-2"]);
+  near(value, 63337);
+  near(chainValue(chain, 10000).final, 633369692);
+});
+
+test("optimum beats the prior XRP middle-leg path", () => {
+  const xrpPath = chainMultiple(getLegs(["AIOZ-1", "XRP-1", "ZEC-1", "ZEC-2"]));
+  assert.ok(solveOptimal().value > xrpPath);
 });
 
 test("optimum beats the published #1 path", () => {
@@ -82,16 +89,16 @@ test("capital progression compounds through the chain", () => {
     assert.equal(steps[i].capitalIn, steps[i - 1].capitalOut);
     assert.ok(steps[i].idleDays > 0, "capital sits in cash between legs");
   }
-  near(final, 457530284);
-  near(multiple, 45753);
+  near(final, 633369692);
+  near(multiple, 63337);
 });
 
 test("friction degrades returns as modelled", () => {
   const chain = solveOptimal().chain;
-  near(chainValue(chain, 10000, { capture: 1, slippage: 0.015, taxRate: 0 }).final, 405424220);
-  near(chainValue(chain, 10000, { capture: 1, slippage: 0.015, taxRate: 0.3 }).final, 119077129);
-  near(chainValue(chain, 10000, { capture: 0.8, slippage: 0.015, taxRate: 0.3 }).final, 15153471);
-  near(chainValue(chain, 10000, { capture: 0.65, slippage: 0.015, taxRate: 0.3 }).final, 3317573);
+  near(chainValue(chain, 10000, { capture: 1, slippage: 0.015, taxRate: 0 }).final, 561238069);
+  near(chainValue(chain, 10000, { capture: 1, slippage: 0.015, taxRate: 0.3 }).final, 161554638);
+  near(chainValue(chain, 10000, { capture: 0.8, slippage: 0.015, taxRate: 0.3 }).final, 19211468);
+  near(chainValue(chain, 10000, { capture: 0.65, slippage: 0.015, taxRate: 0.3 }).final, 4001181);
 });
 
 test("zero friction is a no-op", () => {
