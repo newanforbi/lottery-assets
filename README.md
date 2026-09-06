@@ -2,8 +2,8 @@
 
 **[lotteryassets.com](https://lotteryassets.com)**
 
-**Lottery Assets** is a chronological rotation lottery: twelve assets that went
-vertical, eighteen tradeable buy-low / sell-high legs, and one pool of capital
+**Lottery Assets** is a chronological rotation lottery: eleven assets that went
+vertical, seventeen tradeable buy-low / sell-high legs, and one pool of capital
 that can only be in one position at a time. Overlapping legs are mutually
 exclusive — chain the ones that fit the calendar (Oct 2022 &ndash; Aug 2026) and
 see where a starting stake lands.
@@ -41,9 +41,6 @@ the original hand-built analysis missed, and one row it got wrong:
   it does not change the optimum. ZIGChain's ~34.7&times; Aug 2023&ndash;Dec 2024
   grind overlaps AIOZ and almost every other opener; best ZIG path is only
   ~3,089&times; with Zcash full.
-- **`AIOZ 1st → Render` is not executable.** Render's leg runs Oct 12 2022 &ndash;
-  Mar 17 2025, which entirely contains AIOZ's Sep 2023 &ndash; Mar 2024 leg. The
-  arithmetic behind the published 2,811&times; is right; the trade is impossible.
 
 Every other figure from the original analysis reproduces exactly.
 
@@ -52,7 +49,6 @@ Every other figure from the original analysis reproduces exactly.
 | Ticker | Name | Legs | Notes |
 |--------|------|------|-------|
 | AIOZ | AIOZ Network | 2 | The single most violent leg in the set &mdash; 90&times; in six months |
-| RENDER | Render | 1 | A 31&times; move, but it occupies 29 months &mdash; the costliest real estate in the lottery |
 | INJ | Injective | 1 | The best opening leg that isn't AIOZ |
 | SOL | Solana | 2 | Emerged from the FTX collapse at a generational low |
 | XRP | XRP | 1 | Oct 9 2024 trough at $0.55 into early 2025 &mdash; strong autumn also-ran behind SUI |
@@ -73,9 +69,9 @@ corrected pivot propagates everywhere instead of drifting out of sync.
 |-----|-------------|
 | **Lottery** | The timeline. Click legs to chain them; conflicts dim out. *Solve* animates the optimum, *Deal me a hand* draws a random valid chain. Starting-capital presets: $1K, $5K, $10K, $50K, $100K. |
 | **Ladder** | Step-by-step capital progression for the selected chain, including the idle stretches in cash. |
-| **Leaderboard** | Every valid chain ranked, plus the original nine paths checked against the calendar. |
+| **Leaderboard** | Every valid chain ranked, plus the original eight paths checked against the calendar. |
 | **Assets** | Per-asset pivots and legs with individual multipliers. |
-| **About the Assets** | Deep dossiers on what each of the twelve assets actually is — product, market structure, and why it appears in Lottery Assets. |
+| **About the Assets** | Deep dossiers on what each of the eleven assets actually is — product, market structure, and why it appears in Lottery Assets. |
 | **Reality Check** | Sliders for move capture, slippage, and per-rotation tax. At 65% capture the $633.4M becomes $4.0M. |
 | **Learn** | Educational guide covering what cryptocurrency is, where to buy it (Coinbase, Kraken, Binance), how to self-custody, security basics, taxes, and key concepts. |
 
@@ -97,7 +93,7 @@ src/
   App.jsx                  # Root component, tab nav, capital input, solve/deal
   main.jsx                 # React entry point
   data/
-    assets.js              # Price pivots for all 12 assets + claimed paths
+    assets.js              # Price pivots for all 11 assets + claimed paths
     assetAbout.js          # Long-form copy for About the Assets
   engine/
     solver.js              # buildLegs, conflicts, chainValue, solveOptimal, allChains
@@ -105,7 +101,7 @@ src/
   components/
     Lottery.jsx            # Interactive lottery timeline with conflict dimming
     Ladder.jsx             # Step-by-step capital walk
-    Leaderboard.jsx        # Ranked valid chains + original 9 paths
+    Leaderboard.jsx        # Ranked valid chains + original 8 paths
     AssetCards.jsx         # Per-asset breakdown
     AboutAssets.jsx        # Deep-dive dossiers for each asset
     RealityCheck.jsx       # Friction sliders (capture, slippage, tax)
@@ -242,7 +238,7 @@ The engine (`src/engine/solver.js`) implements:
 - **`solveOptimal`** &mdash; Maximum-product chain via weighted interval
   scheduling DP. Sorts by sell date, then for each leg takes the best chain that
   finished strictly before it opens.
-- **`allChains`** &mdash; Exhaustive enumeration of every valid chain. 18 legs
+- **`allChains`** &mdash; Exhaustive enumeration of every valid chain. 17 legs
   with heavy overlap keeps the search space small enough to enumerate in under a
   millisecond.
 - **`chainValue`** &mdash; Walks a chain step by step, applying optional
@@ -259,7 +255,7 @@ The engine (`src/engine/solver.js`) implements:
 
 ## A caveat worth stating plainly
 
-These twelve assets are here because they went up. The ones that went to zero
+These eleven assets are here because they went up. The ones that went to zero
 over the same four years aren't in the lottery, and there were many more of them.
 Picking these winners in advance and then timing eight turning points across them
 isn't a strategy &mdash; it's the definition of survivorship bias with a

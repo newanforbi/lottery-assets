@@ -35,38 +35,6 @@ export const ASSET_ABOUT = [
     ],
   },
   {
-    id: "RNDR",
-    essence: "A marketplace that turns idle GPUs into a render farm — and later into an AI compute story.",
-    sections: [
-      {
-        title: "What it is",
-        body: [
-          "Render Network (ticker RENDER; formerly RNDR on Ethereum) is a decentralised GPU marketplace founded around OTOY, the company behind OctaneRender. The original job was cinematic and motion-graphics rendering: studios and artists submit frames, node operators with powerful GPUs bid to process them, and the network coordinates distribution, verification, and payment.",
-          "In plain terms, Render is trying to be a global render farm without owning the farm. That matters because professional rendering and, later, machine-learning inference are both bottlenecked by the same scarce resource — high-end GPU hours — and traditional cloud GPUs are expensive and often sold out.",
-        ],
-      },
-      {
-        title: "How value is supposed to accrue",
-        body: [
-          "Creators pay in the network's token (or in stable flows that ultimately touch it); operators earn for completed, verified work. The token is the metering and incentive layer for that marketplace. Over time the narrative widened from \"Hollywood frames\" to \"any GPU job,\" especially AI, which is why Render often trades as a compute-infrastructure proxy rather than a pure media tool.",
-          "A major structural event in its history was the migration from Ethereum (RNDR) to Solana (RENDER), including a token swap. That move was about throughput, fees, and aligning with Solana's consumer-crypto audience as much as about rendering technology itself.",
-        ],
-      },
-      {
-        title: "Why it shows up here",
-        body: [
-          "Render contributes only one leg in this dataset, but it is a monster: from well under a dollar after the 2022 crypto winter into the low teens by early 2025 — roughly 31×. The catch in the lottery is duration. That leg occupies nearly twenty-nine months, which is the costliest real estate in the set: while you are holding Render, you cannot hold almost anything else that mattered in 2023–2024.",
-        ],
-      },
-      {
-        title: "What you are actually holding",
-        body: [
-          "RENDER is a claim on decentralised GPU utilisation and on whether token burn / demand mechanics track real job volume. It is highly correlated with broader crypto risk appetite and with AI hype cycles. The pivots here assume perfect entry at the post-crash low and perfect exit near a multi-year high — a path that was obvious only afterward.",
-        ],
-      },
-    ],
-  },
-  {
     id: "INJ",
     essence: "A Cosmos-based Layer 1 purpose-built for on-chain finance: order books, derivatives, and DeFi plumbing.",
     sections: [
@@ -336,7 +304,7 @@ export const ASSET_ABOUT = [
       {
         title: "Why the multiple misleads",
         body: [
-          "From $0.0049 on Aug 24 2023 to $0.17 on Dec 4 2024 is roughly 34.7× — larger than SUI's autumn leg and in the same ballpark as Render. The catch is occupancy: 468 days that overlap AIOZ-1, INJ, SOL-1, PEPE, SUI, XRP, SUPER, and almost every other tradeable bar before Zcash.",
+          "From $0.0049 on Aug 24 2023 to $0.17 on Dec 4 2024 is roughly 34.7× — larger than SUI's autumn leg and in the same ballpark as AIOZ's opener. The catch is occupancy: 468 days that overlap AIOZ-1, INJ, SOL-1, PEPE, SUI, XRP, SUPER, and almost every other tradeable bar before Zcash.",
           "Alone, ZIG loses to AIOZ-1's 90× opener. Chained into Zcash full it reaches about 3,089× — real, and still an order of magnitude behind AIOZ → SUI → ZEC at 63,337×. Same exit day as SUPER-2 and PEPE-2 (Dec 4), so it is competing for a crowded sell print after blocking the board.",
         ],
       },

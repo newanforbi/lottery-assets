@@ -75,7 +75,7 @@ export default function Learn() {
           application-layer tokens.
         </p>
         <p style={{ margin: 0 }}>
-          The assets on this site — Solana, XRP, Injective, Render, and others — are all tokens
+          The assets on this site — Solana, XRP, Injective, and others — are all tokens
           built on their own blockchains or on top of an existing one. Their prices are driven by
           speculation, adoption curves, and narrative cycles, which is why they can move 10× or
           90× in a year and then give most of it back.
