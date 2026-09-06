@@ -123,11 +123,11 @@ export default function Leaderboard({ capital, setChain, setTab }) {
         )}
       </Panel>
 
-      <Panel title="Checking the original nine paths">
+      <Panel title="Checking the original eight paths">
         <p style={{ fontFamily: SANS, fontSize: 12.5, color: "rgba(255,255,255,0.45)", lineHeight: 1.65, margin: "0 0 14px" }}>
           Each path from the source analysis, recomputed from the price pivots and tested against the
-          calendar. Every multiplier reproduces — but one of them describes a trade that could not
-          have been made.
+          calendar. Every multiplier reproduces, and every one of them describes a trade that could
+          actually have been made.
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           {CLAIMED_PATHS.map((p) => {

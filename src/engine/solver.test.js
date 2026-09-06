@@ -3,16 +3,16 @@ import assert from "node:assert/strict";
 import { CLAIMED_PATHS } from "../data/assets.js";
 import {
   LEGS, getLegs, chainMultiple, chainValue, solveOptimal,
-  topChains, isValidChain, findConflict, allChains, randomChain, effectiveMultiple,
+  topChains, isValidChain, allChains, randomChain, effectiveMultiple,
 } from "./solver.js";
 
 const near = (actual, expected, tol = 0.01) =>
   assert.ok(Math.abs(actual - expected) / expected < tol,
     `expected ~${expected}, got ${actual}`);
 
-test("builds 18 legs from 12 assets", () => {
-  assert.equal(LEGS.length, 18);
-  assert.equal(new Set(LEGS.map((l) => l.id)).size, 18);
+test("builds 17 legs from 11 assets", () => {
+  assert.equal(LEGS.length, 17);
+  assert.equal(new Set(LEGS.map((l) => l.id)).size, 17);
 });
 
 test("leg multipliers derive from pivots", () => {
@@ -23,7 +23,6 @@ test("leg multipliers derive from pivots", () => {
   near(by["ZEC-1"], 21.623);
   near(by["ZEC-2"], 4.118);
   near(by["PEPE-1"], 23.213);   // survives the 1e-7 price scale
-  near(by["RNDR-1"], 31.238);
   near(by["SUI-1"], 7.903);
   near(by["XRP-1"], 5.709);
   near(by["XLM-1"], 5.444);
@@ -32,21 +31,14 @@ test("leg multipliers derive from pivots", () => {
 
 // Every figure from the original hand-built analysis must reproduce exactly.
 // If a pivot is ever edited, these are what catch the drift.
-test("reproduces all nine published path figures", () => {
+test("reproduces all eight published path figures", () => {
   for (const p of CLAIMED_PATHS) {
     near(chainMultiple(getLegs(p.legs)), p.claimed, 0.011);
   }
 });
 
-test("AIOZ 1st -> Render is not executable", () => {
-  const chain = getLegs(["AIOZ-1", "RNDR-1"]);
-  assert.equal(isValidChain(chain), false);
-  const [a, b] = findConflict(chain);
-  assert.deepEqual([a.id, b.id].sort(), ["AIOZ-1", "RNDR-1"]);
-});
-
-test("the other eight published paths are executable", () => {
-  for (const p of CLAIMED_PATHS.filter((p) => p.rank !== 3)) {
+test("all eight published paths are executable", () => {
+  for (const p of CLAIMED_PATHS) {
     assert.ok(isValidChain(getLegs(p.legs)), `${p.label} should be valid`);
   }
 });

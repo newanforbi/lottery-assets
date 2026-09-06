@@ -26,18 +26,6 @@ export const ASSETS = [
     ],
   },
   {
-    id: "RNDR",
-    name: "Render",
-    ticker: "RENDER",
-    color: "#F5426C",
-    colorDim: "rgba(245,66,108,0.12)",
-    note: "A 31× move, but it occupies 29 months — the costliest real estate in the lottery.",
-    pivots: [
-      { date: "2022-10-12", px: 0.42 },
-      { date: "2025-03-17", px: 13.12 },
-    ],
-  },
-  {
     id: "INJ",
     name: "Injective",
     ticker: "INJ",
@@ -169,18 +157,17 @@ export const ASSETS = [
   },
 ];
 
-// The nine paths from the original analysis, kept verbatim so the site can check
+// The eight paths from the original analysis, kept verbatim so the site can check
 // its own solver against them and show where the hand-built table went wrong.
 export const CLAIMED_PATHS = [
   { rank: 1, label: "AIOZ 1st → Strategy 2nd → Zcash full", legs: ["AIOZ-1", "MSTR-2", "ZEC-1", "ZEC-2"], claimed: 28276 },
   { rank: 2, label: "AIOZ 1st → Zcash full", legs: ["AIOZ-1", "ZEC-1", "ZEC-2"], claimed: 8014 },
-  { rank: 3, label: "AIOZ 1st → Render", legs: ["AIOZ-1", "RNDR-1"], claimed: 2811 },
-  { rank: 4, label: "Pepe 1st → Strategy 2nd → Zcash full", legs: ["PEPE-1", "MSTR-2", "ZEC-1", "ZEC-2"], claimed: 7293 },
-  { rank: 5, label: "AIOZ 1st → SuperVerse 2nd", legs: ["AIOZ-1", "SUPER-2"], claimed: 441 },
-  { rank: 6, label: "AIOZ 1st → Strategy 2nd", legs: ["AIOZ-1", "MSTR-2"], claimed: 318 },
-  { rank: 7, label: "AIOZ 1st → Pepe 2nd", legs: ["AIOZ-1", "PEPE-2"], claimed: 312 },
-  { rank: 8, label: "Pepe full sequential", legs: ["PEPE-1", "PEPE-2"], claimed: 80.5 },
-  { rank: 9, label: "SuperVerse full sequential", legs: ["SUPER-1", "SUPER-2"], claimed: 100 },
+  { rank: 3, label: "Pepe 1st → Strategy 2nd → Zcash full", legs: ["PEPE-1", "MSTR-2", "ZEC-1", "ZEC-2"], claimed: 7293 },
+  { rank: 4, label: "AIOZ 1st → SuperVerse 2nd", legs: ["AIOZ-1", "SUPER-2"], claimed: 441 },
+  { rank: 5, label: "AIOZ 1st → Strategy 2nd", legs: ["AIOZ-1", "MSTR-2"], claimed: 318 },
+  { rank: 6, label: "AIOZ 1st → Pepe 2nd", legs: ["AIOZ-1", "PEPE-2"], claimed: 312 },
+  { rank: 7, label: "Pepe full sequential", legs: ["PEPE-1", "PEPE-2"], claimed: 80.5 },
+  { rank: 8, label: "SuperVerse full sequential", legs: ["SUPER-1", "SUPER-2"], claimed: 100 },
 ];
 
 export const TIMELINE_START = "2022-09-01";
