@@ -9,6 +9,14 @@
 //    the low/high/low/high shape every other asset in the set follows.
 //  - Zcash's final pivot (2026-09-06) is one day old at time of writing, so ZEC-2
 //    is flagged `open` — a live position, not a settled trade.
+//  - ZIGChain's exit was corrected from Dec 4 2024 ($0.17, ~34.7×) to Jul 19 2024
+//    ($0.1373, ~28.0×). The later date has the bigger raw multiple but sells too
+//    late to catch SUI-1, so it never beats ~4,397× chained into Zcash. Selling
+//    Jul 19 frees the SUI → Zcash finish and reaches ~28,066× instead.
+//  - Worldcoin (WLD) is a hypothetical pivot pair, not a settled historical trade:
+//    the WLD token did not exist / trade publicly until Jul 2023, so its Sep 2022
+//    "entry" is illustrative only — a numbers exercise, kept separate in spirit
+//    from the other twelve assets, which are all real recorded price pivots.
 
 export const ASSETS = [
   {
@@ -26,12 +34,24 @@ export const ASSETS = [
     ],
   },
   {
+    id: "KAS",
+    name: "Kaspa",
+    ticker: "KAS",
+    color: "#70C7BA",
+    colorDim: "rgba(112,199,186,0.12)",
+    note: "The runner-up opener — 88× in sixteen months, edged out by AIOZ alone.",
+    pivots: [
+      { date: "2022-10-31", px: 0.001982 },
+      { date: "2024-02-28", px: 0.1752 },
+    ],
+  },
+  {
     id: "INJ",
     name: "Injective",
     ticker: "INJ",
     color: "#22A3F0",
     colorDim: "rgba(34,163,240,0.12)",
-    note: "The best opening leg that isn't AIOZ.",
+    note: "The best opening leg that isn't AIOZ or Kaspa.",
     pivots: [
       { date: "2022-12-21", px: 1.25 },
       { date: "2024-03-06", px: 48.28 },
@@ -106,6 +126,18 @@ export const ASSETS = [
     ],
   },
   {
+    id: "WLD",
+    name: "Worldcoin",
+    ticker: "WLD",
+    color: "#B7B9C6",
+    colorDim: "rgba(183,185,198,0.12)",
+    note: "Hypothetical — the World App / WLD token did not trade publicly until Jul 2023, so this pre-launch entry is illustrative only, not a settled historical trade.",
+    pivots: [
+      { date: "2022-09-07", px: 0.45 },
+      { date: "2024-03-13", px: 9.54 },
+    ],
+  },
+  {
     id: "SUI",
     name: "Sui",
     ticker: "SUI",
@@ -135,10 +167,10 @@ export const ASSETS = [
     ticker: "ZIG",
     color: "#C4F542",
     colorDim: "rgba(196,245,66,0.12)",
-    note: "A 35× grind over 15 months — blocks AIOZ and almost everything else until Dec 2024.",
+    note: "Corrected exit: selling Jul 19 2024 (28×) beats riding to the Dec 2024 top, because it frees the SUI → ZEC finish.",
     pivots: [
       { date: "2023-08-24", px: 0.0049 },
-      { date: "2024-12-04", px: 0.17 },
+      { date: "2024-07-19", px: 0.1373 },
     ],
   },
   {

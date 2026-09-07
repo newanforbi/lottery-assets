@@ -3,21 +3,22 @@ import assert from "node:assert/strict";
 import { CLAIMED_PATHS } from "../data/assets.js";
 import {
   LEGS, getLegs, chainMultiple, chainValue, solveOptimal,
-  topChains, isValidChain, allChains, randomChain, effectiveMultiple,
+  topChains, isValidChain, allChains, randomChain, effectiveMultiple, conflicts,
 } from "./solver.js";
 
 const near = (actual, expected, tol = 0.01) =>
   assert.ok(Math.abs(actual - expected) / expected < tol,
     `expected ~${expected}, got ${actual}`);
 
-test("builds 17 legs from 11 assets", () => {
-  assert.equal(LEGS.length, 17);
-  assert.equal(new Set(LEGS.map((l) => l.id)).size, 17);
+test("builds 19 legs from 13 assets", () => {
+  assert.equal(LEGS.length, 19);
+  assert.equal(new Set(LEGS.map((l) => l.id)).size, 19);
 });
 
 test("leg multipliers derive from pivots", () => {
   const by = Object.fromEntries(LEGS.map((l) => [l.id, l.multiple]));
   near(by["AIOZ-1"], 90.0);
+  near(by["KAS-1"], 88.396);
   near(by["SUPER-2"], 4.905);
   near(by["MSTR-2"], 3.528);
   near(by["ZEC-1"], 21.623);
@@ -26,7 +27,48 @@ test("leg multipliers derive from pivots", () => {
   near(by["SUI-1"], 7.903);
   near(by["XRP-1"], 5.709);
   near(by["XLM-1"], 5.444);
-  near(by["ZIG-1"], 34.694);
+  near(by["ZIG-1"], 28.020);    // corrected exit: Jul 19 2024, not the later Dec 4 top
+  near(by["WLD-1"], 21.2);      // hypothetical pivot pair, not a settled historical trade
+});
+
+test("opening-leg ranking: AIOZ, Kaspa, Injective, then the corrected ZIGChain", () => {
+  const firsts = LEGS.filter((l) => l.index === 1).sort((a, b) => b.multiple - a.multiple);
+  assert.deepEqual(firsts.slice(0, 4).map((l) => l.id), ["AIOZ-1", "KAS-1", "INJ-1", "ZIG-1"]);
+});
+
+test("KAS-1 conflicts with the other 2023-era openers but not with SUI or ZEC", () => {
+  const kas = LEGS.find((l) => l.id === "KAS-1");
+  for (const id of ["INJ-1", "SOL-1", "MSTR-1", "ZIG-1", "AIOZ-1", "SUPER-1", "PEPE-1"]) {
+    assert.ok(conflicts(kas, LEGS.find((l) => l.id === id)), `KAS-1 should conflict with ${id}`);
+  }
+  for (const id of ["SUI-1", "XRP-1", "XLM-1", "ZEC-1", "ZEC-2"]) {
+    assert.ok(!conflicts(kas, LEGS.find((l) => l.id === id)), `KAS-1 should not conflict with ${id}`);
+  }
+});
+
+test("best KAS-inclusive chain is a near-miss, short of the AIOZ optimum", () => {
+  const kasChains = allChains().filter((c) => c.chain.some((l) => l.assetId === "KAS"));
+  const best = kasChains[0];
+  assert.deepEqual(best.chain.map((l) => l.id), ["KAS-1", "SUI-1", "ZEC-1", "ZEC-2"]);
+  near(best.value, 88540, 0.01);
+  assert.ok(best.value < solveOptimal().value);
+});
+
+test("ZIG-1's corrected exit frees SUI-1, beating the old Dec-2024-top chain", () => {
+  const zigChains = allChains().filter((c) => c.chain.some((l) => l.assetId === "ZIG"));
+  const best = zigChains[0];
+  assert.deepEqual(best.chain.map((l) => l.id), ["ZIG-1", "SUI-1", "ZEC-1", "ZEC-2"]);
+  near(best.value, 28066, 0.01);
+  // The old exit (Dec 4 2024, $0.17) sold too late to catch SUI-1 and topped out near 4,397x.
+  assert.ok(best.value > 20000);
+});
+
+test("WLD-1 is a mid-pack hypothetical opener, not the record", () => {
+  const wldChains = allChains().filter((c) => c.chain.some((l) => l.assetId === "WLD"));
+  const best = wldChains[0];
+  assert.deepEqual(best.chain.map((l) => l.id), ["WLD-1", "SUI-1", "ZEC-1", "ZEC-2"]);
+  near(best.value, 21235, 0.01);
+  assert.ok(best.value < solveOptimal().value);
 });
 
 // Every figure from the original hand-built analysis must reproduce exactly.
