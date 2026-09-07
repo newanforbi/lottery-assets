@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Lottery Assets — chronological rotation lottery for nine historical crypto and equity legs",
+  "description": "Lottery Assets — chronological rotation lottery for eighteen historical crypto and equity legs across twelve assets",
   "homepage": "https://lotteryassets.com",
   "scripts": {
     "dev": "vite",

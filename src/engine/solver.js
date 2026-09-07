@@ -167,7 +167,7 @@ export function solveOptimal(legs = LEGS) {
 }
 
 /**
- * Every valid chain, ranked. 15 legs with heavy overlap in the 2024 window keeps
+ * Every valid chain, ranked. 18 legs with heavy overlap in the 2024 window keeps
  * the search space small enough to enumerate exhaustively in well under a
  * millisecond, so there is no need to approximate.
  */

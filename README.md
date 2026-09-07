@@ -34,7 +34,7 @@ the original hand-built analysis missed, and one row it got wrong:
 - **The optimum is `AIOZ-1 → SUI-1 → ZEC-1 → ZEC-2` at 90,147&times;** &mdash;
   $901.5M on $10K, after ZEC-2's live print moved to Sep 6 2026 at $1,248.13
   (~5.86&times;). Ahead of the XRP middle-leg path (65,120&times;), the older
-  SuperVerse path (55,946&times;), and the published best of 28,276&times;.
+  SuperVerse path (55,946&times;), and the published best of 40,245&times;.
   Sui's July 31 2024 → Jan 1 2025 leg returns ~7.90&times; and fits between
   AIOZ's exit and Zcash's entry, outrunning XRP (5.71&times;), Stellar/XLM
   (5.44&times;), SuperVerse (4.91&times;), and Strategy (3.53&times;) in that

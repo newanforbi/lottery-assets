@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { CLAIMED_PATHS } from "../data/assets.js";
 import {
-  topChains, getLegs, chainMultiple, isValidChain, findConflict, solveOptimal, bestSingle,
+  topChains, getLegs, chainMultiple, isValidChain, findConflict, solveOptimal, bestSingle, allChains,
 } from "../engine/solver.js";
 import { formatCurrency, formatMultiple, formatDateShort } from "../ui/format.js";
 import { MONO, SANS, Eyebrow, Panel, Chip, Button, useMediaQuery } from "../ui/atoms.jsx";
@@ -33,6 +33,10 @@ export default function Leaderboard({ capital, setChain, setTab }) {
   const ranked = useMemo(() => topChains(60), []);
   const optimal = useMemo(() => solveOptimal(), []);
   const single = useMemo(() => bestSingle(), []);
+  // Best chain that opens on Kaspa instead of AIOZ — the runner-up path, derived
+  // so a pivot edit moves the copy with it rather than leaving a stale figure.
+  const kasBest = useMemo(() => allChains().find((c) => c.chain.some((l) => l.assetId === "KAS")), []);
+  const kasLeg = kasBest?.chain.find((l) => l.assetId === "KAS");
   const publishedTop = chainMultiple(getLegs(CLAIMED_PATHS[0].legs));
 
   const load = (chain) => { setChain(chain); setTab("lottery"); };
@@ -55,10 +59,18 @@ export default function Leaderboard({ capital, setChain, setTab }) {
           <span style={{ fontFamily: MONO, color: "#14B6E7" }}>5.44×</span>, SuperVerse's{" "}
           <span style={{ fontFamily: MONO, color: "#FF4FD8" }}>4.91×</span>, and Strategy's{" "}
           <span style={{ fontFamily: MONO, color: "#FF7A45" }}>3.53×</span> in the gap between
-          AIOZ's exit and Zcash's entry. Kaspa's own opener comes closest to unseating AIOZ outright
-          — <span style={{ fontFamily: MONO, color: "#70C7BA" }}>KAS-1 at 88.40×</span> is the
-          second-largest leg in the set — but chaining it into Sui and Zcash still falls short of
-          the record at roughly <span style={{ fontFamily: MONO }}>88,540×</span>.
+          AIOZ's exit and Zcash's entry.
+          {kasBest && kasLeg && (
+            <>
+              {" "}Kaspa's own opener comes closest to unseating AIOZ outright —{" "}
+              <span style={{ fontFamily: MONO, color: kasLeg.color }}>
+                {kasLeg.id} at {formatMultiple(kasLeg.multiple)}
+              </span>{" "}
+              is the second-largest leg in the set — but chaining it into Sui and Zcash still falls
+              short of the record at{" "}
+              <span style={{ fontFamily: MONO }}>{formatMultiple(kasBest.value)}</span>.
+            </>
+          )}
         </p>
         <p style={{ fontFamily: SANS, fontSize: 13.5, color: "rgba(255,255,255,0.6)", lineHeight: 1.7, margin: 0 }}>
           For scale: the best single buy-and-hold in the whole set is{" "}
