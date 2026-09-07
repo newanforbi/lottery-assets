@@ -173,60 +173,19 @@ changes.
 
 ## Icon generation notes
 
-The tab icons are the emblem's **filled silhouette**: transparent outside its
-outer boundary, with the interior kept opaque so a light tab bar cannot bleed
-through the gaps between the ring, the ball, and the stand. No shape crop &mdash;
-the alpha follows the mark itself.
-
-For small sizes (16&ndash;64px), visibility is improved on top of that pipeline:
-
-- **Tighter crop + slight scale-up** so the mark fills more of the tab tile
-- **Gold-ring thickening** before downscale so the metal rim survives LANCZOS
-- **Dual exterior rim** &mdash; a pale-gold halo (reads on dark chrome) outside a
-  near-black stroke (reads on light tabs)
-- **Contrast / saturation / unsharp** on the 16&ndash;48px frames only
-
-Cut square from the wordmark-free artwork and downsample with LANCZOS for edge
-antialiasing. Source artwork lives at `public/emblem-source.png`. Regenerate with:
+The current mark is a finished navy-tile icon: gold lottery drum, gold/white
+balls, rising gold arrow. Source artwork lives at `public/emblem-source.png`.
+Regenerate the derived set with:
 
 ```bash
 python3 scripts/generate-favicons.py --src public/emblem-source.png
 ```
 
-That refreshes `favicon-32.png`, multi-size `favicon.ico`, `apple-touch-icon.png`,
-and the PWA icons together so the rim treatment stays consistent.
-
-### Sealing the interior
-
-Two different kinds of gap leak through the silhouette, each fixed differently:
-
-**Enclosed gaps** &mdash; where the ring passes behind the ball and its dark
-lower edge meets the dark ground &mdash; are bridged by a disk closing of radius
-22 before `binary_fill_holes`.
-
-**The open concavity** between the stand and the bar chart is not a hole at all;
-it connects to the exterior, so no hole fill can reach it. It is covered by
-filling the **gold ring's disc**, fitted from the artwork at centre (624.5,
-510.5), radius 316.5, **clipped at y=786** (the emblem's bottom). The ring's
-lower arc is occluded by the stand, so an unclipped disc would paint 41px of
-black below the artwork.
-
-### The exterior rim
-
-A **14px black rim** around the entire mark. The arrow's tip extends ~89px past
-the ring where it is white on bare tab colour and vanishes on light themes; the
-gold ring dissolves into tan or amber tabs. The rim is dilated from the opaque
-mask and intersected with currently-transparent pixels, so it only grows into
-empty space.
-
-### Regeneration traps
-
-- **Erode the brightness mask before measuring.** A single stray JPEG pixel one
-  level above threshold can inflate an enclosing radius from 381 to 598.
-- **Keep every connected component, not just the largest.** The outer gold ring
-  is a separate component from the ball; taking only the largest silently drops it.
-- `ImageDraw.floodfill` is a no-op in Pillow 12.3. Use `scipy.ndimage`
-  (`label` / `binary_fill_holes`) for connectivity work.
+That refreshes `favicon-32.png`, multi-size `favicon.ico` (16/32/48/64),
+`apple-touch-icon.png`, and the PWA icons. The generator tight-crops the mark,
+recenters it on a square of the source navy, and LANCZOS-downsamples. Small
+sizes (16&ndash;64px) get a light contrast / saturation / unsharp pass so the
+arrow and drum still read in a tab.
 
 ## The solver
 
