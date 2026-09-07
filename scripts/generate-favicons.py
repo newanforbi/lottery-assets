@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Regenerate Lottery Assets favicons from public/icon-512.png (or --src).
+"""Regenerate Lottery Assets favicons from public/emblem-source.png (or --src).
 
-Improves small-size visibility: tighter crop, gold-ring thicken, dual rim
-(pale gold for dark chrome + near-black for light tabs), mild contrast boost.
+The current mark is a finished navy-tile icon (gold lottery drum + rising
+arrow). Generation tight-crops the artwork, recenters it on a square of the
+source background, and LANCZOS-downsamples so 16–64px tabs still read.
 """
 
 from __future__ import annotations
@@ -13,70 +14,74 @@ from pathlib import Path
 
 import numpy as np
 from PIL import Image, ImageEnhance, ImageFilter
-from scipy import ndimage
 
 
-def dual_rim(im: Image.Image, dark_r: int, light_r: int) -> Image.Image:
-    a = np.array(im.split()[-1])
-    opaque = a > 20
-    light = ndimage.binary_dilation(opaque, iterations=light_r) & ~opaque
-    dark = ndimage.binary_dilation(opaque | light, iterations=dark_r) & ~(opaque | light)
-    out = np.array(im)
-    out[light] = (252, 228, 168, 255)
-    out[dark] = (8, 8, 10, 255)
-    return Image.fromarray(out)
+NAVY = (1, 11, 31, 255)
 
 
-def thicken_gold(im: Image.Image, iterations: int) -> Image.Image:
-    arr = np.array(im)
-    r, g, b, a = arr[:, :, 0], arr[:, :, 1], arr[:, :, 2], arr[:, :, 3]
-    gold = (a > 180) & (r > 135) & (g > 90) & (b < 145) & (r >= g - 5)
-    dil = ndimage.binary_dilation(gold, iterations=iterations)
-    lum = r.astype(np.float32) * 0.2126 + g.astype(np.float32) * 0.7152 + b.astype(np.float32) * 0.0722
-    target = dil & (a > 160) & ~gold & (lum < 100)
-    if gold.any():
-        color = arr[gold].mean(axis=0).astype(np.float32)
-        color[:3] = np.clip(color[:3] * 1.08 + 8, 0, 255)
-        arr[target] = color.astype(np.uint8)
-    return Image.fromarray(arr)
+def content_mask(arr: np.ndarray) -> np.ndarray:
+    """Pixels that belong to the mark, not the designed background."""
+    alpha = arr[:, :, 3]
+    if (alpha < 8).mean() > 0.05:
+        return alpha > 8
+    corners = np.concatenate(
+        [
+            arr[:16, :16, :3].reshape(-1, 3),
+            arr[:16, -16:, :3].reshape(-1, 3),
+            arr[-16:, :16, :3].reshape(-1, 3),
+            arr[-16:, -16:, :3].reshape(-1, 3),
+        ]
+    )
+    bg = np.median(corners, axis=0).astype(np.float32)
+    dist = np.linalg.norm(arr[:, :, :3].astype(np.float32) - bg, axis=2)
+    return dist > 16
 
 
-def boost_small(im: Image.Image) -> Image.Image:
-    r, g, b, a = im.split()
-    rgb = Image.merge("RGB", (r, g, b))
-    rgb = ImageEnhance.Contrast(rgb).enhance(1.22)
-    rgb = ImageEnhance.Color(rgb).enhance(1.28)
-    rgb = ImageEnhance.Brightness(rgb).enhance(1.10)
-    out = rgb.convert("RGBA")
-    out.putalpha(a)
-    return out
+def background_rgba(arr: np.ndarray) -> tuple[int, int, int, int]:
+    alpha = arr[:, :, 3]
+    if (alpha < 8).mean() > 0.05:
+        return (0, 0, 0, 0)
+    corners = np.concatenate(
+        [
+            arr[:16, :16, :3].reshape(-1, 3),
+            arr[:16, -16:, :3].reshape(-1, 3),
+            arr[-16:, :16, :3].reshape(-1, 3),
+            arr[-16:, -16:, :3].reshape(-1, 3),
+        ]
+    )
+    bg = np.median(corners, axis=0)
+    return (int(bg[0]), int(bg[1]), int(bg[2]), 255)
 
 
-def prepare_canvas(src: Image.Image, scale_up: float = 1.06, pad: int = 28) -> Image.Image:
-    arr = np.array(src)
-    ys, xs = np.where(arr[:, :, 3] > 8)
-    y0, y1, x0, x1 = ys.min(), ys.max(), xs.min(), xs.max()
-    crop = src.crop((x0, y0, x1 + 1, y1 + 1))
+def prepare_canvas(src: Image.Image, scale_up: float = 1.04, pad_ratio: float = 0.10) -> Image.Image:
+    arr = np.array(src.convert("RGBA"))
+    mask = content_mask(arr)
+    ys, xs = np.where(mask)
+    if len(ys) == 0:
+        return src.convert("RGBA")
+    y0, y1, x0, x1 = int(ys.min()), int(ys.max()), int(xs.min()), int(xs.max())
+    crop = src.convert("RGBA").crop((x0, y0, x1 + 1, y1 + 1))
     cw, ch = crop.size
-    crop = crop.resize((int(cw * scale_up), int(ch * scale_up)), Image.LANCZOS)
+    crop = crop.resize((max(1, int(cw * scale_up)), max(1, int(ch * scale_up))), Image.LANCZOS)
     cw, ch = crop.size
+    pad = max(12, int(round(max(cw, ch) * pad_ratio)))
     side = max(cw, ch) + pad * 2
-    canvas = Image.new("RGBA", (side, side), (0, 0, 0, 0))
+    canvas = Image.new("RGBA", (side, side), background_rgba(arr))
     canvas.paste(crop, ((side - cw) // 2, (side - ch) // 2), crop)
     return canvas
 
 
 def render(canvas: Image.Image, size: int) -> Image.Image:
-    side = canvas.size[0]
-    im = thicken_gold(canvas.copy(), 4 if size <= 64 else 2)
-    px = side / size
-    light_r = max(2, int(round(1.15 * px)))
-    dark_r = max(2, int(round(0.95 * px)))
-    im = dual_rim(im, dark_r=dark_r, light_r=light_r)
-    out = im.resize((size, size), Image.LANCZOS)
+    out = canvas.resize((size, size), Image.LANCZOS)
     if size <= 64:
-        out = boost_small(out)
-        out = out.filter(ImageFilter.UnsharpMask(radius=0.55, percent=140, threshold=1))
+        r, g, b, a = out.split()
+        rgb = Image.merge("RGB", (r, g, b))
+        rgb = ImageEnhance.Contrast(rgb).enhance(1.12)
+        rgb = ImageEnhance.Color(rgb).enhance(1.10)
+        rgb = ImageEnhance.Brightness(rgb).enhance(1.04)
+        out = rgb.convert("RGBA")
+        out.putalpha(a)
+        out = out.filter(ImageFilter.UnsharpMask(radius=0.55, percent=130, threshold=1))
     return out
 
 
@@ -131,11 +136,10 @@ def write_ico(path: Path, frames: dict[int, Image.Image]) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--src", type=Path, default=Path("public/icon-512.png"))
+    ap.add_argument("--src", type=Path, default=Path("public/emblem-source.png"))
     ap.add_argument("--out-dir", type=Path, default=Path("public"))
     args = ap.parse_args()
 
-    # Prefer regenerating from a pre-rim master if present; otherwise use current 512.
     src = Image.open(args.src).convert("RGBA")
     canvas = prepare_canvas(src)
 
