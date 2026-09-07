@@ -35,6 +35,38 @@ export const ASSET_ABOUT = [
     ],
   },
   {
+    id: "KAS",
+    essence: "A GHOSTDAG proof-of-work chain that keeps Bitcoin's security model but processes blocks in parallel instead of a single linear chain.",
+    sections: [
+      {
+        title: "What it is",
+        body: [
+          "Kaspa is a proof-of-work cryptocurrency built around the GHOSTDAG protocol, a generalisation of Bitcoin's longest-chain rule that lets multiple blocks be mined and confirmed in parallel rather than discarding every block that loses a race. Blocks form a directed acyclic graph (a \"BlockDAG\") instead of a single chain, and GHOSTDAG's ordering rule decides which blocks count and in what sequence, without throwing away the work miners did on the ones that did not win outright.",
+          "The pitch is that you can keep Bitcoin's trust model — real energy-backed proof of work, no pre-mine favouritism, no validator set to capture — while getting much faster block times and higher throughput, because the network no longer needs to slow block production down to avoid orphaning honest blocks.",
+        ],
+      },
+      {
+        title: "Why the DAG matters",
+        body: [
+          "Traditional proof-of-work chains face a throughput ceiling: produce blocks too quickly and you get frequent forks, wasted hash power, and centralisation pressure toward whoever has the fastest network link. Kaspa's DAG structure is designed so that near-simultaneous blocks are not competitors to be discarded but siblings to be merged into a consistent order, which is what lets it target one-second block times where Bitcoin targets ten minutes.",
+          "That architecture is also why Kaspa attracted a dedicated mining and cypherpunk following distinct from most 2023–2024 narrative coins: it is closer in spirit to Bitcoin's fair-launch, no-VC-allocation ethos than to a venture-funded Layer 1, and its community leans heavily on that lineage when explaining why the token has value beyond a chart.",
+        ],
+      },
+      {
+        title: "Why it shows up here",
+        body: [
+          "KAS's single leg in this set runs from the Oct 31 2022 low of $0.001982 to the Feb 28 2024 high of $0.1752 — roughly 88.4× over about sixteen months, the second-largest opening leg in the whole board, just behind AIOZ's 90×. It also opens earlier than any other asset here, which means it collides with almost every other 2023-era opener (INJ, SOL, MSTR, ZIG, SUPER-1, PEPE-1). Chained into Sui and Zcash it reaches roughly 88,540× — a near-miss that falls just short of the AIOZ-led optimum at 90,147×.",
+        ],
+      },
+      {
+        title: "What you are actually holding",
+        body: [
+          "KAS is the native proof-of-work asset that pays miners for securing the BlockDAG; holding it is a bet on GHOSTDAG's throughput advantages mattering enough to sustain a dedicated mining and holder base, not a claim on a company or a fee-generating application layer. Liquidity is thinner than the large-cap names in this set, so a hindsight-perfect entry and exit is an even bigger stretch here than usual.",
+        ],
+      },
+    ],
+  },
+  {
     id: "INJ",
     essence: "A Cosmos-based Layer 1 purpose-built for on-chain finance: order books, derivatives, and DeFi plumbing.",
     sections: [

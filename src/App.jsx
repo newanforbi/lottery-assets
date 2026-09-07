@@ -91,7 +91,7 @@ export default function App() {
       >
         <div style={{ padding: compact ? "26px 16px 0" : "32px 28px 0", maxWidth: 1080, margin: "0 auto" }}>
           <Eyebrow size={10} color="rgba(255,255,255,0.25)" style={{ letterSpacing: 2, marginBottom: 8 }}>
-            Eleven assets · 17 tradeable legs · Oct 2022 → Sep 2026
+            Twelve assets · 18 tradeable legs · Oct 2022 → Sep 2026
           </Eyebrow>
           <h1
             style={{
@@ -112,7 +112,7 @@ export default function App() {
             Lottery Assets
           </h1>
           <p style={{ fontSize: 14, color: "rgba(255,255,255,0.45)", margin: "0 0 22px", maxWidth: 660, lineHeight: 1.6 }}>
-            Lottery Assets is a chronological rotation lottery: eleven names that went vertical, one
+            Lottery Assets is a chronological rotation lottery: twelve names that went vertical, one
             pool of capital, and a hard rule that overlapping trades can never both be yours. Chain
             the legs that fit and see where a starting stake lands.
           </p>

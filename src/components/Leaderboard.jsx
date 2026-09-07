@@ -55,7 +55,10 @@ export default function Leaderboard({ capital, setChain, setTab }) {
           <span style={{ fontFamily: MONO, color: "#14B6E7" }}>5.44×</span>, SuperVerse's{" "}
           <span style={{ fontFamily: MONO, color: "#FF4FD8" }}>4.91×</span>, and Strategy's{" "}
           <span style={{ fontFamily: MONO, color: "#FF7A45" }}>3.53×</span> in the gap between
-          AIOZ's exit and Zcash's entry.
+          AIOZ's exit and Zcash's entry. Kaspa's own opener comes closest to unseating AIOZ outright
+          — <span style={{ fontFamily: MONO, color: "#70C7BA" }}>KAS-1 at 88.40×</span> is the
+          second-largest leg in the set — but chaining it into Sui and Zcash still falls short of
+          the record at roughly <span style={{ fontFamily: MONO }}>88,540×</span>.
         </p>
         <p style={{ fontFamily: SANS, fontSize: 13.5, color: "rgba(255,255,255,0.6)", lineHeight: 1.7, margin: 0 }}>
           For scale: the best single buy-and-hold in the whole set is{" "}

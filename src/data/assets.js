@@ -26,12 +26,24 @@ export const ASSETS = [
     ],
   },
   {
+    id: "KAS",
+    name: "Kaspa",
+    ticker: "KAS",
+    color: "#70C7BA",
+    colorDim: "rgba(112,199,186,0.12)",
+    note: "The runner-up opener — 88× in sixteen months, edged out by AIOZ alone.",
+    pivots: [
+      { date: "2022-10-31", px: 0.001982 },
+      { date: "2024-02-28", px: 0.1752 },
+    ],
+  },
+  {
     id: "INJ",
     name: "Injective",
     ticker: "INJ",
     color: "#22A3F0",
     colorDim: "rgba(34,163,240,0.12)",
-    note: "The best opening leg that isn't AIOZ.",
+    note: "The best opening leg that isn't AIOZ or Kaspa.",
     pivots: [
       { date: "2022-12-21", px: 1.25 },
       { date: "2024-03-06", px: 48.28 },

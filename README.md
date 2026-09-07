@@ -2,8 +2,8 @@
 
 **[lotteryassets.com](https://lotteryassets.com)**
 
-**Lottery Assets** is a chronological rotation lottery: eleven assets that went
-vertical, seventeen tradeable buy-low / sell-high legs, and one pool of capital
+**Lottery Assets** is a chronological rotation lottery: twelve assets that went
+vertical, eighteen tradeable buy-low / sell-high legs, and one pool of capital
 that can only be in one position at a time. Overlapping legs are mutually
 exclusive — chain the ones that fit the calendar (Oct 2022 &ndash; Sep 2026) and
 see where a starting stake lands.
@@ -42,6 +42,13 @@ the original hand-built analysis missed, and one row it got wrong:
   it does not change the optimum. ZIGChain's ~34.7&times; Aug 2023&ndash;Dec 2024
   grind overlaps AIOZ and almost every other opener; best ZIG path is only
   ~4,397&times; with Zcash full.
+- **Kaspa is the closest AIOZ has ever come to losing the opener slot.** Its
+  Oct 31 2022 → Feb 28 2024 leg (~88.4&times;) is the second-largest single
+  leg in the set — bigger than Injective, ZIGChain, or anything else — and it
+  opens earlier than every other asset here, so it collides with almost the
+  entire 2023 cohort (INJ, SOL, MSTR, ZIG, SUPER-1, PEPE-1). Chained into Sui
+  and Zcash it reaches ~88,540&times;, a genuine near-miss that still falls
+  short of the AIOZ-led 90,147&times; record.
 
 Every other figure from the original analysis reproduces exactly.
 
@@ -50,7 +57,8 @@ Every other figure from the original analysis reproduces exactly.
 | Ticker | Name | Legs | Notes |
 |--------|------|------|-------|
 | AIOZ | AIOZ Network | 2 | The single most violent leg in the set &mdash; 90&times; in six months |
-| INJ | Injective | 1 | The best opening leg that isn't AIOZ |
+| KAS | Kaspa | 1 | Oct 31 2022 → Feb 28 2024, $0.001982 → $0.1752 &mdash; ~88.4&times;, the runner-up opener |
+| INJ | Injective | 1 | The best opening leg that isn't AIOZ or Kaspa |
 | SOL | Solana | 2 | Emerged from the FTX collapse at a generational low |
 | XRP | XRP | 1 | Oct 9 2024 trough at $0.55 into early 2025 &mdash; strong autumn also-ran behind SUI |
 | MSTR | Strategy | 2 | The only equity &mdash; leveraged bitcoin exposure in a brokerage account |
@@ -72,7 +80,7 @@ corrected pivot propagates everywhere instead of drifting out of sync.
 | **Ladder** | Step-by-step capital progression for the selected chain, including the idle stretches in cash. |
 | **Leaderboard** | Every valid chain ranked, plus the original eight paths checked against the calendar. |
 | **Assets** | Per-asset pivots and legs with individual multipliers. |
-| **About the Assets** | Deep dossiers on what each of the eleven assets actually is — product, market structure, and why it appears in Lottery Assets. |
+| **About the Assets** | Deep dossiers on what each of the twelve assets actually is — product, market structure, and why it appears in Lottery Assets. |
 | **Reality Check** | Sliders for move capture, slippage, and per-rotation tax. At 65% capture the $901.5M becomes $4.9M. |
 | **Learn** | Educational guide covering what cryptocurrency is, where to buy it (Coinbase, Kraken, Binance), how to self-custody, security basics, taxes, and key concepts. |
 
@@ -85,7 +93,7 @@ corrected pivot propagates everywhere instead of drifting out of sync.
 | **Visuals** | Galaxy canvas with shooting-star particles (`src/ui/Cosmos.jsx`) |
 | **Type system** | JetBrains Mono, Space Grotesk, DM Sans via Google Fonts |
 | **Solver** | Weighted interval scheduling via DP, plus exhaustive enumeration for the leaderboard |
-| **Tests** | Node.js built-in test runner, 15 assertions covering solver correctness and claimed-path validation |
+| **Tests** | Node.js built-in test runner, 18 assertions covering solver correctness and claimed-path validation |
 
 ## Project structure
 
@@ -94,11 +102,11 @@ src/
   App.jsx                  # Root component, tab nav, capital input, solve/deal
   main.jsx                 # React entry point
   data/
-    assets.js              # Price pivots for all 11 assets + claimed paths
+    assets.js              # Price pivots for all 12 assets + claimed paths
     assetAbout.js          # Long-form copy for About the Assets
   engine/
     solver.js              # buildLegs, conflicts, chainValue, solveOptimal, allChains
-    solver.test.js         # 15 tests: multipliers, chain validity, friction model
+    solver.test.js         # 18 tests: multipliers, chain validity, friction model
   components/
     Lottery.jsx            # Interactive lottery timeline with conflict dimming
     Ladder.jsx             # Step-by-step capital walk
@@ -130,7 +138,7 @@ index.html                 # Entry HTML with OG/Twitter meta tags
 ```bash
 npm install
 npm run dev          # http://localhost:5173
-npm test             # 15 solver tests
+npm test             # 18 solver tests
 npm run build        # production build → dist/
 ```
 
@@ -198,7 +206,7 @@ The engine (`src/engine/solver.js`) implements:
 - **`solveOptimal`** &mdash; Maximum-product chain via weighted interval
   scheduling DP. Sorts by sell date, then for each leg takes the best chain that
   finished strictly before it opens.
-- **`allChains`** &mdash; Exhaustive enumeration of every valid chain. 17 legs
+- **`allChains`** &mdash; Exhaustive enumeration of every valid chain. 18 legs
   with heavy overlap keeps the search space small enough to enumerate in under a
   millisecond.
 - **`chainValue`** &mdash; Walks a chain step by step, applying optional
@@ -215,7 +223,7 @@ The engine (`src/engine/solver.js`) implements:
 
 ## A caveat worth stating plainly
 
-These eleven assets are here because they went up. The ones that went to zero
+These twelve assets are here because they went up. The ones that went to zero
 over the same four years aren't in the lottery, and there were many more of them.
 Picking these winners in advance and then timing eight turning points across them
 isn't a strategy &mdash; it's the definition of survivorship bias with a
