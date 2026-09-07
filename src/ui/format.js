@@ -14,7 +14,7 @@ export function formatFull(n) {
   return "$" + Math.round(n).toLocaleString("en-US");
 }
 
-// Prices here span $0.000000635 (Pepe) to $876.93 (Zcash) — one formatter
+// Prices here span $0.000000635 (Pepe) to $1,248.13 (Zcash) — one formatter
 // can't use a fixed precision across nine orders of magnitude.
 export function formatPrice(p) {
   if (p >= 1) return "$" + p.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });

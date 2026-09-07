@@ -247,7 +247,7 @@ export const ASSET_ABOUT = [
       {
         title: "Why it shows up here",
         body: [
-          "SUI contributes one leg: Jul 31 2024 at $0.62 to Jan 1 2025 at $4.90 — about 7.90× over 154 days. It starts the same day as SuperVerse's second leg and overlaps XRP's autumn run, so the lottery forces a choice. At ~7.90× it beats XRP (~5.71×), SUPER-2 (~4.91×), and MSTR-2 (~3.53×), which is why the current optimum is AIOZ-1 → SUI-1 → ZEC-1 → ZEC-2 at roughly 63,337×.",
+          "SUI contributes one leg: Jul 31 2024 at $0.62 to Jan 1 2025 at $4.90 — about 7.90× over 154 days. It starts the same day as SuperVerse's second leg and overlaps XRP's autumn run, so the lottery forces a choice. At ~7.90× it beats XRP (~5.71×), SUPER-2 (~4.91×), and MSTR-2 (~3.53×), which is why the current optimum is AIOZ-1 → SUI-1 → ZEC-1 → ZEC-2 at roughly 90,147×.",
         ],
       },
       {
@@ -279,7 +279,7 @@ export const ASSET_ABOUT = [
       {
         title: "Why it shows up here",
         body: [
-          "XLM contributes one leg: Oct 2 2024 at $0.09 to Nov 27 2024 at $0.49 — about 5.44× in 56 days. That beats SUPER-2 and MSTR-2 on multiple, but it overlaps SUI-1 and XRP-1, and there is no follow-on leg in the set between late November and Zcash's April open. Best XLM chain is AIOZ-1 → XLM-1 → ZEC full at roughly 43,632× — real, ranked, and still behind the Sui optimum at 63,337×.",
+          "XLM contributes one leg: Oct 2 2024 at $0.09 to Nov 27 2024 at $0.49 — about 5.44× in 56 days. That beats SUPER-2 and MSTR-2 on multiple, but it overlaps SUI-1 and XRP-1, and there is no follow-on leg in the set between late November and Zcash's April open. Best XLM chain is AIOZ-1 → XLM-1 → ZEC full at roughly 62,101× — real, ranked, and still behind the Sui optimum at 90,147×.",
         ],
       },
       {
@@ -305,7 +305,7 @@ export const ASSET_ABOUT = [
         title: "Why the multiple misleads",
         body: [
           "From $0.0049 on Aug 24 2023 to $0.17 on Dec 4 2024 is roughly 34.7× — larger than SUI's autumn leg and in the same ballpark as AIOZ's opener. The catch is occupancy: 468 days that overlap AIOZ-1, INJ, SOL-1, PEPE, SUI, XRP, SUPER, and almost every other tradeable bar before Zcash.",
-          "Alone, ZIG loses to AIOZ-1's 90× opener. Chained into Zcash full it reaches about 3,089× — real, and still an order of magnitude behind AIOZ → SUI → ZEC at 63,337×. Same exit day as SUPER-2 and PEPE-2 (Dec 4), so it is competing for a crowded sell print after blocking the board.",
+          "Alone, ZIG loses to AIOZ-1's 90× opener. Chained into Zcash full it reaches about 4,397× — real, and still an order of magnitude behind AIOZ → SUI → ZEC at 90,147×. Same exit day as SUPER-2 and PEPE-2 (Dec 4), so it is competing for a crowded sell print after blocking the board.",
         ],
       },
       {
@@ -337,13 +337,13 @@ export const ASSET_ABOUT = [
         title: "Why privacy returned as a trade",
         body: [
           "For long stretches ZEC traded as a neglected \"old coin\" — cypherpunk heritage without Solana-style retail heat. Privacy narratives periodically revive when markets refocus on surveillance, exchange KYC fatigue, or the idea that confidential settlement is under-owned financial infrastructure. When that happens, the free float of attention-sensitive privacy coins can reprice violently because the prior base was so depressed.",
-          "Zcash's appearance at the far right of the lottery is exactly that shape: a multi-month explosion, a sharp drawdown, and another violent leg higher into August 2026 — with the final pivot marked open because it was still live when the dataset was captured.",
+          "Zcash's appearance at the far right of the lottery is exactly that shape: a multi-month explosion, a sharp drawdown, and another violent leg higher into September 2026 — with the final pivot marked open because it was still live when the dataset was captured.",
         ],
       },
       {
         title: "Why it shows up here",
         body: [
-          "ZEC provides the closing engine of the optimal chain. After earlier capital has compounded through AIOZ and Sui, both ZEC legs fit sequentially at the end of the calendar and multiply the stack again. Without Zcash's late window, the headline 63,337× does not exist. That is also why ZEC-2's \"still open\" flag matters: part of the fairy tale is marked to a live print rather than a settled exit.",
+          "ZEC provides the closing engine of the optimal chain. After earlier capital has compounded through AIOZ and Sui, both ZEC legs fit sequentially at the end of the calendar and multiply the stack again. Without Zcash's late window, the headline 90,147× does not exist. That is also why ZEC-2's \"still open\" flag matters: part of the fairy tale is marked to a live print rather than a settled exit.",
         ],
       },
       {

@@ -7,7 +7,7 @@
 //  - Solana's second pivot was given as "$1.91.90" and its trough as "Sep 4, 2025"
 //    listed out of chronological order. Resolved to $191.90 / 2024-09-04, matching
 //    the low/high/low/high shape every other asset in the set follows.
-//  - Zcash's final pivot (2026-08-23) is one day old at time of writing, so ZEC-2
+//  - Zcash's final pivot (2026-09-06) is one day old at time of writing, so ZEC-2
 //    is flagged `open` — a live position, not a settled trade.
 
 export const ASSETS = [
@@ -152,17 +152,19 @@ export const ASSETS = [
       { date: "2025-04-09", px: 31.17 },
       { date: "2025-11-12", px: 674.0 },
       { date: "2026-03-04", px: 212.95 },
-      { date: "2026-08-23", px: 876.93 },
+      { date: "2026-09-06", px: 1248.13 },
     ],
   },
 ];
 
-// The eight paths from the original analysis, kept verbatim so the site can check
-// its own solver against them and show where the hand-built table went wrong.
+// The eight paths from the original analysis, kept so the site can check its own
+// solver against them and show where the hand-built table went wrong. The three
+// Zcash-full rows were restated for ZEC-2's Sep 6 2026 live print; the other
+// five figures are still the original published numbers.
 export const CLAIMED_PATHS = [
-  { rank: 1, label: "AIOZ 1st → Strategy 2nd → Zcash full", legs: ["AIOZ-1", "MSTR-2", "ZEC-1", "ZEC-2"], claimed: 28276 },
-  { rank: 2, label: "AIOZ 1st → Zcash full", legs: ["AIOZ-1", "ZEC-1", "ZEC-2"], claimed: 8014 },
-  { rank: 3, label: "Pepe 1st → Strategy 2nd → Zcash full", legs: ["PEPE-1", "MSTR-2", "ZEC-1", "ZEC-2"], claimed: 7293 },
+  { rank: 1, label: "AIOZ 1st → Strategy 2nd → Zcash full", legs: ["AIOZ-1", "MSTR-2", "ZEC-1", "ZEC-2"], claimed: 40245 },
+  { rank: 2, label: "AIOZ 1st → Zcash full", legs: ["AIOZ-1", "ZEC-1", "ZEC-2"], claimed: 11406 },
+  { rank: 3, label: "Pepe 1st → Strategy 2nd → Zcash full", legs: ["PEPE-1", "MSTR-2", "ZEC-1", "ZEC-2"], claimed: 10380 },
   { rank: 4, label: "AIOZ 1st → SuperVerse 2nd", legs: ["AIOZ-1", "SUPER-2"], claimed: 441 },
   { rank: 5, label: "AIOZ 1st → Strategy 2nd", legs: ["AIOZ-1", "MSTR-2"], claimed: 318 },
   { rank: 6, label: "AIOZ 1st → Pepe 2nd", legs: ["AIOZ-1", "PEPE-2"], claimed: 312 },

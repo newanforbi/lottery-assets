@@ -21,7 +21,7 @@ test("leg multipliers derive from pivots", () => {
   near(by["SUPER-2"], 4.905);
   near(by["MSTR-2"], 3.528);
   near(by["ZEC-1"], 21.623);
-  near(by["ZEC-2"], 4.118);
+  near(by["ZEC-2"], 5.861);
   near(by["PEPE-1"], 23.213);   // survives the 1e-7 price scale
   near(by["SUI-1"], 7.903);
   near(by["XRP-1"], 5.709);
@@ -43,11 +43,11 @@ test("all eight published paths are executable", () => {
   }
 });
 
-test("optimum is AIOZ-1 -> SUI-1 -> ZEC-1 -> ZEC-2 at ~63,337x", () => {
+test("optimum is AIOZ-1 -> SUI-1 -> ZEC-1 -> ZEC-2 at ~90,147x", () => {
   const { chain, value } = solveOptimal();
   assert.deepEqual(chain.map((l) => l.id), ["AIOZ-1", "SUI-1", "ZEC-1", "ZEC-2"]);
-  near(value, 63337);
-  near(chainValue(chain, 10000).final, 633369692);
+  near(value, 90147);
+  near(chainValue(chain, 10000).final, 901471854);
 });
 
 test("optimum beats the prior XRP middle-leg path", () => {
@@ -83,16 +83,16 @@ test("capital progression compounds through the chain", () => {
     assert.equal(steps[i].capitalIn, steps[i - 1].capitalOut);
     assert.ok(steps[i].idleDays > 0, "capital sits in cash between legs");
   }
-  near(final, 633369692);
-  near(multiple, 63337);
+  near(final, 901471854);
+  near(multiple, 90147);
 });
 
 test("friction degrades returns as modelled", () => {
   const chain = solveOptimal().chain;
-  near(chainValue(chain, 10000, { capture: 1, slippage: 0.015, taxRate: 0 }).final, 561238069);
-  near(chainValue(chain, 10000, { capture: 1, slippage: 0.015, taxRate: 0.3 }).final, 161554638);
-  near(chainValue(chain, 10000, { capture: 0.8, slippage: 0.015, taxRate: 0.3 }).final, 19211468);
-  near(chainValue(chain, 10000, { capture: 0.65, slippage: 0.015, taxRate: 0.3 }).final, 4001181);
+  near(chainValue(chain, 10000, { capture: 1, slippage: 0.015, taxRate: 0 }).final, 798807283);
+  near(chainValue(chain, 10000, { capture: 1, slippage: 0.015, taxRate: 0.3 }).final, 223315077);
+  near(chainValue(chain, 10000, { capture: 0.8, slippage: 0.015, taxRate: 0.3 }).final, 24698648);
+  near(chainValue(chain, 10000, { capture: 0.65, slippage: 0.015, taxRate: 0.3 }).final, 4878580);
 });
 
 test("zero friction is a no-op", () => {
