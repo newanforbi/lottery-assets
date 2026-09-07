@@ -58,7 +58,11 @@ export default function Leaderboard({ capital, setChain, setTab }) {
           AIOZ's exit and Zcash's entry. Kaspa's own opener comes closest to unseating AIOZ outright
           — <span style={{ fontFamily: MONO, color: "#70C7BA" }}>KAS-1 at 88.40×</span> is the
           second-largest leg in the set — but chaining it into Sui and Zcash still falls short of
-          the record at roughly <span style={{ fontFamily: MONO }}>88,540×</span>.
+          the record at roughly <span style={{ fontFamily: MONO }}>88,540×</span>. ZIGChain's
+          corrected Jul 19 2024 exit (~28.0×) is the fourth-largest opener and now chains into the
+          same Sui → Zcash finish at roughly{" "}
+          <span style={{ fontFamily: MONO, color: "#C4F542" }}>28,066×</span>. Worldcoin is a
+          hypothetical mid-pack opener (~21.2×), not a settled historical trade.
         </p>
         <p style={{ fontFamily: SANS, fontSize: 13.5, color: "rgba(255,255,255,0.6)", lineHeight: 1.7, margin: 0 }}>
           For scale: the best single buy-and-hold in the whole set is{" "}

@@ -10,9 +10,9 @@ const near = (actual, expected, tol = 0.01) =>
   assert.ok(Math.abs(actual - expected) / expected < tol,
     `expected ~${expected}, got ${actual}`);
 
-test("builds 18 legs from 12 assets", () => {
-  assert.equal(LEGS.length, 18);
-  assert.equal(new Set(LEGS.map((l) => l.id)).size, 18);
+test("builds 19 legs from 13 assets", () => {
+  assert.equal(LEGS.length, 19);
+  assert.equal(new Set(LEGS.map((l) => l.id)).size, 19);
 });
 
 test("leg multipliers derive from pivots", () => {
@@ -27,13 +27,13 @@ test("leg multipliers derive from pivots", () => {
   near(by["SUI-1"], 7.903);
   near(by["XRP-1"], 5.709);
   near(by["XLM-1"], 5.444);
-  near(by["ZIG-1"], 34.694);
+  near(by["ZIG-1"], 28.020);    // corrected exit: Jul 19 2024, not the later Dec 4 top
+  near(by["WLD-1"], 21.2);      // hypothetical pivot pair, not a settled historical trade
 });
 
-test("Kaspa is the runner-up opening leg, just behind AIOZ", () => {
+test("opening-leg ranking: AIOZ, Kaspa, Injective, then the corrected ZIGChain", () => {
   const firsts = LEGS.filter((l) => l.index === 1).sort((a, b) => b.multiple - a.multiple);
-  assert.equal(firsts[0].id, "AIOZ-1");
-  assert.equal(firsts[1].id, "KAS-1");
+  assert.deepEqual(firsts.slice(0, 4).map((l) => l.id), ["AIOZ-1", "KAS-1", "INJ-1", "ZIG-1"]);
 });
 
 test("KAS-1 conflicts with the other 2023-era openers but not with SUI or ZEC", () => {
@@ -51,6 +51,23 @@ test("best KAS-inclusive chain is a near-miss, short of the AIOZ optimum", () =>
   const best = kasChains[0];
   assert.deepEqual(best.chain.map((l) => l.id), ["KAS-1", "SUI-1", "ZEC-1", "ZEC-2"]);
   near(best.value, 88540, 0.01);
+  assert.ok(best.value < solveOptimal().value);
+});
+
+test("ZIG-1's corrected exit frees SUI-1, beating the old Dec-2024-top chain", () => {
+  const zigChains = allChains().filter((c) => c.chain.some((l) => l.assetId === "ZIG"));
+  const best = zigChains[0];
+  assert.deepEqual(best.chain.map((l) => l.id), ["ZIG-1", "SUI-1", "ZEC-1", "ZEC-2"]);
+  near(best.value, 28066, 0.01);
+  // The old exit (Dec 4 2024, $0.17) sold too late to catch SUI-1 and topped out near 4,397x.
+  assert.ok(best.value > 20000);
+});
+
+test("WLD-1 is a mid-pack hypothetical opener, not the record", () => {
+  const wldChains = allChains().filter((c) => c.chain.some((l) => l.assetId === "WLD"));
+  const best = wldChains[0];
+  assert.deepEqual(best.chain.map((l) => l.id), ["WLD-1", "SUI-1", "ZEC-1", "ZEC-2"]);
+  near(best.value, 21235, 0.01);
   assert.ok(best.value < solveOptimal().value);
 });
 

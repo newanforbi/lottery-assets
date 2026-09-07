@@ -259,6 +259,38 @@ export const ASSET_ABOUT = [
     ],
   },
   {
+    id: "WLD",
+    essence: "Hypothetical entry — a hindsight-only numbers exercise built on a pivot pair that predates the token's actual public launch.",
+    sections: [
+      {
+        title: "What it is",
+        body: [
+          "Worldcoin (WLD) is the token behind Tools for Humanity's World ID / World App project — an iris-scanning \"proof of personhood\" system meant to distinguish real humans from bots and AI agents online, paired with a token distributed to verified users. It is a Layer-2 project (World Chain) with an identity-and-distribution pitch rather than a payments or DeFi one.",
+          "WLD launched and began public trading in July 2023, on the back of a broader argument that as AI-generated content and bot traffic scale, cryptographic proof of unique humanity becomes valuable infrastructure — and that a token can bootstrap adoption by paying people (via iris scans at physical \"Orb\" stations) to join.",
+        ],
+      },
+      {
+        title: "Why this pivot pair is hypothetical",
+        body: [
+          "The entry used here — Sep 7 2022 at $0.45 — predates WLD's actual market existence by about ten months; there is no real order book print at that price on that date. This asset is included purely as a numbers exercise: a way to ask \"if a token had followed this price path, where would it rank?\" rather than a claim about Worldcoin's real trading history.",
+          "The exit, Mar 13 2024 at $9.54, does land inside WLD's real trading window and happens to fall on the same day Solana's first leg closed — but paired with a fictional entry, the resulting 21.2× multiple is illustrative only, not a settled historical trade the way every other asset's pivots are.",
+        ],
+      },
+      {
+        title: "Why it shows up here",
+        body: [
+          "As a thought experiment, WLD-1's 21.2× lands seventh of thirteen opening legs — behind AIOZ, Kaspa, Injective, ZIGChain (corrected), and Pepe, just ahead of SuperVerse and Solana. Its hypothetical holding period (Sep 2022 → Mar 2024) collides with the same 2023-era cohort as Kaspa and ZIGChain, so its best chain is WLD-1 → SUI-1 → ZEC-1 → ZEC-2 at roughly 21,235× — solidly mid-pack, nowhere near the optimum.",
+        ],
+      },
+      {
+        title: "What you are actually holding",
+        body: [
+          "In reality, WLD is a claim on adoption of biometric proof-of-personhood infrastructure, not on the fictional 2022 price used in this exercise. Treat every number attached to this asset as a \"what if,\" not as evidence about how Worldcoin actually traded — the other twelve assets in this set are real recorded pivots, and WLD deliberately is not.",
+        ],
+      },
+    ],
+  },
+  {
     id: "SUI",
     essence: "A Move-based Layer 1 from Mysten Labs — object-centric design, parallel execution, and a summer-2024-to-New-Year price run that currently owns the autumn slot.",
     sections: [
@@ -324,32 +356,32 @@ export const ASSET_ABOUT = [
   },
   {
     id: "ZIG",
-    essence: "A long DeFi / RWA-adjacent token grind — ~35× over fifteen months that locks out the openers the lottery actually needs.",
+    essence: "A DeFi / RWA-adjacent token grind — ~28× over eleven months, corrected to the exit that actually maximises the chain rather than the biggest headline multiple.",
     sections: [
       {
         title: "What it is",
         body: [
           "ZIGChain (ticker ZIG; historically associated with the Zignaly / ZIG ecosystem) sits in the crowded lane of crypto projects pitching portfolio tooling, copy-trading roots, and later chain / RWA ambitions. Like many mid-cap names, the marketed product surface has shifted with the cycle; what the lottery cares about is the price path, not the pitch deck.",
-          "In this set it plays the role of a multi-season hold: bought in the late-2023 trough and carried deep into the 2024 risk-on year. That is a very different animal from the short autumn middles (SUI, XRP, XLM) that fit between AIOZ and Zcash.",
+          "In this set it plays the role of a multi-season hold: bought in the late-2023 trough and carried well into the 2024 risk-on year. That is a very different animal from the short autumn middles (SUI, XRP, XLM) that fit between AIOZ and Zcash.",
         ],
       },
       {
-        title: "Why the multiple misleads",
+        title: "Why the exit was corrected",
         body: [
-          "From $0.0049 on Aug 24 2023 to $0.17 on Dec 4 2024 is roughly 34.7× — larger than SUI's autumn leg and in the same ballpark as AIOZ's opener. The catch is occupancy: 468 days that overlap AIOZ-1, INJ, SOL-1, PEPE, SUI, XRP, SUPER, and almost every other tradeable bar before Zcash.",
-          "Alone, ZIG loses to AIOZ-1's 90× opener. Chained into Zcash full it reaches about 4,397× — real, and still an order of magnitude behind AIOZ → SUI → ZEC at 90,147×. Same exit day as SUPER-2 and PEPE-2 (Dec 4), so it is competing for a crowded sell print after blocking the board.",
+          "ZIGChain's all-time chart keeps climbing after this leg's original Dec 4 2024 exit ($0.17, ~34.7×) — a bigger raw number, but a print made four and a half months too late to catch Sui's Jul 31 2024 buy. Selling instead at the Jul 19 2024 high of $0.1373 (~28.0×) gives up about 6.7 points of multiple but frees the calendar for the same Sui → Zcash finish AIOZ and Kaspa use.",
+          "The trade-off resolves decisively: riding to the December top and jumping straight to Zcash tops out around 4,397×, while selling in July and chaining through Sui reaches roughly 28,066× — about 6.4× more capital by rotating out earlier rather than later.",
         ],
       },
       {
         title: "Why it shows up here",
         body: [
-          "ZIG is in the set as a cautionary lane: survivorship bias loves a 35× coin, and the lottery exists to show why you still would not pick it if capital can only be in one place. Best ZIG chain is ZIG-1 → ZEC-1 → ZEC-2. It never enters the optimum.",
+          "With the corrected exit, ZIG-1 is the fourth-largest opening leg in the set (behind AIOZ, Kaspa, and Injective) and its best chain — ZIG-1 → SUI-1 → ZEC-1 → ZEC-2 at ~28,066× — is a real, ranked result, even though it still loses to the AIOZ-led optimum at 90,147×. It remains a cautionary lane about chasing the biggest single number: the 730-day window from Aug 2023 onward overlaps AIOZ-1, Kaspa, Injective, Solana, Pepe, and SuperVerse, so ZIG only ever gets to run alone or into the late-cycle Sui/Zcash finish.",
         ],
       },
       {
         title: "What you are actually holding",
         body: [
-          "A mid-liquidity ecosystem token whose returns in this window came from a long speculative repricing, not from a claim on mature protocol cash flows. Holding it through this pivot pair means sitting out AIOZ, Sui, and the rest of the 2023–2024 rotation puzzle — which is exactly why the solver leaves it on the bench.",
+          "A mid-liquidity ecosystem token whose returns in this window came from a speculative repricing, not from a claim on mature protocol cash flows. Holding it through this pivot pair still means sitting out AIOZ, Kaspa, and most of the 2023–2024 rotation puzzle — the correction just makes clear that when you sell also matters as much as how high the chart eventually went.",
         ],
       },
     ],
