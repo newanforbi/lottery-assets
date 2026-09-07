@@ -5,7 +5,7 @@
 **Lottery Assets** is a chronological rotation lottery: eleven assets that went
 vertical, seventeen tradeable buy-low / sell-high legs, and one pool of capital
 that can only be in one position at a time. Overlapping legs are mutually
-exclusive — chain the ones that fit the calendar (Oct 2022 &ndash; Aug 2026) and
+exclusive — chain the ones that fit the calendar (Oct 2022 &ndash; Sep 2026) and
 see where a starting stake lands.
 
 ---
@@ -31,16 +31,17 @@ fades out.
 Running the search over chains that actually obey the calendar turned up a result
 the original hand-built analysis missed, and one row it got wrong:
 
-- **The optimum is `AIOZ-1 → SUI-1 → ZEC-1 → ZEC-2` at 63,337&times;** &mdash;
-  $633.4M on $10K. Ahead of the XRP middle-leg path (45,753&times;), the older
-  SuperVerse path (39,307&times;), and the published best of 28,276&times;.
+- **The optimum is `AIOZ-1 → SUI-1 → ZEC-1 → ZEC-2` at 90,147&times;** &mdash;
+  $901.5M on $10K, after ZEC-2's live print moved to Sep 6 2026 at $1,248.13
+  (~5.86&times;). Ahead of the XRP middle-leg path (65,120&times;), the older
+  SuperVerse path (55,946&times;), and the published best of 28,276&times;.
   Sui's July 31 2024 → Jan 1 2025 leg returns ~7.90&times; and fits between
   AIOZ's exit and Zcash's entry, outrunning XRP (5.71&times;), Stellar/XLM
   (5.44&times;), SuperVerse (4.91&times;), and Strategy (3.53&times;) in that
   autumn window. XLM's eight-week pop is real but fully inside SUI's hold, so
   it does not change the optimum. ZIGChain's ~34.7&times; Aug 2023&ndash;Dec 2024
   grind overlaps AIOZ and almost every other opener; best ZIG path is only
-  ~3,089&times; with Zcash full.
+  ~4,397&times; with Zcash full.
 
 Every other figure from the original analysis reproduces exactly.
 
@@ -72,7 +73,7 @@ corrected pivot propagates everywhere instead of drifting out of sync.
 | **Leaderboard** | Every valid chain ranked, plus the original eight paths checked against the calendar. |
 | **Assets** | Per-asset pivots and legs with individual multipliers. |
 | **About the Assets** | Deep dossiers on what each of the eleven assets actually is — product, market structure, and why it appears in Lottery Assets. |
-| **Reality Check** | Sliders for move capture, slippage, and per-rotation tax. At 65% capture the $633.4M becomes $4.0M. |
+| **Reality Check** | Sliders for move capture, slippage, and per-rotation tax. At 65% capture the $901.5M becomes $4.9M. |
 | **Learn** | Educational guide covering what cryptocurrency is, where to buy it (Coinbase, Kraken, Binance), how to self-custody, security basics, taxes, and key concepts. |
 
 ## Tech stack

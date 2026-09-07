@@ -91,7 +91,7 @@ export default function App() {
       >
         <div style={{ padding: compact ? "26px 16px 0" : "32px 28px 0", maxWidth: 1080, margin: "0 auto" }}>
           <Eyebrow size={10} color="rgba(255,255,255,0.25)" style={{ letterSpacing: 2, marginBottom: 8 }}>
-            Eleven assets · 17 tradeable legs · Oct 2022 → Aug 2026
+            Eleven assets · 17 tradeable legs · Oct 2022 → Sep 2026
           </Eyebrow>
           <h1
             style={{
