@@ -11,6 +11,7 @@ import AboutAssets from "./components/AboutAssets.jsx";
 import RealityCheck from "./components/RealityCheck.jsx";
 import Learn from "./components/Learn.jsx";
 import ExchangeBook from "./components/ExchangeBook.jsx";
+import KrakenFunded from "./components/KrakenFunded.jsx";
 
 const NAV = [
   { key: "lottery", label: "LOTTERY" },
@@ -18,10 +19,13 @@ const NAV = [
   { key: "leaderboard", label: "LEADERBOARD" },
   { key: "assets", label: "ASSETS" },
   { key: "leverage", label: "3× BOOK" },
+  { key: "funded", label: "FUNDED" },
   { key: "about", label: "ABOUT THE ASSETS" },
   { key: "reality", label: "REALITY CHECK" },
   { key: "learn", label: "LEARN" },
 ];
+
+const HIDE_LOTTERY_CHROME = new Set(["leverage", "funded"]);
 
 const PRESETS = [1000, 5000, 10000, 50000, 100000];
 
@@ -95,7 +99,9 @@ export default function App() {
           <Eyebrow size={10} color="rgba(255,255,255,0.25)" style={{ letterSpacing: 2, marginBottom: 8 }}>
             {tab === "leverage"
               ? "Twenty-eight Coinbase names · 3× buying power · Oct 2022 → Sep 2026"
-              : "Thirteen assets · 19 tradeable legs · Oct 2022 → Sep 2026"}
+              : tab === "funded"
+                ? "Kraken Funded · $10K challenge · +12% pass · −3% fail"
+                : "Thirteen assets · 19 tradeable legs · Oct 2022 → Sep 2026"}
           </Eyebrow>
           <h1
             style={{
@@ -121,7 +127,8 @@ export default function App() {
             the legs that fit and see where a starting stake lands.
           </p>
 
-          {/* Capital + actions */}
+          {/* Capital + actions — lottery chrome. Funded is a fixed $10K book. */}
+          {tab !== "funded" && (
           <div
             style={{
               display: "flex",
@@ -202,7 +209,7 @@ export default function App() {
               </div>
             </div>
 
-            {tab !== "leverage" && (
+            {!HIDE_LOTTERY_CHROME.has(tab) && (
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 <Button onClick={solve} color="#00E5FF" filled disabled={solving}>
                   {solving ? "Solving…" : "Solve"}
@@ -211,6 +218,7 @@ export default function App() {
               </div>
             )}
           </div>
+          )}
 
           <nav aria-label="Sections">
             <div
@@ -254,6 +262,7 @@ export default function App() {
           {tab === "leaderboard" && <Leaderboard capital={capital} setChain={setChain} setTab={setTab} />}
           {tab === "assets" && <AssetCards chain={chain} setChain={setChain} />}
           {tab === "leverage" && <ExchangeBook capital={capital} />}
+          {tab === "funded" && <KrakenFunded />}
           {tab === "about" && <AboutAssets />}
           {tab === "reality" && <RealityCheck chain={chain} capital={capital} onSolve={solve} />}
           {tab === "learn" && <Learn />}
