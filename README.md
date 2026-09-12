@@ -91,11 +91,11 @@ corrected pivot propagates everywhere instead of drifting out of sync.
 | Tab | What it does |
 |-----|-------------|
 | **Lottery** | The timeline. Click legs to chain them; conflicts dim out. *Solve* animates the optimum, *Deal me a hand* draws a random valid chain. Starting-capital presets: $1K, $5K, $10K, $50K, $100K. |
+| **3× Book** | The Coinbase borrow book as a rotation lottery: twenty-eight names, isolated 3× (`3m − 2`), same click-to-chain timeline as Lottery. Listing-month prints are stripped. Solve finds `SOL-1 → CRV-1 → ZEC-2 → ZEC-3` at ~2.47 million×. |
+| **Funded** | The Kraken Funded book as a rotation lottery. Official rules stay in view ($90 / $10K / +12% / −3% / 80-20, no added leverage). Lanes are the names that already have a mapped history (3×-book overlap plus Injective). The other app-book names do not have pivots here yet. |
 | **Ladder** | Step-by-step capital progression for the selected chain, including the idle stretches in cash. |
 | **Leaderboard** | Every valid chain ranked, plus the original eight paths checked against the calendar. |
 | **Assets** | Per-asset pivots and legs with individual multipliers. |
-| **3× Book** | The Coinbase borrow book as a rotation lottery: twenty-eight names, isolated 3× (`3m − 2`), same click-to-chain timeline as Lottery. Listing-month prints are stripped. Solve finds `SOL-1 → CRV-1 → ZEC-2 → ZEC-3` at ~2.47 million×. |
-| **Funded** | The Kraken Funded book as a rotation lottery. Official rules stay in view ($90 / $10K / +12% / −3% / 80-20, no added leverage). Lanes are the names that already have a mapped history (3×-book overlap plus Injective). The other app-book names do not have pivots here yet. |
 | **About the Assets** | Deep dossiers on what each of the thirteen assets actually is — product, market structure, and why it appears in Lottery Assets. |
 | **Reality Check** | Sliders for move capture, slippage, and per-rotation tax. At 65% capture the $901.5M becomes $4.9M. |
 | **Learn** | Educational guide covering what cryptocurrency is, where to buy it (Coinbase, Kraken, Binance), how to self-custody, security basics, taxes, and key concepts. |

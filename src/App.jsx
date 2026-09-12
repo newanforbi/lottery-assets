@@ -17,11 +17,11 @@ import KrakenFunded from "./components/KrakenFunded.jsx";
 
 const NAV = [
   { key: "lottery", label: "LOTTERY" },
+  { key: "leverage", label: "3× BOOK" },
+  { key: "funded", label: "FUNDED" },
   { key: "ladder", label: "LADDER" },
   { key: "leaderboard", label: "LEADERBOARD" },
   { key: "assets", label: "ASSETS" },
-  { key: "leverage", label: "3× BOOK" },
-  { key: "funded", label: "FUNDED" },
   { key: "about", label: "ABOUT THE ASSETS" },
   { key: "reality", label: "REALITY CHECK" },
   { key: "learn", label: "LEARN" },
