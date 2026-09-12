@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { GalaxyBackground } from "./ui/Cosmos.jsx";
 import { MONO, DISPLAY, SANS, Eyebrow, Button, Odometer, useMediaQuery } from "./ui/atoms.jsx";
-import { formatCurrency, formatMultiple } from "./ui/format.js";
+import { formatCurrency, formatFull, formatMultiple } from "./ui/format.js";
+import { BOOK_LEVERAGE } from "./data/exchangeBook.js";
 import { solveOptimal, randomChain, chainValue, sortChain } from "./engine/solver.js";
 import { bookOptimal, buildBookLegs } from "./engine/leverage.js";
 import { fundedOptimal, fundedRandom } from "./engine/funded.js";
@@ -38,7 +39,7 @@ const COPY = {
   leverage: {
     eyebrow: "Twenty-eight Coinbase names · 3× buying power · Oct 2022 → Sep 2026",
     blurb:
-      "The Coinbase borrow book as a rotation lottery. Isolated 3× turns a spot multiple m into 3m − 2. Same calendar rule: one pool of cash, overlapping legs mutually exclusive. Listing-month prints are stripped.",
+      "The Coinbase borrow book as a rotation lottery. $3,000 cash is $9,000 on the tape — isolated 3×, so a spot multiple m becomes 3m − 2 on your cash. Same calendar rule: one pool of cash, overlapping legs mutually exclusive. A one-third drop from entry wipes the equity.",
   },
   funded: {
     eyebrow: "Kraken Funded · $10K challenge · +12% pass · −3% fail",
@@ -168,7 +169,9 @@ export default function App() {
             }}
           >
             <div style={{ flex: "0 1 auto" }}>
-              <Eyebrow size={9} style={{ marginBottom: 6 }}>Starting capital</Eyebrow>
+              <Eyebrow size={9} style={{ marginBottom: 6 }}>
+                {tab === "leverage" ? `Cash · ${BOOK_LEVERAGE}× buying power` : "Starting capital"}
+              </Eyebrow>
               {/* Wraps so the preset row drops to its own line rather than
                   pushing the page sideways on ~320px phones. */}
               <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
@@ -185,15 +188,15 @@ export default function App() {
                     onChange={(e) => onCapitalChange(e.target.value)}
                     onBlur={() => capitalText === "" && setPreset(10000)}
                     inputMode="numeric"
-                    aria-label="Starting capital in dollars"
+                    aria-label={tab === "leverage" ? "Cash in dollars" : "Starting capital in dollars"}
                     style={{
                       width: compact ? 110 : 140, background: "transparent", border: "none", outline: "none",
                       fontFamily: MONO, fontSize: 18, color: "#fff", fontWeight: 600,
                     }}
                   />
                 </div>
-                <div style={{ display: "flex", gap: 4 }}>
-                  {PRESETS.map((p) => (
+                <div style={{ display: "flex", gap: 4, alignItems: "center", flexWrap: "wrap" }}>
+                  {(tab === "leverage" ? [1000, 3000, 5000, 10000, 50000] : PRESETS).map((p) => (
                     <button
                       key={p}
                       onClick={() => setPreset(p)}
@@ -207,6 +210,11 @@ export default function App() {
                       {formatCurrency(p).replace(".0", "")}
                     </button>
                   ))}
+                  {tab === "leverage" && (
+                    <span style={{ fontFamily: MONO, fontSize: 12, color: "#F7931A", whiteSpace: "nowrap" }}>
+                      → {formatFull(capital * BOOK_LEVERAGE)} on the tape
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
