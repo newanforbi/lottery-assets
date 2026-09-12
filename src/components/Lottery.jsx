@@ -10,7 +10,7 @@ export default function Lottery({ chain, setChain, capital }) {
       chain={chain}
       setChain={setChain}
       capital={capital}
-      emptyHint="Click any bar to start a chain. Bars that overlap what you already hold will fade out — one pool of capital can only be in one position at a time, which is the whole constraint Lottery Assets exists to make visible."
+      emptyHint="Click any bar to start a chain. Bars that overlap what you already hold will fade out — one pool of capital can only be in one position at a time. WLD* is a hypothetical pre-launch entry, not a public market. ZEC-2 is marked to the 6 Sep 2026 print and is still open."
     />
   );
 }

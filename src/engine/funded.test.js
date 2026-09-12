@@ -2,17 +2,19 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   afterSpread,
-  buildFundedLegs,
+  buildFundedCorridors,
   challengeLines,
   challengeProgress,
   fundedHistoryAssets,
   fundedOptimal,
+  fundedPasses,
   fundedPayout,
+  fundedScore,
   spotMoveToFail,
   spotMoveToPass,
+  walkCorridor,
 } from "./funded.js";
-import { FUNDED_RULES, FUNDED_ASSETS, FUNDED_TIERS } from "../data/krakenFunded.js";
-import { isValidChain } from "./solver.js";
+import { FUNDED_ASSETS, FUNDED_MODEL, FUNDED_RULES, FUNDED_TIERS } from "../data/krakenFunded.js";
 
 const near = (actual, expected, tol = 1e-9) =>
   assert.ok(Math.abs(actual - expected) < tol, `expected ~${expected}, got ${actual}`);
@@ -41,13 +43,15 @@ test("published tiers are $1K/$20, $5K/$50, $10K/$90", () => {
   );
 });
 
-test("round-trip 0.04% × 2 haircuts a multiple by (1 − spread)²", () => {
+test("model spread is labeled separately from the 12/3/80 contract", () => {
+  assert.equal(FUNDED_RULES.spreadEachSide, undefined);
+  assert.equal(FUNDED_MODEL.spreadEachSide, 0.0004);
   const r = afterSpread(2);
-  near(r, 2 * (1 - FUNDED_RULES.spreadEachSide) ** 2);
+  near(r, 2 * (1 - 0.0004) / (1 + 0.0004));
   assert.ok(r < 2);
 });
 
-test("all-in pass / fail spots include the spread", () => {
+test("all-in pass / fail spots include the model spread", () => {
   const pass = spotMoveToPass();
   const fail = spotMoveToFail();
   near(afterSpread(pass), 1 + FUNDED_RULES.passPct);
@@ -86,6 +90,26 @@ test("challenge progress is pass / fail / open against fixed lines", () => {
   assert.equal(challengeProgress(9_701), "open");
 });
 
+test("a sparse 38× first print is still a +12% pass, not a lottery multiple", () => {
+  const walk = walkCorridor(1, "2023-01-01", [{ date: "2023-06-01", px: 38 }]);
+  assert.equal(walk.outcome, "pass");
+  near(walk.net, 1.12);
+  assert.ok(walk.printNet > 30);
+});
+
+test("a +12% print before −3% is a pass; the reverse fails", () => {
+  const pass = walkCorridor(100, "2024-01-15", [
+    { date: "2024-02-01", px: 105 },
+    { date: "2024-03-01", px: 113 },
+  ]);
+  assert.equal(pass.outcome, "pass");
+  const fail = walkCorridor(100, "2024-01-15", [
+    { date: "2024-02-01", px: 96 },
+    { date: "2024-03-01", px: 130 },
+  ]);
+  assert.equal(fail.outcome, "fail");
+});
+
 test("funded book has the 58 names from the screenshots", () => {
   assert.equal(FUNDED_ASSETS.length, 58);
   const ids = new Set(FUNDED_ASSETS.map((a) => a.id));
@@ -104,21 +128,22 @@ test("lottery overlap is the seven names that actually sit on both books", () =>
   assert.deepEqual(lotto, ["INJ", "PEPE", "SOL", "SUI", "WLD", "XRP", "ZEC"]);
 });
 
-test("funded history lanes are the mapped names, including Injective, no leverage", () => {
+test("funded corridors score +12% before −3%, not multi-year compounding", () => {
   const assets = fundedHistoryAssets();
-  const ids = assets.map((a) => a.id);
-  assert.ok(ids.includes("INJ"));
-  assert.ok(ids.includes("SOL"));
-  assert.ok(ids.includes("HYPE"));
-  assert.ok(!ids.includes("BNB"));
-  assert.ok(!ids.includes("XLM"));
-  const legs = buildFundedLegs();
-  assert.ok(legs.length >= 20);
-  for (const leg of legs) {
-    assert.equal(leg.leverage, 1);
-    near(leg.multiple, leg.spotMultiple, 1e-12);
-  }
+  assert.ok(assets.some((a) => a.id === "INJ"));
+  const legs = buildFundedCorridors();
+  assert.ok(legs.length >= 10);
+  const passes = fundedPasses(legs);
+  assert.ok(passes.length >= 1);
+  assert.ok(passes.every((l) => l.outcome === "pass"));
+  assert.ok(passes.every((l) => l.multiple >= 1.12));
   const opt = fundedOptimal();
-  assert.ok(opt.chain.length >= 3);
-  assert.ok(isValidChain(opt.chain));
+  assert.equal(opt.chain.length, 1);
+  assert.equal(opt.chain[0].outcome, "pass");
+  assert.ok(opt.chain[0].days <= passes[passes.length - 1].days);
+  assert.ok(opt.value < 3, "a pass is about +12%, not a lottery multiple");
+  near(opt.value, 1.12, 1e-9);
+  const keep = fundedScore(opt.chain, 10_000);
+  assert.equal(keep.kind, "pass");
+  assert.equal(keep.final, 960);
 });

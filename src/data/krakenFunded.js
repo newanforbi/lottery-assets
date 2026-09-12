@@ -11,10 +11,14 @@ export const FUNDED_RULES = {
   fee: 90,
   traderSplit: 0.8,
   houseSplit: 0.2,
-  spreadEachSide: 0.0004,
   minPayout: 20,
   operator: "Payward Oceanic Ltd (BVI)",
   evaluator: "Breakout Trading Group, LLC",
+};
+
+/** Model spread — Kraken's FAQ has mentioned 0.04% each side; not part of the 12/3/80 contract. */
+export const FUNDED_MODEL = {
+  spreadEachSide: 0.0004,
 };
 
 export const FUNDED_TIERS = [
