@@ -5,6 +5,7 @@ import {
   leveredMultiple, liquidationPrice, liquidationDrop,
   leveredMultipleAfterInterest, recoveryMultiple,
   buildBookLegs, bookOptimal, bookAllChains, bookBestSpotSingle,
+  seasonedMonthly, seasonedPivots, isSeasoned, LISTING_SEASON_DAYS,
 } from "./leverage.js";
 import { isValidChain } from "./solver.js";
 
@@ -49,7 +50,7 @@ test("book leg multipliers derive from pivots, then 3× is applied", () => {
   near(by["ZEC-2"].spotMultiple, 29.56);
   near(by["ZEC-3"].spotMultiple, 6.7536);
   near(by["PEPE-1"].spotMultiple, 24.608);
-  near(by["HYPE-1"].spotMultiple, 15.213);
+  near(by["HYPE-1"].spotMultiple, 6.318); // Apr 2025 trough, not the Nov 2024 genesis print
   near(by["SUI-1"].spotMultiple, 14.793);
   assert.equal(by["ZEC-3"].open, true);
   assert.equal(by["HYPE-2"].open, true);
@@ -73,6 +74,19 @@ test("spot-equivalent book optimum is the same path, ~63× smaller", () => {
 
 test("every enumerated 3× chain is calendar-valid", () => {
   for (const { chain } of bookAllChains(3)) assert.ok(isValidChain(chain));
+});
+
+test("listing-month and genesis prints are not used", () => {
+  const hype = BOOK_TRADEABLE.find((a) => a.id === "HYPE");
+  const sui = BOOK_TRADEABLE.find((a) => a.id === "SUI");
+  assert.equal(isSeasoned("2024-11-29", hype), false);
+  assert.equal(isSeasoned("2025-04-09", hype), true);
+  assert.ok(seasonedPivots(hype).every((p) => isSeasoned(p.date, hype)));
+  assert.ok(!seasonedPivots(hype).some((p) => p.px === 3.9));
+  const suiMonths = seasonedMonthly(sui).map((p) => p.date.slice(0, 7));
+  assert.ok(!suiMonths.includes("2023-05"), "Sui listing month must be dropped");
+  assert.ok(suiMonths.includes("2023-06") || suiMonths.includes("2023-07"));
+  assert.ok(LISTING_SEASON_DAYS >= 30);
 });
 
 test("Zcash's three-leg product beats buying the Jul-2024 low and holding", () => {

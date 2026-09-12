@@ -4,11 +4,13 @@
 // Coinbase listing starts later. Multipliers are never stored; they are derived
 // from these pivots the same way the lottery engine derives them.
 //
-// HYPE's first pivot is the public-market genesis ATL (29 Nov 2024, ~$3.90),
-// not a Coinbase print — Coinbase listed HYPE in Feb 2026. WLD ignores the
-// lottery's hypothetical 2022 entry and a 9 Sep 2025 $3.95 wick (close $1.93).
-// RENDER ignores a 10 Oct 2025 $0.65 flash-wick. USDC is listed on the book
-// as the cash rail and has no tradeable legs.
+// Listing / genesis opening prints are not used. Tokens that launched inside
+// the window carry a `listed` date; the engine drops the first 30 days and any
+// leftover launch-wick first close so that spike cannot set the scale or a
+// pivot. HYPE therefore starts at the Apr 2025 trough, not the 29 Nov 2024
+// airdrop print. WLD ignores the lottery's hypothetical 2022 entry and a
+// 9 Sep 2025 $3.95 wick (close $1.93). RENDER ignores a 10 Oct 2025 $0.65
+// flash-wick. USDC is the cash rail and has no tradeable legs.
 
 export const BOOK_AS_OF = "2026-09-12";
 export const BOOK_LEVERAGE = 3;
@@ -266,13 +268,14 @@ export const BOOK_ASSETS = [
     name: "Hyperliquid",
     ticker: "HYPE",
     color: "#32DFC9",
-    note: "Genesis airdrop Nov 29 2024 (~$3.90 ATL). Coinbase listed Feb 2026; the second leg is the exchange-printed run to $89.65.",
+    note: "Genesis airdrop Nov 29 2024 is excluded — that opening print is a listing artifact. First seasoned leg is the Apr 2025 trough into the Sep 2025 high; Coinbase listed Feb 2026.",
     inLottery: false,
     openLast: true,
+    listed: "2024-11-29",
     pivots: [
       {
-        date: "2024-11-29",
-        px: 3.9,
+        date: "2025-04-09",
+        px: 9.39,
       },
       {
         date: "2025-09-18",
@@ -295,7 +298,7 @@ export const BOOK_ASSETS = [
       ["2026-08", 87.92], ["2026-09", 79.77]
     ],
     windowHigh: 89.65,
-    windowLow: 3.9,
+    windowLow: 9.39,
   },
   {
     id: "DOGE",
@@ -686,9 +689,10 @@ export const BOOK_ASSETS = [
     name: "Sui",
     ticker: "SUI",
     color: "#4DA2FF",
-    note: "Coinbase history from listing. The book uses the Oct 2023 $0.363 low into Jan 2025 $5.37 (~14.8\u00d7), deeper than the lottery's Jul 2024 start.",
+    note: "Launched May 2023; the listing-month print is dropped. The book uses the Oct 2023 $0.363 low into Jan 2025 $5.37 (~14.8\u00d7), deeper than the lottery's Jul 2024 start.",
     inLottery: true,
     openLast: false,
+    listed: "2023-05-03",
     pivots: [
       {
         date: "2023-10-19",
@@ -823,9 +827,10 @@ export const BOOK_ASSETS = [
     name: "Worldcoin",
     ticker: "WLD",
     color: "#B7B9C6",
-    note: "Coinbase prints from Apr 2025 only. Uses the Jun \u2192 Sep 2025 close (not the $3.95 wick). The lottery's 2022 entry is hypothetical and is not used here.",
+    note: "Launched Jul 2023; Coinbase prints from Apr 2025. Uses the Jun \u2192 Sep 2025 close (not the $3.95 wick). The lottery's 2022 entry is hypothetical and is not used here.",
     inLottery: true,
     openLast: false,
+    listed: "2023-07-24",
     pivots: [
       {
         date: "2025-06-22",
@@ -855,6 +860,7 @@ export const BOOK_ASSETS = [
     note: "Kraken/Coinbase prints from May 2023. Two legs: the first meme impulse, then the Sep \u2192 Dec 2024 second wave. Largest single opener in the book after Zcash's later run.",
     inLottery: true,
     openLast: false,
+    listed: "2023-04-19",
     pivots: [
       {
         date: "2023-09-14",
@@ -928,9 +934,10 @@ export const BOOK_ASSETS = [
     name: "Render",
     ticker: "RENDER",
     color: "#E04E2A",
-    note: "Coinbase from the Feb 2024 ticker transition. Uses the Aug 2024 $3.41 low into Dec 2024 $11.85. The Oct 2025 $0.65 print was a one-day wick and is ignored.",
+    note: "RENDER ticker listed Feb 2024; the opening-month print is dropped so the listing wick cannot set the scale. Uses the Aug 2024 $3.41 low into Dec 2024 $11.85.",
     inLottery: false,
     openLast: false,
+    listed: "2024-02-15",
     pivots: [
       {
         date: "2024-08-05",
@@ -998,6 +1005,7 @@ export const BOOK_ASSETS = [
     note: "Coinbase from Feb 2025. Apr 2025 $0.0037 into the Jul 2025 $0.0466 NFT-meme peak \u2014 a 12.6\u00d7 spot leg in three months.",
     inLottery: false,
     openLast: false,
+    listed: "2024-12-17",
     pivots: [
       {
         date: "2025-04-09",

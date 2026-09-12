@@ -3,6 +3,7 @@ import { BOOK_ASSETS, BOOK_AS_OF, BOOK_CASH, BOOK_LEVERAGE, BOOK_TRADEABLE } fro
 import {
   bookBestSingle, bookOptimal, bookTopChains, buildBookLegs,
   leveredMultiple, liquidationPrice, recoveryMultiple,
+  seasonedAsset, seasonedMonthly,
 } from "../engine/leverage.js";
 import { chainValue } from "../engine/solver.js";
 import { formatCurrency, formatDate, formatDateShort, formatMultiple, formatPrice } from "../ui/format.js";
@@ -15,14 +16,8 @@ const VIEWS = [
   { key: "fromhere", label: "FROM HERE" },
 ];
 
-function monthlyPoints(monthly) {
-  return (monthly || []).map((row) =>
-    Array.isArray(row) ? { date: `${row[0]}-01`, px: row[1] } : row
-  );
-}
-
 function Sparkline({ monthly, color, lastPx }) {
-  const pts = monthlyPoints(monthly);
+  const pts = seasonedMonthly({ monthly });
   if (pts.length < 2) {
     return (
       <div style={{ height: 44, display: "flex", alignItems: "center" }}>
@@ -90,11 +85,12 @@ export default function ExchangeBook({ capital }) {
   const buyingPower = capital * BOOK_LEVERAGE;
   const borrowed = capital * (BOOK_LEVERAGE - 1);
 
-  const selected = BOOK_ASSETS.find((a) => a.id === selectedId) ?? BOOK_TRADEABLE[0];
+  const selected = seasonedAsset(BOOK_ASSETS.find((a) => a.id === selectedId) ?? BOOK_TRADEABLE[0]);
   const selectedLegs = legs.filter((l) => l.assetId === selected.id);
 
   const fromHere = useMemo(() => {
-    return BOOK_TRADEABLE.map((asset) => {
+    return BOOK_TRADEABLE.map((raw) => {
+      const asset = seasonedAsset(raw);
       const spot = recoveryMultiple(asset.lastPx, asset.windowHigh);
       return {
         asset,
@@ -124,9 +120,9 @@ export default function ExchangeBook({ capital }) {
         <p style={{ fontFamily: SANS, fontSize: 13.5, color: "rgba(255,255,255,0.6)", lineHeight: 1.7, margin: 0 }}>
           Isolated {BOOK_LEVERAGE}× turns a spot multiple <span style={{ fontFamily: MONO }}>m</span> into{" "}
           <span style={{ fontFamily: MONO }}>{BOOK_LEVERAGE}m − {BOOK_LEVERAGE - 1}</span>. A 2× coin is 4× on cash; a
-          one-third drop from entry wipes the equity. Borrow interest is not in these headlines —
-          Coinbase charges it on the borrowed slice, and it compounds against you the longer a
-          leg runs. Prints through {formatDate(BOOK_AS_OF)}.
+          one-third drop from entry wipes the equity. Genesis and listing-month prints are
+          stripped from every name — that left-hand spike when a coin first ticks is not a
+          market. Borrow interest is not in these headlines. Prints through {formatDate(BOOK_AS_OF)}.
         </p>
       </Panel>
 
@@ -292,11 +288,11 @@ function HistoryMap({ compact, selected, selectedLegs, leverage, onSelect }) {
             </p>
           </div>
           <div style={{ flex: "1 1 220px", minWidth: 180 }}>
-            <Eyebrow size={9} style={{ marginBottom: 6 }}>Monthly close · log scale</Eyebrow>
+            <Eyebrow size={9} style={{ marginBottom: 6 }}>Monthly close · log scale · listing month stripped</Eyebrow>
             <Sparkline monthly={selected.monthly} color={selected.color} lastPx={selected.lastPx} />
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
               <span style={{ fontFamily: MONO, fontSize: 9, color: "rgba(255,255,255,0.3)" }}>
-                {monthlyPoints(selected.monthly)[0] ? formatDateShort(monthlyPoints(selected.monthly)[0].date) : "—"}
+                {selected.monthly?.[0] ? formatDateShort(selected.monthly[0].date) : "—"}
               </span>
               <span style={{ fontFamily: MONO, fontSize: 9, color: selected.color }}>
                 {selected.lastPx ? formatPrice(selected.lastPx) : "—"} · {formatDateShort(selected.lastDate || BOOK_AS_OF)}
