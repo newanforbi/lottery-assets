@@ -131,6 +131,7 @@ export const ASSETS = [
     ticker: "WLD",
     color: "#B7B9C6",
     colorDim: "rgba(183,185,198,0.12)",
+    hypothetical: true,
     note: "Hypothetical — the World App / WLD token did not trade publicly until Jul 2023, so this pre-launch entry is illustrative only, not a settled historical trade.",
     pivots: [
       { date: "2022-09-07", px: 0.45 },

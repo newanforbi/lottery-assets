@@ -2,11 +2,11 @@ import { chainValue, sortChain } from "../engine/solver.js";
 import { formatCurrency, formatFull, formatMultiple, formatPrice, formatDate } from "../ui/format.js";
 import { MONO, SANS, Eyebrow, Panel, Stat, Button, Chip, useMediaQuery } from "../ui/atoms.jsx";
 
-function EmptyState({ onSolve }) {
+function EmptyState({ onSolve, source }) {
   return (
     <Panel title="Capital ladder">
       <p style={{ fontFamily: SANS, fontSize: 13, color: "rgba(255,255,255,0.45)", lineHeight: 1.6, margin: "0 0 16px" }}>
-        Nothing chained yet. Pick legs in the lottery, or drop in the optimal chain and read the
+        Nothing chained yet. Pick legs in the {source === "book" ? "3× book" : "lottery"}, or drop in the optimal chain and read the
         progression from here.
       </p>
       <Button onClick={onSolve} color="#00E5FF" filled>Solve and show me</Button>
@@ -14,9 +14,9 @@ function EmptyState({ onSolve }) {
   );
 }
 
-export default function Ladder({ chain, capital, onSolve }) {
+export default function Ladder({ chain, capital, onSolve, source = "lottery" }) {
   const compact = useMediaQuery("(max-width: 720px)");
-  if (!chain.length) return <EmptyState onSolve={onSolve} />;
+  if (!chain.length) return <EmptyState onSolve={onSolve} source={source} />;
 
   const { steps, final, multiple } = chainValue(chain, capital);
   const sorted = sortChain(chain);

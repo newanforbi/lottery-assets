@@ -26,9 +26,18 @@ function LegBar({ leg, state, onClick, onHover, compact }) {
   const width = pct(leg.sellTime) - left;
   const selected = state === "selected";
   const blocked = state === "blocked";
+  const dead = state === "dead" || leg.liquidated;
   const extra = leg.spotMultiple
     ? ` · ${formatMultiple(leg.spotMultiple)} spot`
     : "";
+  const outcome = leg.outcome;
+  const label = dead
+    ? "0× · liquidated"
+    : outcome === "pass"
+      ? "PASS"
+      : outcome === "fail"
+        ? "FAIL"
+        : formatMultiple(leg.multiple);
 
   return (
     <div
@@ -36,17 +45,19 @@ function LegBar({ leg, state, onClick, onHover, compact }) {
       tabIndex={blocked ? -1 : 0}
       aria-pressed={selected}
       aria-disabled={blocked}
-      aria-label={`${leg.assetName} leg ${leg.index}, ${formatDate(leg.buyDate)} to ${formatDate(leg.sellDate)}, ${formatMultiple(leg.multiple)}${blocked ? ", blocked by an overlapping position" : ""}`}
+      aria-label={`${leg.assetName} leg ${leg.index}, ${formatDate(leg.buyDate)} to ${formatDate(leg.sellDate)}, ${formatMultiple(leg.multiple)}${dead ? ", liquidated on the monthly path" : ""}${blocked ? ", blocked by an overlapping position" : ""}`}
       title={
-        blocked
-          ? `${leg.ticker} ${formatDate(leg.buyDate)} → ${formatDate(leg.sellDate)} — overlaps a position already in your chain`
-          : `${leg.ticker} ${formatPrice(leg.buyPx)} → ${formatPrice(leg.sellPx)}  (${leg.days} days, ${formatMultiple(leg.multiple)}${extra})`
+        dead
+          ? `${leg.ticker} ${formatDate(leg.buyDate)} → ${formatDate(leg.sellDate)} — monthly close tagged liq ${leg.liq != null ? formatPrice(leg.liq) : ""} · not in the solver`
+          : blocked
+            ? `${leg.ticker} ${formatDate(leg.buyDate)} → ${formatDate(leg.sellDate)} — overlaps a position already in your chain`
+            : `${leg.ticker} ${formatPrice(leg.buyPx)} → ${formatPrice(leg.sellPx)}  (${leg.days} days, ${formatMultiple(leg.multiple)}${extra}${outcome ? ` · ${outcome}` : ""})`
       }
-      onClick={() => !blocked && onClick(leg)}
+      onClick={() => !blocked && !dead && onClick(leg)}
       onMouseEnter={() => onHover(leg)}
       onMouseLeave={() => onHover(null)}
       onKeyDown={(e) => {
-        if (!blocked && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); onClick(leg); }
+        if (!blocked && !dead && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); onClick(leg); }
       }}
       style={{
         position: "absolute",
@@ -55,12 +66,14 @@ function LegBar({ leg, state, onClick, onHover, compact }) {
         top: 4,
         bottom: 4,
         borderRadius: 999,
-        cursor: blocked ? "not-allowed" : "pointer",
+        cursor: blocked || dead ? "not-allowed" : "pointer",
         pointerEvents: blocked ? "none" : "auto",
-        opacity: blocked ? 0.12 : 1,
-        background: selected
-          ? `linear-gradient(90deg, ${leg.color}55, ${leg.color}30)`
-          : `linear-gradient(90deg, ${leg.color}22, ${leg.color}12)`,
+        opacity: dead ? 0.35 : blocked ? 0.12 : 1,
+        background: dead
+          ? `repeating-linear-gradient(-45deg, ${leg.color}40 0 3px, ${leg.color}10 3px 7px)`
+          : selected
+            ? `linear-gradient(90deg, ${leg.color}55, ${leg.color}30)`
+            : `linear-gradient(90deg, ${leg.color}22, ${leg.color}12)`,
         border: `1px solid ${selected ? leg.color : leg.color + "45"}`,
         boxShadow: selected ? `0 0 18px ${leg.color}55, inset 0 0 12px ${leg.color}20` : "none",
         display: "flex",
@@ -91,7 +104,7 @@ function LegBar({ leg, state, onClick, onHover, compact }) {
           padding: "0 8px",
         }}
       >
-        {formatMultiple(leg.multiple)}
+        {label}
       </span>
     </div>
   );
@@ -123,31 +136,41 @@ export default function Timeline({
   setChain,
   capital,
   emptyHint,
+  mode = "chain",
+  score,
+  endsLabel = "Ends with",
 }) {
   const compact = useMediaQuery("(max-width: 720px)");
   const [hovered, setHovered] = useState(null);
 
   const selectedIds = useMemo(() => new Set(chain.map((l) => l.id)), [chain]);
   const sorted = useMemo(() => sortChain(chain), [chain]);
-  const result = useMemo(() => chainValue(chain, capital), [chain, capital]);
+  const result = useMemo(
+    () => (score ? score(chain, capital) : chainValue(chain, capital)),
+    [chain, capital, score]
+  );
   const lanes = useMemo(
     () => assets.filter((asset) => legs.some((l) => l.assetId === asset.id)),
     [assets, legs]
   );
 
   const legState = (leg) => {
+    if (leg.liquidated) return "dead";
     if (selectedIds.has(leg.id)) return "selected";
+    if (mode === "inspect") return "open";
     if (!canAdd(chain, leg)) return "blocked";
     if (hovered && hovered.id !== leg.id && conflicts(hovered, leg)) return "conflicting";
     return "open";
   };
 
   const toggle = (leg) => {
-    setChain((prev) =>
-      prev.some((l) => l.id === leg.id)
+    if (leg.liquidated) return;
+    setChain((prev) => {
+      if (mode === "inspect") return prev.some((l) => l.id === leg.id) ? [] : [leg];
+      return prev.some((l) => l.id === leg.id)
         ? prev.filter((l) => l.id !== leg.id)
-        : [...prev, leg]
-    );
+        : [...prev, leg];
+    });
   };
 
   const blockedCount = legs.filter((l) => !selectedIds.has(l.id) && !canAdd(chain, l)).length;
@@ -207,7 +230,7 @@ export default function Timeline({
                     transition: "color 0.25s ease",
                   }}
                 >
-                  {asset.ticker}
+                  {asset.ticker}{asset.hypothetical ? "*" : ""}
                 </div>
                 <div
                   style={{
@@ -322,7 +345,7 @@ export default function Timeline({
 
             <div style={{ display: "flex", gap: 18, flexWrap: "wrap", marginTop: 14, alignItems: "baseline" }}>
               <div>
-                <Eyebrow size={9} style={{ marginBottom: 2 }}>Ends with</Eyebrow>
+                <Eyebrow size={9} style={{ marginBottom: 2 }}>{endsLabel}</Eyebrow>
                 <span style={{ fontFamily: MONO, fontSize: 20, fontWeight: 600, color: "#F4B728" }}>
                   {formatCurrency(result.final)}
                 </span>
@@ -340,8 +363,13 @@ export default function Timeline({
                 </span>
               </div>
               {openLegs.map((leg) => (
-                <Chip key={leg.id} color="#F4B728">{leg.id} STILL OPEN</Chip>
+                <Chip key={leg.id} color="#F4B728">{leg.id} STILL OPEN · {formatDate(leg.sellDate)}</Chip>
               ))}
+              {sorted.some((l) => l.hypothetical || assets.find((a) => a.id === l.assetId)?.hypothetical) && (
+                <Chip color="#B7B9C6">HYPOTHETICAL ENTRY</Chip>
+              )}
+              {sorted.some((l) => l.outcome === "pass") && <Chip color="#2EE59D">PASS</Chip>}
+              {sorted.some((l) => l.outcome === "fail") && <Chip color="#FF5C5C">FAIL</Chip>}
             </div>
           </div>
         )}

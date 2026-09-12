@@ -1,5 +1,8 @@
 import { BOOK_LEVERAGE, BOOK_TRADEABLE } from "../data/exchangeBook.js";
-import { buildLegs, solveOptimal, allChains, topChains, bestSingle } from "./solver.js";
+import { buildLegs, solveOptimal, allChains, topChains, bestSingle, randomChain } from "./solver.js";
+
+/** Model APR on the borrowed slice — not Coinbase's live rate. */
+export const BOOK_BORROW_APR = 0.10;
 
 /** First-month / genesis prints are listing artifacts, not tradeable levels. */
 export const LISTING_SEASON_DAYS = 30;
@@ -95,40 +98,85 @@ export function recoveryMultiple(lastPx, windowHigh) {
   return windowHigh / lastPx;
 }
 
-/** Turn book assets into solver legs, with `multiple` set to the levered figure. */
-export function buildBookLegs(leverage = BOOK_LEVERAGE, assets = BOOK_TRADEABLE) {
-  const tradeable = assets
-    .filter((a) => !a.cash && a.pivots.length >= 2)
-    .map(seasonedAsset)
-    .filter((a) => a.pivots.length >= 2);
-  const legs = buildLegs(tradeable);
-  return legs.map((leg) => {
-    const asset = tradeable.find((a) => a.id === leg.assetId);
-    const lastIndex = Math.floor((asset.pivots.length - 1) / 2);
-    return {
-      ...leg,
-      spotMultiple: leg.multiple,
-      multiple: leveredMultiple(leg.multiple, leverage),
-      leverage,
-      open: Boolean(asset.openLast && leg.index === lastIndex + 1),
-    };
+/**
+ * Isolated N× dies if a monthly close between entry and exit prints at or
+ * under the liq line. These are closes, not lows — an intra-month wick can
+ * still have killed a leg this function calls survived.
+ */
+/** Monthly rows are stored as YYYY-MM-01; the print is the month's close. */
+function monthCloseDate(iso) {
+  const [y, m] = iso.slice(0, 7).split("-").map(Number);
+  const last = new Date(Date.UTC(y, m, 0)).getUTCDate();
+  return `${y}-${String(m).padStart(2, "0")}-${String(last).padStart(2, "0")}`;
+}
+
+export function pathHitsLiquidation(buyDate, buyPx, sellDate, monthly, leverage = BOOK_LEVERAGE) {
+  if (!(leverage > 1) || !(buyPx > 0)) return false;
+  const liq = liquidationPrice(buyPx, leverage);
+  return (monthly || []).some((p) => {
+    const close = monthCloseDate(p.date);
+    return close > buyDate && close < sellDate && p.px > 0 && p.px <= liq;
   });
 }
 
+function decorateBookLeg(leg, asset, leverage, apr) {
+  const lastIndex = Math.floor((asset.pivots.length - 1) / 2);
+  const liquidated = pathHitsLiquidation(
+    leg.buyDate, leg.buyPx, leg.sellDate, asset.monthly, leverage
+  );
+  const years = leg.days / 365.25;
+  const endpoint = leveredMultiple(leg.multiple, leverage);
+  const afterInterest = apr > 0
+    ? leveredMultipleAfterInterest(leg.multiple, years, apr, leverage)
+    : endpoint;
+  return {
+    ...leg,
+    spotMultiple: leg.multiple,
+    endpointMultiple: endpoint,
+    multiple: liquidated ? 0 : Math.max(afterInterest, 0),
+    leverage,
+    apr,
+    liquidated,
+    survived: !liquidated,
+    liq: liquidationPrice(leg.buyPx, leverage),
+    open: Boolean(asset.openLast && leg.index === lastIndex + 1),
+  };
+}
+
+/** Every book leg, including ones that would have liquidated mid-hold. */
+export function buildBookLegs(leverage = BOOK_LEVERAGE, assets = BOOK_TRADEABLE, opts = {}) {
+  const apr = opts.apr ?? (leverage > 1 ? BOOK_BORROW_APR : 0);
+  const tradeable = assets
+    .filter((a) => !a.cash && (a.pivots || []).length >= 2)
+    .map(seasonedAsset)
+    .filter((a) => a.pivots.length >= 2);
+  const byId = Object.fromEntries(tradeable.map((a) => [a.id, a]));
+  return buildLegs(tradeable).map((leg) => decorateBookLeg(leg, byId[leg.assetId], leverage, apr));
+}
+
+/** Legs the 3× solver is allowed to use: survived the monthly path. */
+export function survivingBookLegs(leverage = BOOK_LEVERAGE, assets = BOOK_TRADEABLE, opts = {}) {
+  return buildBookLegs(leverage, assets, opts).filter((leg) => leg.survived && leg.multiple > 0);
+}
+
 export function bookOptimal(leverage = BOOK_LEVERAGE) {
-  return solveOptimal(buildBookLegs(leverage));
+  return solveOptimal(survivingBookLegs(leverage));
 }
 
 export function bookTopChains(n = 15, leverage = BOOK_LEVERAGE) {
-  return topChains(n, buildBookLegs(leverage));
+  return topChains(n, survivingBookLegs(leverage));
 }
 
 export function bookAllChains(leverage = BOOK_LEVERAGE) {
-  return allChains(buildBookLegs(leverage));
+  return allChains(survivingBookLegs(leverage));
 }
 
 export function bookBestSingle(leverage = BOOK_LEVERAGE) {
-  return bestSingle(buildBookLegs(leverage));
+  return bestSingle(survivingBookLegs(leverage));
+}
+
+export function bookRandom(leverage = BOOK_LEVERAGE) {
+  return randomChain(survivingBookLegs(leverage));
 }
 
 export function bookBestSpotSingle() {

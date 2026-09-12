@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { GalaxyBackground } from "./ui/Cosmos.jsx";
 import { MONO, DISPLAY, SANS, Eyebrow, Button, Odometer, useMediaQuery } from "./ui/atoms.jsx";
-import { formatCurrency, formatFull, formatMultiple } from "./ui/format.js";
+import { formatCurrency, formatDate, formatFull, formatMultiple } from "./ui/format.js";
 import { BOOK_LEVERAGE } from "./data/exchangeBook.js";
+import { FUNDED_RULES, FUNDED_TIERS } from "./data/krakenFunded.js";
 import { solveOptimal, randomChain, chainValue, sortChain } from "./engine/solver.js";
-import { bookOptimal, buildBookLegs } from "./engine/leverage.js";
-import { fundedOptimal, fundedRandom } from "./engine/funded.js";
+import { bookOptimal, bookRandom } from "./engine/leverage.js";
+import { fundedOptimal, fundedRandom, fundedScore } from "./engine/funded.js";
 import Lottery from "./components/Lottery.jsx";
 import Ladder from "./components/Ladder.jsx";
 import Leaderboard from "./components/Leaderboard.jsx";
@@ -29,6 +30,9 @@ const NAV = [
 ];
 
 const PRESETS = [1000, 5000, 10000, 50000, 100000];
+const BOOK_TABS = new Set(["lottery", "leverage", "funded"]);
+const HIDE_ON_FUNDED = new Set(["ladder", "leaderboard", "assets", "reality"]);
+const HIDE_ON_LEVERAGE = new Set(["leaderboard", "assets"]);
 
 const COPY = {
   lottery: {
@@ -37,19 +41,32 @@ const COPY = {
       "Lottery Assets is a chronological rotation lottery: thirteen names that went vertical, one pool of capital, and a hard rule that overlapping trades can never both be yours. Chain the legs that fit and see where a starting stake lands.",
   },
   leverage: {
-    eyebrow: "Twenty-eight Coinbase names · 3× buying power · Oct 2022 → Sep 2026",
+    eyebrow: "Twenty-eight Coinbase names · 3× buying power · path-checked · model 10% APR",
     blurb:
-      "The Coinbase borrow book as a rotation lottery. Isolated 3×: whatever cash you enter is three times that on the tape, and a spot multiple m becomes 3m − 2 on your cash. Same calendar rule: one pool of cash, overlapping legs mutually exclusive. A one-third drop from entry wipes the equity.",
+      "The Coinbase borrow book as a rotation lottery. Isolated 3×: cash × 3 on the tape, 3m − 2 on equity, after model borrow interest. A monthly close through entry × ⅔ zeros the leg and drops it from Solve. Intra-month wicks are not in the tape.",
   },
   funded: {
-    eyebrow: "Kraken Funded · $10K challenge · +12% pass · −3% fail",
+    eyebrow: "Kraken Funded · +12% before −3% · no extra leverage",
     blurb:
-      "The Kraken Funded book as a rotation lottery. Officially no extra leverage — buy and sell in dollars. The real challenge is +12% before −3% from a $10,000 start. The bars are hindsight on the names that already have a mapped history.",
+      "A corridor, not a compound. Official tiers only. All-in from each mapped low: first +12% after the model spread is a pass; first −3% from start is a fail. The challenge ends. You keep 80% of the +12%; the house capital never leaves.",
   },
 };
 
+function regimeOf(tab, lens) {
+  return BOOK_TABS.has(tab) ? tab : lens;
+}
+
+function visibleNav(regime) {
+  return NAV.filter((n) => {
+    if (regime === "funded" && HIDE_ON_FUNDED.has(n.key)) return false;
+    if (regime === "leverage" && HIDE_ON_LEVERAGE.has(n.key)) return false;
+    return true;
+  });
+}
+
 export default function App() {
   const [tab, setTab] = useState("lottery");
+  const [lens, setLens] = useState("lottery");
   const [capital, setCapital] = useState(10000);
   const [capitalText, setCapitalText] = useState("10,000");
   const [chain, setChain] = useState([]);
@@ -78,14 +95,29 @@ export default function App() {
     setCapitalText(n.toLocaleString("en-US"));
   };
 
+  const selectTab = (key) => {
+    setTab(key);
+    if (BOOK_TABS.has(key)) {
+      setLens(key);
+      if (key === "funded" && !FUNDED_TIERS.some((t) => t.start === capital)) {
+        setPreset(FUNDED_RULES.start);
+      }
+    }
+  };
+
+  const regime = regimeOf(tab, lens);
   const activeChain =
-    tab === "leverage" ? bookChain : tab === "funded" ? fundedChain : chain;
+    regime === "leverage" ? bookChain : regime === "funded" ? fundedChain : chain;
 
   const reveal = (legs, setter) => {
     clearTimers();
     setter([]);
     setSolving(true);
     const sorted = sortChain(legs);
+    if (!sorted.length) {
+      setSolving(false);
+      return;
+    }
     sorted.forEach((leg, i) => {
       timersRef.current.push(
         setTimeout(() => {
@@ -96,24 +128,27 @@ export default function App() {
     });
   };
 
-  // Reveal the optimal chain one leg at a time, so the shape of the answer
-  // registers before the final number lands.
   const solve = () => {
-    if (tab === "leverage") reveal(bookOptimal().chain, setBookChain);
-    else if (tab === "funded") reveal(fundedOptimal().chain, setFundedChain);
+    if (regime === "leverage") reveal(bookOptimal().chain, setBookChain);
+    else if (regime === "funded") reveal(fundedOptimal().chain, setFundedChain);
     else reveal(solveOptimal().chain, setChain);
   };
 
   const deal = () => {
     clearTimers();
     setSolving(false);
-    if (tab === "leverage") setBookChain(randomChain(buildBookLegs(3)));
-    else if (tab === "funded") setFundedChain(fundedRandom());
+    if (regime === "leverage") setBookChain(bookRandom());
+    else if (regime === "funded") setFundedChain(fundedRandom());
     else setChain(randomChain());
   };
 
-  const result = chainValue(activeChain, capital);
-  const copy = COPY[tab] ?? COPY.lottery;
+  const lotteryResult = chainValue(activeChain, capital);
+  const captureGhost = chainValue(activeChain, capital, { capture: 0.65, slippage: 0, taxRate: 0 });
+  const corridor = fundedScore(fundedChain, capital);
+  const result = regime === "funded" ? corridor : lotteryResult;
+  const copy = COPY[tab] || COPY[regime] || COPY.lottery;
+  const openLeg = activeChain.find((l) => l.open);
+  const fundedTier = FUNDED_TIERS.find((t) => t.start === capital) || FUNDED_TIERS[2];
 
   return (
     <>
@@ -154,7 +189,6 @@ export default function App() {
             {copy.blurb}
           </p>
 
-          {/* Capital + actions — shared lottery chrome */}
           <div
             style={{
               display: "flex",
@@ -170,33 +204,37 @@ export default function App() {
           >
             <div style={{ flex: "0 1 auto" }}>
               <Eyebrow size={9} style={{ marginBottom: 6 }}>
-                {tab === "leverage" ? `Cash · ${BOOK_LEVERAGE}× buying power` : "Starting capital"}
+                {regime === "funded"
+                  ? "Official tier"
+                  : regime === "leverage"
+                    ? `Cash · ${BOOK_LEVERAGE}× buying power`
+                    : "Starting capital"}
               </Eyebrow>
-              {/* Wraps so the preset row drops to its own line rather than
-                  pushing the page sideways on ~320px phones. */}
               <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                <div
-                  style={{
-                    display: "flex", alignItems: "center", gap: 2,
-                    background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.12)",
-                    borderRadius: 6, padding: "8px 12px",
-                  }}
-                >
-                  <span style={{ fontFamily: MONO, fontSize: 18, color: "rgba(255,255,255,0.4)" }}>$</span>
-                  <input
-                    value={capitalText}
-                    onChange={(e) => onCapitalChange(e.target.value)}
-                    onBlur={() => capitalText === "" && setPreset(10000)}
-                    inputMode="numeric"
-                    aria-label={tab === "leverage" ? "Cash in dollars" : "Starting capital in dollars"}
+                {regime !== "funded" && (
+                  <div
                     style={{
-                      width: compact ? 110 : 140, background: "transparent", border: "none", outline: "none",
-                      fontFamily: MONO, fontSize: 18, color: "#fff", fontWeight: 600,
+                      display: "flex", alignItems: "center", gap: 2,
+                      background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.12)",
+                      borderRadius: 6, padding: "8px 12px",
                     }}
-                  />
-                </div>
+                  >
+                    <span style={{ fontFamily: MONO, fontSize: 18, color: "rgba(255,255,255,0.4)" }}>$</span>
+                    <input
+                      value={capitalText}
+                      onChange={(e) => onCapitalChange(e.target.value)}
+                      onBlur={() => capitalText === "" && setPreset(10000)}
+                      inputMode="numeric"
+                      aria-label={regime === "leverage" ? "Cash in dollars" : "Starting capital in dollars"}
+                      style={{
+                        width: compact ? 110 : 140, background: "transparent", border: "none", outline: "none",
+                        fontFamily: MONO, fontSize: 18, color: "#fff", fontWeight: 600,
+                      }}
+                    />
+                  </div>
+                )}
                 <div style={{ display: "flex", gap: 4, alignItems: "center", flexWrap: "wrap" }}>
-                  {PRESETS.map((p) => (
+                  {(regime === "funded" ? FUNDED_TIERS.map((t) => t.start) : PRESETS).map((p) => (
                     <button
                       key={p}
                       onClick={() => setPreset(p)}
@@ -208,20 +246,32 @@ export default function App() {
                       }}
                     >
                       {formatCurrency(p).replace(".0", "")}
+                      {regime === "funded" && (
+                        <span style={{ display: "block", fontSize: 8, color: "rgba(255,255,255,0.35)", marginTop: 2 }}>
+                          fee {formatFull(FUNDED_TIERS.find((t) => t.start === p).fee)}
+                        </span>
+                      )}
                     </button>
                   ))}
-                  {tab === "leverage" && (
+                  {regime === "leverage" && (
                     <span style={{ fontFamily: MONO, fontSize: 12, color: "#F7931A", whiteSpace: "nowrap" }}>
                       → {formatFull(capital * BOOK_LEVERAGE)}
                     </span>
                   )}
                 </div>
               </div>
+              {regime === "funded" && (
+                <div style={{ fontFamily: MONO, fontSize: 10, color: "rgba(255,255,255,0.32)", marginTop: 6 }}>
+                  {formatFull(fundedTier.start)} never leaves · fee {formatFull(fundedTier.fee)} gone either way
+                </div>
+              )}
             </div>
 
             <div style={{ flex: "1 1 auto", minWidth: 150 }}>
               <Eyebrow size={9} style={{ marginBottom: 6 }}>
-                {activeChain.length ? "Ends with" : "Pick legs to begin"}
+                {regime === "funded"
+                  ? (fundedChain.length ? corridor.caption : "You keep")
+                  : activeChain.length ? "Ends with" : "Pick legs to begin"}
               </Eyebrow>
               <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
                 <Odometer
@@ -229,24 +279,46 @@ export default function App() {
                   format={formatCurrency}
                   style={{
                     fontFamily: MONO, fontSize: compact ? 26 : 32, fontWeight: 600,
-                    color: activeChain.length ? "#F4B728" : "rgba(255,255,255,0.25)",
-                    textShadow: activeChain.length ? "0 0 24px rgba(244,183,40,0.35)" : "none",
+                    color: (regime === "funded" ? fundedChain.length : activeChain.length)
+                      ? (corridor.kind === "fail" && regime === "funded" ? "#FF5C5C" : "#F4B728")
+                      : "rgba(255,255,255,0.25)",
+                    textShadow: (regime === "funded" ? fundedChain.length : activeChain.length)
+                      ? "0 0 24px rgba(244,183,40,0.35)" : "none",
                     transition: "color 0.3s ease",
                   }}
                 />
-                {activeChain.length > 0 && (
+                {(regime === "funded" ? fundedChain.length : activeChain.length) > 0 && (
                   <span style={{ fontFamily: MONO, fontSize: 14, color: "rgba(255,255,255,0.4)" }}>
-                    {formatMultiple(result.multiple)}
+                    {regime === "funded" && corridor.kind === "pass"
+                      ? "+12%"
+                      : regime === "funded" && corridor.kind === "fail"
+                        ? "−3%"
+                        : formatMultiple(result.multiple)}
                   </span>
                 )}
               </div>
+              {regime === "lottery" && activeChain.length > 0 && (
+                <div style={{ fontFamily: MONO, fontSize: 11, color: "rgba(255,255,255,0.32)", marginTop: 4, lineHeight: 1.5 }}>
+                  at 65% capture → {formatCurrency(captureGhost.final)}
+                  {openLeg ? ` · ${openLeg.id} marked to ${formatDate(openLeg.sellDate)}` : ""}
+                </div>
+              )}
+              {regime === "funded" && fundedChain.length > 0 && corridor.kind === "pass" && (
+                <div style={{ fontFamily: MONO, fontSize: 11, color: "rgba(255,255,255,0.32)", marginTop: 4 }}>
+                  80% of {formatFull(corridor.equity - capital)} · house resets to {formatFull(capital)}
+                </div>
+              )}
             </div>
 
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               <Button onClick={solve} color="#00E5FF" filled disabled={solving}>
-                {solving ? "Solving…" : "Solve"}
+                {solving
+                  ? (regime === "funded" ? "Searching…" : "Solving…")
+                  : regime === "funded" ? "Find a pass" : "Solve"}
               </Button>
-              <Button onClick={deal} color="#FF4FD8">Deal me a hand</Button>
+              <Button onClick={deal} color="#FF4FD8">
+                {regime === "funded" ? "Deal a pass" : "Deal me a hand"}
+              </Button>
             </div>
           </div>
 
@@ -258,14 +330,14 @@ export default function App() {
                 overflowX: "auto", scrollbarWidth: "none",
               }}
             >
-              {NAV.map((n) => (
+              {visibleNav(regime).map((n) => (
                 <button
                   key={n.key}
                   role="tab"
                   aria-selected={tab === n.key}
                   aria-controls={`panel-${n.key}`}
                   id={`tab-${n.key}`}
-                  onClick={() => setTab(n.key)}
+                  onClick={() => selectTab(n.key)}
                   style={{
                     fontFamily: MONO, fontSize: 10, letterSpacing: 1.5, padding: "10px 14px",
                     background: "none", border: "none", whiteSpace: "nowrap",
@@ -288,13 +360,29 @@ export default function App() {
           style={{ padding: compact ? "18px 16px 60px" : "22px 28px 70px", maxWidth: 1080, margin: "0 auto" }}
         >
           {tab === "lottery" && <Lottery chain={chain} setChain={setChain} capital={capital} solving={solving} />}
-          {tab === "ladder" && <Ladder chain={chain} capital={capital} onSolve={solve} />}
+          {tab === "ladder" && (
+            <Ladder
+              chain={regime === "leverage" ? bookChain : chain}
+              capital={capital}
+              onSolve={solve}
+              source={regime === "leverage" ? "book" : "lottery"}
+            />
+          )}
           {tab === "leaderboard" && <Leaderboard capital={capital} setChain={setChain} setTab={setTab} />}
           {tab === "assets" && <AssetCards chain={chain} setChain={setChain} />}
           {tab === "leverage" && <ExchangeBook chain={bookChain} setChain={setBookChain} capital={capital} />}
           {tab === "funded" && <KrakenFunded chain={fundedChain} setChain={setFundedChain} capital={capital} />}
           {tab === "about" && <AboutAssets />}
-          {tab === "reality" && <RealityCheck chain={chain} capital={capital} onSolve={solve} />}
+          {tab === "reality" && (
+            <RealityCheck
+              chain={regime === "leverage" ? bookChain : chain}
+              capital={capital}
+              onSolve={solve}
+              fallbackChain={regime === "leverage" ? bookOptimal().chain : undefined}
+              solveLabel={regime === "leverage" ? "Put it on the book" : "Put it in the lottery"}
+              variant={regime === "leverage" ? "book" : "lottery"}
+            />
+          )}
           {tab === "learn" && <Learn />}
 
           <div
@@ -311,6 +399,8 @@ export default function App() {
               certainty of mistiming; the Reality Check tab exists to quantify how quickly those erase
               the headline. Cryptocurrency and single-stock positions carry extreme risk including total
               loss of capital. Past performance does not guarantee future results. This is not financial advice.
+              {regime === "leverage" && " Isolated 3× can liquidate on a one-third drop; monthly closes are in the engine, intra-month wicks are not."}
+              {regime === "funded" && " Kraken Funded is a +12% / −3% evaluation corridor. The house capital never leaves the account."}
             </p>
           </div>
 

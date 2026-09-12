@@ -24,13 +24,17 @@ function Slider({ label, hint, value, min, max, step, onChange, color, display }
   );
 }
 
-export default function RealityCheck({ chain, capital, onSolve }) {
+export default function RealityCheck({
+  chain, capital, onSolve, fallbackChain,
+  solveLabel = "Put it in the lottery",
+  variant = "lottery",
+}) {
   const compact = useMediaQuery("(max-width: 720px)");
   const [capture, setCapture] = useState(80);
   const [slippage, setSlippage] = useState(1.5);
   const [taxRate, setTaxRate] = useState(30);
 
-  const active = chain.length ? chain : solveOptimal().chain;
+  const active = chain.length ? chain : (fallbackChain ?? solveOptimal().chain);
   const usingFallback = chain.length === 0;
 
   const friction = { capture: capture / 100, slippage: slippage / 100, taxRate: taxRate / 100 };
@@ -67,7 +71,7 @@ export default function RealityCheck({ chain, capital, onSolve }) {
           <span style={{ fontFamily: SANS, fontSize: 12.5, color: "rgba(255,255,255,0.6)" }}>
             No chain selected — showing the optimal one.
           </span>
-          <Button onClick={onSolve} color="#00E5FF">Put it in the lottery</Button>
+          <Button onClick={onSolve} color="#00E5FF">{solveLabel}</Button>
         </div>
       )}
 
@@ -146,11 +150,9 @@ export default function RealityCheck({ chain, capital, onSolve }) {
 
       <Panel title="The honest reading">
         <p style={{ fontFamily: SANS, fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: 0 }}>
-          These assets are in Lottery Assets because they went up. The ones that went to zero over the same
-          four years aren't here, and there were far more of them. Picking the thirteen winners in advance,
-          then timing eight turning points across them, is not a strategy — it's the definition of
-          survivorship bias with a calculator attached. The number this tab produces at realistic
-          settings is the interesting one, and it is still built on knowing the answers first.
+          {variant === "book"
+            ? "The 3× book is the same hindsight exercise with borrowed dollars. Interest and a monthly-close liquidation filter are in the engine; intra-month wicks are not. Survivorship still selects the names, and nobody bought every trough."
+            : "These assets are in Lottery Assets because they went up. The ones that went to zero over the same four years aren't here, and there were far more of them. Picking the thirteen winners in advance, then timing eight turning points across them, is not a strategy — it's the definition of survivorship bias with a calculator attached. The number this tab produces at realistic settings is the interesting one, and it is still built on knowing the answers first."}
         </p>
       </Panel>
     </div>

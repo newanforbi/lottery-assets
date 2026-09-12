@@ -5,7 +5,8 @@ import {
   leveredMultiple, liquidationPrice, liquidationDrop,
   leveredMultipleAfterInterest, recoveryMultiple,
   buildBookLegs, bookOptimal, bookAllChains, bookBestSpotSingle,
-  seasonedMonthly, seasonedPivots, isSeasoned, LISTING_SEASON_DAYS,
+  pathHitsLiquidation, seasonedMonthly, seasonedPivots, isSeasoned,
+  LISTING_SEASON_DAYS, BOOK_BORROW_APR,
 } from "./leverage.js";
 import { isValidChain } from "./solver.js";
 
@@ -42,10 +43,13 @@ test("the book is the 28 Coinbase names plus USDC as the cash rail", () => {
   assert.ok(BOOK_TRADEABLE.every((a) => a.pivots.length >= 2 && a.pivots.length % 2 === 0));
 });
 
-test("book leg multipliers derive from pivots, then 3× is applied", () => {
+test("book leg multipliers derive from pivots, then 3× and model interest are applied", () => {
   const by = Object.fromEntries(buildBookLegs(3).map((l) => [l.id, l]));
   near(by["SOL-1"].spotMultiple, 26.2375);
-  near(by["SOL-1"].multiple, 76.7125);
+  near(by["SOL-1"].endpointMultiple, 76.7125);
+  assert.ok(by["SOL-1"].multiple < by["SOL-1"].endpointMultiple);
+  assert.equal(by["SOL-1"].apr, BOOK_BORROW_APR);
+  assert.equal(by["SOL-1"].survived, true);
   near(by["ZEC-1"].spotMultiple, 5.0265);
   near(by["ZEC-2"].spotMultiple, 29.56);
   near(by["ZEC-3"].spotMultiple, 6.7536);
@@ -57,19 +61,44 @@ test("book leg multipliers derive from pivots, then 3× is applied", () => {
   assert.equal(by["SOL-1"].open, false);
 });
 
-test("3× book optimum is SOL-1 → CRV-1 → ZEC-2 → ZEC-3", () => {
+test("a mid-hold close through the liq line kills the leg", () => {
+  assert.equal(
+    pathHitsLiquidation("2023-01-15", 100, "2023-06-01", [
+      { date: "2023-01-01", px: 110 },
+      { date: "2023-02-01", px: 60 },
+      { date: "2023-05-01", px: 200 },
+    ], 3),
+    true
+  );
+  assert.equal(
+    pathHitsLiquidation("2023-01-15", 100, "2023-06-01", [
+      { date: "2023-02-01", px: 80 },
+      { date: "2023-05-01", px: 200 },
+    ], 3),
+    false
+  );
+});
+
+test("current 3× book legs survive the monthly-close path", () => {
+  const dead = buildBookLegs(3).filter((l) => l.liquidated);
+  assert.deepEqual(dead.map((l) => l.id), []);
+});
+
+test("3× book optimum is SOL-1 → CRV-1 → ZEC-2 → ZEC-3 after interest", () => {
   const { chain, value } = bookOptimal(3);
   // Curve's Aug–Dec 2024 flush-to-rip (7.44×) outruns ZEC-1 (5.03×) in the
   // same autumn slot, then the two later Zcash legs finish the chain.
+  // Interest on the borrowed slice haircuts the old 2.47M× endpoint figure.
   assert.deepEqual(chain.map((l) => l.id), ["SOL-1", "CRV-1", "ZEC-2", "ZEC-3"]);
-  near(value, 2465715, 0.01);
+  near(value, 2431674, 0.01);
+  assert.ok(chain.every((l) => l.survived));
 });
 
 test("spot-equivalent book optimum is the same path, ~63× smaller", () => {
   const spot = bookOptimal(1);
   assert.deepEqual(spot.chain.map((l) => l.id), ["SOL-1", "CRV-1", "ZEC-2", "ZEC-3"]);
   near(spot.value, 38947, 0.01);
-  near(bookOptimal(3).value / spot.value, 63.3, 0.02);
+  near(bookOptimal(3).value / spot.value, 62.4, 0.03);
 });
 
 test("every enumerated 3× chain is calendar-valid", () => {

@@ -91,8 +91,8 @@ corrected pivot propagates everywhere instead of drifting out of sync.
 | Tab | What it does |
 |-----|-------------|
 | **Lottery** | The timeline. Click legs to chain them; conflicts dim out. *Solve* animates the optimum, *Deal me a hand* draws a random valid chain. Starting-capital presets: $1K, $5K, $10K, $50K, $100K. |
-| **3× Book** | The Coinbase borrow book as a rotation lottery: twenty-eight names, isolated 3× (`3m − 2`), same click-to-chain timeline as Lottery. Buying power is 3× whatever cash is in the box. Listing-month prints are stripped. Solve finds `SOL-1 → CRV-1 → ZEC-2 → ZEC-3` at ~2.47 million×. |
-| **Funded** | The Kraken Funded book as a rotation lottery. Official rules stay in view ($90 / $10K / +12% / −3% / 80-20, no added leverage). Lanes are the names that already have a mapped history (3×-book overlap plus Injective). The other app-book names do not have pivots here yet. |
+| **3× Book** | The Coinbase borrow book as a rotation lottery: twenty-eight names, isolated 3× (`3m − 2` after a model 10% APR on the loan). Buying power is 3× whatever cash is in the box. A monthly close through entry × ⅔ zeros the leg and drops it from Solve (intra-month wicks are not in the tape). Listing-month prints are stripped. Solve finds `SOL-1 → CRV-1 → ZEC-2 → ZEC-3` at ~2.43 million×. Ladder and Reality Check rebind to this book; Leaderboard and Assets stay lottery-only. |
+| **Funded** | A +12% / −3% corridor, not a compound. Official tiers only ($1K/$20, $5K/$50, $10K/$90). All-in from each mapped low: first +12% after a model spread is a pass; first −3% from start is a fail; the challenge ends. Find a pass is the fastest clean +12%. You keep 80% of that gain ($960 on the $10K tier); the house capital never leaves. Lanes are the names that already have a mapped history. Ladder / Leaderboard / Assets / Reality Check are hidden here. |
 | **Ladder** | Step-by-step capital progression for the selected chain, including the idle stretches in cash. |
 | **Leaderboard** | Every valid chain ranked, plus the original eight paths checked against the calendar. |
 | **Assets** | Per-asset pivots and legs with individual multipliers. |
@@ -125,10 +125,10 @@ src/
   engine/
     solver.js              # buildLegs, conflicts, chainValue, solveOptimal, allChains
     solver.test.js         # 20 tests: multipliers, chain validity, friction model
-    leverage.js            # 3× isolated-long math + book legs / solver wrappers
-    leverage.test.js       # Book size, 3× formula, SOL→CRV→ZEC optimum
-    funded.js              # Challenge lines, spread haircut, 80/20 payout, pass/fail
-    funded.test.js         # $10K lines, official $10,500 example, 58-name book
+    leverage.js            # 3× isolated-long math, borrow interest, monthly-path liquidation
+    leverage.test.js       # Book size, 3× formula, interest, liq filter, SOL→CRV→ZEC optimum
+    funded.js              # Corridor walk (+12% / −3%), 80/20 payout, fastest pass
+    funded.test.js         # $10K lines, official $10,500 example, clipped passes, 58-name book
   components/
     Timeline.jsx           # Shared click-to-chain lanes used by Lottery, 3× Book, Funded
     Lottery.jsx            # Lottery timeline wrapper
@@ -136,7 +136,7 @@ src/
     Leaderboard.jsx        # Ranked valid chains + original 8 paths
     AssetCards.jsx         # Per-asset breakdown
     ExchangeBook.jsx       # 3× Book: same timeline, isolated 3× multiples
-    KrakenFunded.jsx       # Funded: same timeline, spot multiples, $10K rules strip
+    KrakenFunded.jsx       # Funded: inspect-one-attempt timeline, corridor score, tier fee
     AboutAssets.jsx        # Deep-dive dossiers for each asset
     RealityCheck.jsx       # Friction sliders (capture, slippage, tax)
     Learn.jsx              # Educational crypto content

@@ -1,16 +1,21 @@
 import { useMemo } from "react";
-import { FUNDED_ASSETS, FUNDED_RULES } from "../data/krakenFunded.js";
-import { buildFundedLegs, challengeLines, fundedHistoryAssets } from "../engine/funded.js";
+import { FUNDED_ASSETS, FUNDED_MODEL } from "../data/krakenFunded.js";
+import { buildFundedCorridors, challengeLines, fundedHistoryAssets, fundedPayout, fundedScore } from "../engine/funded.js";
 import { formatFull } from "../ui/format.js";
-import { MONO, SANS } from "../ui/atoms.jsx";
+import { SANS } from "../ui/atoms.jsx";
 import Timeline from "./Timeline.jsx";
 
 export default function KrakenFunded({ chain, setChain, capital }) {
   const assets = useMemo(() => fundedHistoryAssets(), []);
-  const legs = useMemo(() => buildFundedLegs(), []);
-  const mapped = assets.length;
-  const leftover = FUNDED_ASSETS.length - mapped;
-  const lines = challengeLines();
+  const legs = useMemo(() => buildFundedCorridors(), []);
+  const lines = challengeLines(capital);
+  const passes = legs.filter((l) => l.outcome === "pass").length;
+  const fails = legs.filter((l) => l.outcome === "fail").length;
+  const leftover = FUNDED_ASSETS.length - assets.length;
+  const selected = chain[0];
+  const payout = selected?.outcome === "pass"
+    ? fundedPayout(lines.start, lines.passAt)
+    : null;
 
   return (
     <div>
@@ -27,15 +32,15 @@ export default function KrakenFunded({ chain, setChain, capital }) {
           lineHeight: 1.65,
         }}
       >
-        Official game: {formatFull(FUNDED_RULES.fee)} fee, {formatFull(lines.start)} house
-        capital, pass {formatFull(lines.passAt)}, fail {formatFull(lines.failAt)}, no added
-        leverage, keep 80% after a pass. The bars below are the other machine — hindsight
-        rotation on the {mapped} names that already have a mapped history. {leftover} names
-        in the app book (BNB, memecoins, new L1s) do not have pivots here yet.
-        <span style={{ fontFamily: MONO, color: "rgba(255,255,255,0.35)" }}>
-          {" "}
-          +12% / −3% · 80/20 · $10K never leaves
-        </span>
+        Corridor, not a lottery. All-in from each mapped low: first +12% after a{" "}
+        {FUNDED_MODEL.spreadEachSide * 10000} bp model spread is a pass; first −3%
+        from start is a fail. The challenge ends at either. {passes} passes, {fails}{" "}
+        fails on the {assets.length} names that have history. {leftover} app-book
+        names have no pivots. Fee {formatFull(lines.fee)} on this tier
+        is gone either way. A pass on {formatFull(lines.start)} pays you{" "}
+        {formatFull(payout?.trader ?? fundedPayout(lines.start, lines.passAt).trader)};
+        the {formatFull(lines.start)} never leaves.
+        {fails === 0 && " Zero fails on this tape: the mapped lows are hindsight troughs, and no monthly close printed −3% first. Intra-month wicks are not in the tape."}
       </div>
       <Timeline
         assets={assets}
@@ -43,7 +48,10 @@ export default function KrakenFunded({ chain, setChain, capital }) {
         chain={chain}
         setChain={setChain}
         capital={capital}
-        emptyHint="Click any bar to start a chain. Same mutual-exclusion rule as the lottery. Officially this book has no extra leverage — every multiple is spot. The real challenge is +12% before −3%; these bars are what the names did with hindsight."
+        mode="inspect"
+        score={fundedScore}
+        endsLabel={selected?.outcome === "pass" ? "You keep" : selected?.outcome === "fail" ? "Wiped" : "Marked"}
+        emptyHint="Click a bar to inspect one attempt. Find a pass is the fastest clean +12% before −3%. This is not a four-year compound."
       />
     </div>
   );
