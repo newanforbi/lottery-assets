@@ -39,7 +39,7 @@ const COPY = {
   leverage: {
     eyebrow: "Twenty-eight Coinbase names · 3× buying power · Oct 2022 → Sep 2026",
     blurb:
-      "The Coinbase borrow book as a rotation lottery. $3,000 cash is $9,000 on the tape — isolated 3×, so a spot multiple m becomes 3m − 2 on your cash. Same calendar rule: one pool of cash, overlapping legs mutually exclusive. A one-third drop from entry wipes the equity.",
+      "The Coinbase borrow book as a rotation lottery. Isolated 3×: whatever cash you enter is three times that on the tape, and a spot multiple m becomes 3m − 2 on your cash. Same calendar rule: one pool of cash, overlapping legs mutually exclusive. A one-third drop from entry wipes the equity.",
   },
   funded: {
     eyebrow: "Kraken Funded · $10K challenge · +12% pass · −3% fail",
@@ -196,7 +196,7 @@ export default function App() {
                   />
                 </div>
                 <div style={{ display: "flex", gap: 4, alignItems: "center", flexWrap: "wrap" }}>
-                  {(tab === "leverage" ? [1000, 3000, 5000, 10000, 50000] : PRESETS).map((p) => (
+                  {PRESETS.map((p) => (
                     <button
                       key={p}
                       onClick={() => setPreset(p)}
@@ -212,7 +212,7 @@ export default function App() {
                   ))}
                   {tab === "leverage" && (
                     <span style={{ fontFamily: MONO, fontSize: 12, color: "#F7931A", whiteSpace: "nowrap" }}>
-                      → {formatFull(capital * BOOK_LEVERAGE)} on the tape
+                      → {formatFull(capital * BOOK_LEVERAGE)}
                     </span>
                   )}
                 </div>
