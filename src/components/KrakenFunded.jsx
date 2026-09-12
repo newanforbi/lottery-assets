@@ -40,6 +40,7 @@ export default function KrakenFunded({ chain, setChain, capital }) {
         is gone either way. A pass on {formatFull(lines.start)} pays you{" "}
         {formatFull(payout?.trader ?? fundedPayout(lines.start, lines.passAt).trader)};
         the {formatFull(lines.start)} never leaves.
+        {fails === 0 && " Zero fails on this tape: the mapped lows are hindsight troughs, and no monthly close printed −3% first. Intra-month wicks are not in the tape."}
       </div>
       <Timeline
         assets={assets}
