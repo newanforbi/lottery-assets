@@ -10,12 +10,14 @@ import AssetCards from "./components/AssetCards.jsx";
 import AboutAssets from "./components/AboutAssets.jsx";
 import RealityCheck from "./components/RealityCheck.jsx";
 import Learn from "./components/Learn.jsx";
+import ExchangeBook from "./components/ExchangeBook.jsx";
 
 const NAV = [
   { key: "lottery", label: "LOTTERY" },
   { key: "ladder", label: "LADDER" },
   { key: "leaderboard", label: "LEADERBOARD" },
   { key: "assets", label: "ASSETS" },
+  { key: "leverage", label: "3× BOOK" },
   { key: "about", label: "ABOUT THE ASSETS" },
   { key: "reality", label: "REALITY CHECK" },
   { key: "learn", label: "LEARN" },
@@ -91,7 +93,9 @@ export default function App() {
       >
         <div style={{ padding: compact ? "26px 16px 0" : "32px 28px 0", maxWidth: 1080, margin: "0 auto" }}>
           <Eyebrow size={10} color="rgba(255,255,255,0.25)" style={{ letterSpacing: 2, marginBottom: 8 }}>
-            Thirteen assets · 19 tradeable legs · Oct 2022 → Sep 2026
+            {tab === "leverage"
+              ? "Twenty-eight Coinbase names · 3× buying power · Oct 2022 → Sep 2026"
+              : "Thirteen assets · 19 tradeable legs · Oct 2022 → Sep 2026"}
           </Eyebrow>
           <h1
             style={{
@@ -198,12 +202,14 @@ export default function App() {
               </div>
             </div>
 
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              <Button onClick={solve} color="#00E5FF" filled disabled={solving}>
-                {solving ? "Solving…" : "Solve"}
-              </Button>
-              <Button onClick={deal} color="#FF4FD8">Deal me a hand</Button>
-            </div>
+            {tab !== "leverage" && (
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <Button onClick={solve} color="#00E5FF" filled disabled={solving}>
+                  {solving ? "Solving…" : "Solve"}
+                </Button>
+                <Button onClick={deal} color="#FF4FD8">Deal me a hand</Button>
+              </div>
+            )}
           </div>
 
           <nav aria-label="Sections">
@@ -247,6 +253,7 @@ export default function App() {
           {tab === "ladder" && <Ladder chain={chain} capital={capital} onSolve={solve} />}
           {tab === "leaderboard" && <Leaderboard capital={capital} setChain={setChain} setTab={setTab} />}
           {tab === "assets" && <AssetCards chain={chain} setChain={setChain} />}
+          {tab === "leverage" && <ExchangeBook capital={capital} />}
           {tab === "about" && <AboutAssets />}
           {tab === "reality" && <RealityCheck chain={chain} capital={capital} onSolve={solve} />}
           {tab === "learn" && <Learn />}

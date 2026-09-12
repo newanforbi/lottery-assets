@@ -94,6 +94,7 @@ corrected pivot propagates everywhere instead of drifting out of sync.
 | **Ladder** | Step-by-step capital progression for the selected chain, including the idle stretches in cash. |
 | **Leaderboard** | Every valid chain ranked, plus the original eight paths checked against the calendar. |
 | **Assets** | Per-asset pivots and legs with individual multipliers. |
+| **3× Book** | The twenty-eight names Coinbase will let you buy with borrowed cash (~3× buying power), plus USDC as the cash rail. Monthly history, spot vs 3× legs, a ranked rotation solver, and a from-here recovery-to-high table. Isolated 3× turns a spot multiple `m` into `3m − 2`; a one-third drop from entry liquidates. The 3× optimum is `SOL-1 → CRV-1 → ZEC-2 → ZEC-3` at ~2.47 million× — Curve's Aug 2024 flush outruns ZEC's first bounce in the autumn slot. |
 | **About the Assets** | Deep dossiers on what each of the thirteen assets actually is — product, market structure, and why it appears in Lottery Assets. |
 | **Reality Check** | Sliders for move capture, slippage, and per-rotation tax. At 65% capture the $901.5M becomes $4.9M. |
 | **Learn** | Educational guide covering what cryptocurrency is, where to buy it (Coinbase, Kraken, Binance), how to self-custody, security basics, taxes, and key concepts. |
@@ -107,7 +108,7 @@ corrected pivot propagates everywhere instead of drifting out of sync.
 | **Visuals** | Galaxy canvas with shooting-star particles (`src/ui/Cosmos.jsx`) |
 | **Type system** | JetBrains Mono, Space Grotesk, DM Sans via Google Fonts |
 | **Solver** | Weighted interval scheduling via DP, plus exhaustive enumeration for the leaderboard |
-| **Tests** | Node.js built-in test runner, 20 assertions covering solver correctness and claimed-path validation |
+| **Tests** | Node.js built-in test runner, covering solver correctness, claimed-path validation, and the 3× book |
 
 ## Project structure
 
@@ -118,14 +119,18 @@ src/
   data/
     assets.js              # Price pivots for all 13 assets + claimed paths
     assetAbout.js          # Long-form copy for About the Assets
+    exchangeBook.js        # Coinbase 3× book: 28 tradeable names + USDC, monthly closes, pivots
   engine/
     solver.js              # buildLegs, conflicts, chainValue, solveOptimal, allChains
     solver.test.js         # 20 tests: multipliers, chain validity, friction model
+    leverage.js            # 3× isolated-long math + book legs / solver wrappers
+    leverage.test.js       # Book size, 3× formula, SOL→CRV→ZEC optimum
   components/
     Lottery.jsx            # Interactive lottery timeline with conflict dimming
     Ladder.jsx             # Step-by-step capital walk
     Leaderboard.jsx        # Ranked valid chains + original 8 paths
     AssetCards.jsx         # Per-asset breakdown
+    ExchangeBook.jsx       # Coinbase 3× book: history, ranked 3× chains, from-here recovery
     AboutAssets.jsx        # Deep-dive dossiers for each asset
     RealityCheck.jsx       # Friction sliders (capture, slippage, tax)
     Learn.jsx              # Educational crypto content
@@ -152,7 +157,7 @@ index.html                 # Entry HTML with OG/Twitter meta tags
 ```bash
 npm install
 npm run dev          # http://localhost:5173
-npm test             # 20 solver tests
+npm test             # solver + 3× book tests
 npm run build        # production build → dist/
 ```
 
