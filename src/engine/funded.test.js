@@ -2,13 +2,17 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   afterSpread,
+  buildFundedLegs,
   challengeLines,
   challengeProgress,
+  fundedHistoryAssets,
+  fundedOptimal,
   fundedPayout,
   spotMoveToFail,
   spotMoveToPass,
 } from "./funded.js";
 import { FUNDED_RULES, FUNDED_ASSETS, FUNDED_TIERS } from "../data/krakenFunded.js";
+import { isValidChain } from "./solver.js";
 
 const near = (actual, expected, tol = 1e-9) =>
   assert.ok(Math.abs(actual - expected) < tol, `expected ~${expected}, got ${actual}`);
@@ -98,4 +102,23 @@ test("funded book has the 58 names from the screenshots", () => {
 test("lottery overlap is the seven names that actually sit on both books", () => {
   const lotto = FUNDED_ASSETS.filter((a) => a.inLottery).map((a) => a.id).sort();
   assert.deepEqual(lotto, ["INJ", "PEPE", "SOL", "SUI", "WLD", "XRP", "ZEC"]);
+});
+
+test("funded history lanes are the mapped names, including Injective, no leverage", () => {
+  const assets = fundedHistoryAssets();
+  const ids = assets.map((a) => a.id);
+  assert.ok(ids.includes("INJ"));
+  assert.ok(ids.includes("SOL"));
+  assert.ok(ids.includes("HYPE"));
+  assert.ok(!ids.includes("BNB"));
+  assert.ok(!ids.includes("XLM"));
+  const legs = buildFundedLegs();
+  assert.ok(legs.length >= 20);
+  for (const leg of legs) {
+    assert.equal(leg.leverage, 1);
+    near(leg.multiple, leg.spotMultiple, 1e-12);
+  }
+  const opt = fundedOptimal();
+  assert.ok(opt.chain.length >= 3);
+  assert.ok(isValidChain(opt.chain));
 });

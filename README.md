@@ -94,8 +94,8 @@ corrected pivot propagates everywhere instead of drifting out of sync.
 | **Ladder** | Step-by-step capital progression for the selected chain, including the idle stretches in cash. |
 | **Leaderboard** | Every valid chain ranked, plus the original eight paths checked against the calendar. |
 | **Assets** | Per-asset pivots and legs with individual multipliers. |
-| **3× Book** | The twenty-eight names Coinbase will let you buy with borrowed cash (~3× buying power), plus USDC as the cash rail. Monthly history, spot vs 3× legs, a ranked rotation solver, and a from-here recovery-to-high table. Isolated 3× turns a spot multiple `m` into `3m − 2`; a one-third drop from entry liquidates. Genesis / listing-month prints are stripped so the left-hand launch spike cannot set a pivot or the chart scale. The 3× optimum is `SOL-1 → CRV-1 → ZEC-2 → ZEC-3` at ~2.47 million× — Curve's Aug 2024 flush outruns ZEC's first bounce in the autumn slot. |
-| **Funded** | Kraken Funded as it actually is: a $90 fee for a $10,000 evaluation, pass at $11,200 (+12%), fail at $9,700 (−3% from start, not from peak), no added leverage. After a pass you keep 80% of funded profits, the $10K never leaves, and the same 3% floor can close the account. Fifty-eight names from the 12 Sep 2026 app book, tagged against the 3× book and the lottery. |
+| **3× Book** | The Coinbase borrow book as a rotation lottery: twenty-eight names, isolated 3× (`3m − 2`), same click-to-chain timeline as Lottery. Listing-month prints are stripped. Solve finds `SOL-1 → CRV-1 → ZEC-2 → ZEC-3` at ~2.47 million×. |
+| **Funded** | The Kraken Funded book as a rotation lottery. Official rules stay in view ($90 / $10K / +12% / −3% / 80-20, no added leverage). Lanes are the names that already have a mapped history (3×-book overlap plus Injective). The other app-book names do not have pivots here yet. |
 | **About the Assets** | Deep dossiers on what each of the thirteen assets actually is — product, market structure, and why it appears in Lottery Assets. |
 | **Reality Check** | Sliders for move capture, slippage, and per-rotation tax. At 65% capture the $901.5M becomes $4.9M. |
 | **Learn** | Educational guide covering what cryptocurrency is, where to buy it (Coinbase, Kraken, Binance), how to self-custody, security basics, taxes, and key concepts. |
@@ -130,12 +130,13 @@ src/
     funded.js              # Challenge lines, spread haircut, 80/20 payout, pass/fail
     funded.test.js         # $10K lines, official $10,500 example, 58-name book
   components/
-    Lottery.jsx            # Interactive lottery timeline with conflict dimming
+    Timeline.jsx           # Shared click-to-chain lanes used by Lottery, 3× Book, Funded
+    Lottery.jsx            # Lottery timeline wrapper
     Ladder.jsx             # Step-by-step capital walk
     Leaderboard.jsx        # Ranked valid chains + original 8 paths
     AssetCards.jsx         # Per-asset breakdown
-    ExchangeBook.jsx       # Coinbase 3× book: history, ranked 3× chains, from-here recovery
-    KrakenFunded.jsx       # Kraken Funded: $10K challenge, after-pass, 58-name book
+    ExchangeBook.jsx       # 3× Book: same timeline, isolated 3× multiples
+    KrakenFunded.jsx       # Funded: same timeline, spot multiples, $10K rules strip
     AboutAssets.jsx        # Deep-dive dossiers for each asset
     RealityCheck.jsx       # Friction sliders (capture, slippage, tax)
     Learn.jsx              # Educational crypto content

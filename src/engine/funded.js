@@ -1,4 +1,8 @@
-import { FUNDED_RULES, FUNDED_TIERS } from "../data/krakenFunded.js";
+import { ASSETS } from "../data/assets.js";
+import { BOOK_TRADEABLE } from "../data/exchangeBook.js";
+import { FUNDED_ASSETS, FUNDED_RULES, FUNDED_TIERS } from "../data/krakenFunded.js";
+import { solveOptimal, randomChain } from "./solver.js";
+import { buildBookLegs } from "./leverage.js";
 
 const cents = (n) => Math.round(n * 100) / 100;
 
@@ -54,4 +58,42 @@ export function challengeProgress(equity, start = FUNDED_RULES.start, rules = FU
   if (equity >= passAt) return "pass";
   if (equity <= failAt) return "fail";
   return "open";
+}
+
+/**
+ * Funded names that already have a mapped pivot history — the 3× book
+ * overlap, plus lottery-only names (Injective). No added leverage: the
+ * official Funded book is spot in dollars.
+ */
+export function fundedHistoryAssets() {
+  const history = new Map();
+  for (const asset of BOOK_TRADEABLE) history.set(asset.id, asset);
+  for (const asset of ASSETS) {
+    if (!history.has(asset.id)) history.set(asset.id, asset);
+  }
+  return FUNDED_ASSETS
+    .map((row) => {
+      const asset = history.get(row.id);
+      if (!asset || (asset.pivots || []).length < 2) return null;
+      return {
+        ...asset,
+        name: row.name,
+        ticker: row.id,
+        color: row.color,
+        colorDim: asset.colorDim || `${row.color}1f`,
+      };
+    })
+    .filter(Boolean);
+}
+
+export function buildFundedLegs() {
+  return buildBookLegs(1, fundedHistoryAssets());
+}
+
+export function fundedOptimal() {
+  return solveOptimal(buildFundedLegs());
+}
+
+export function fundedRandom() {
+  return randomChain(buildFundedLegs());
 }
