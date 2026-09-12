@@ -3,6 +3,8 @@ import { GalaxyBackground } from "./ui/Cosmos.jsx";
 import { MONO, DISPLAY, SANS, Eyebrow, Button, Odometer, useMediaQuery } from "./ui/atoms.jsx";
 import { formatCurrency, formatMultiple } from "./ui/format.js";
 import { solveOptimal, randomChain, chainValue, sortChain } from "./engine/solver.js";
+import { bookOptimal, buildBookLegs } from "./engine/leverage.js";
+import { fundedOptimal, fundedRandom } from "./engine/funded.js";
 import Lottery from "./components/Lottery.jsx";
 import Ladder from "./components/Ladder.jsx";
 import Leaderboard from "./components/Leaderboard.jsx";
@@ -11,13 +13,15 @@ import AboutAssets from "./components/AboutAssets.jsx";
 import RealityCheck from "./components/RealityCheck.jsx";
 import Learn from "./components/Learn.jsx";
 import ExchangeBook from "./components/ExchangeBook.jsx";
+import KrakenFunded from "./components/KrakenFunded.jsx";
 
 const NAV = [
   { key: "lottery", label: "LOTTERY" },
+  { key: "leverage", label: "3× BOOK" },
+  { key: "funded", label: "FUNDED" },
   { key: "ladder", label: "LADDER" },
   { key: "leaderboard", label: "LEADERBOARD" },
   { key: "assets", label: "ASSETS" },
-  { key: "leverage", label: "3× BOOK" },
   { key: "about", label: "ABOUT THE ASSETS" },
   { key: "reality", label: "REALITY CHECK" },
   { key: "learn", label: "LEARN" },
@@ -25,11 +29,31 @@ const NAV = [
 
 const PRESETS = [1000, 5000, 10000, 50000, 100000];
 
+const COPY = {
+  lottery: {
+    eyebrow: "Thirteen assets · 19 tradeable legs · Oct 2022 → Sep 2026",
+    blurb:
+      "Lottery Assets is a chronological rotation lottery: thirteen names that went vertical, one pool of capital, and a hard rule that overlapping trades can never both be yours. Chain the legs that fit and see where a starting stake lands.",
+  },
+  leverage: {
+    eyebrow: "Twenty-eight Coinbase names · 3× buying power · Oct 2022 → Sep 2026",
+    blurb:
+      "The Coinbase borrow book as a rotation lottery. Isolated 3× turns a spot multiple m into 3m − 2. Same calendar rule: one pool of cash, overlapping legs mutually exclusive. Listing-month prints are stripped.",
+  },
+  funded: {
+    eyebrow: "Kraken Funded · $10K challenge · +12% pass · −3% fail",
+    blurb:
+      "The Kraken Funded book as a rotation lottery. Officially no extra leverage — buy and sell in dollars. The real challenge is +12% before −3% from a $10,000 start. The bars are hindsight on the names that already have a mapped history.",
+  },
+};
+
 export default function App() {
   const [tab, setTab] = useState("lottery");
   const [capital, setCapital] = useState(10000);
   const [capitalText, setCapitalText] = useState("10,000");
   const [chain, setChain] = useState([]);
+  const [bookChain, setBookChain] = useState([]);
+  const [fundedChain, setFundedChain] = useState([]);
   const [solving, setSolving] = useState(false);
   const timersRef = useRef([]);
   const compact = useMediaQuery("(max-width: 720px)");
@@ -53,30 +77,42 @@ export default function App() {
     setCapitalText(n.toLocaleString("en-US"));
   };
 
-  // Reveal the optimal chain one leg at a time, so the shape of the answer
-  // registers before the final number lands.
-  const solve = () => {
+  const activeChain =
+    tab === "leverage" ? bookChain : tab === "funded" ? fundedChain : chain;
+
+  const reveal = (legs, setter) => {
     clearTimers();
-    const optimal = sortChain(solveOptimal().chain);
-    setChain([]);
+    setter([]);
     setSolving(true);
-    optimal.forEach((leg, i) => {
+    const sorted = sortChain(legs);
+    sorted.forEach((leg, i) => {
       timersRef.current.push(
         setTimeout(() => {
-          setChain((prev) => [...prev, leg]);
-          if (i === optimal.length - 1) setSolving(false);
+          setter((prev) => [...prev, leg]);
+          if (i === sorted.length - 1) setSolving(false);
         }, 260 * (i + 1))
       );
     });
   };
 
+  // Reveal the optimal chain one leg at a time, so the shape of the answer
+  // registers before the final number lands.
+  const solve = () => {
+    if (tab === "leverage") reveal(bookOptimal().chain, setBookChain);
+    else if (tab === "funded") reveal(fundedOptimal().chain, setFundedChain);
+    else reveal(solveOptimal().chain, setChain);
+  };
+
   const deal = () => {
     clearTimers();
     setSolving(false);
-    setChain(randomChain());
+    if (tab === "leverage") setBookChain(randomChain(buildBookLegs(3)));
+    else if (tab === "funded") setFundedChain(fundedRandom());
+    else setChain(randomChain());
   };
 
-  const result = chainValue(chain, capital);
+  const result = chainValue(activeChain, capital);
+  const copy = COPY[tab] ?? COPY.lottery;
 
   return (
     <>
@@ -93,9 +129,7 @@ export default function App() {
       >
         <div style={{ padding: compact ? "26px 16px 0" : "32px 28px 0", maxWidth: 1080, margin: "0 auto" }}>
           <Eyebrow size={10} color="rgba(255,255,255,0.25)" style={{ letterSpacing: 2, marginBottom: 8 }}>
-            {tab === "leverage"
-              ? "Twenty-eight Coinbase names · 3× buying power · Oct 2022 → Sep 2026"
-              : "Thirteen assets · 19 tradeable legs · Oct 2022 → Sep 2026"}
+            {copy.eyebrow}
           </Eyebrow>
           <h1
             style={{
@@ -116,12 +150,10 @@ export default function App() {
             Lottery Assets
           </h1>
           <p style={{ fontSize: 14, color: "rgba(255,255,255,0.45)", margin: "0 0 22px", maxWidth: 660, lineHeight: 1.6 }}>
-            Lottery Assets is a chronological rotation lottery: thirteen names that went vertical, one
-            pool of capital, and a hard rule that overlapping trades can never both be yours. Chain
-            the legs that fit and see where a starting stake lands.
+            {copy.blurb}
           </p>
 
-          {/* Capital + actions */}
+          {/* Capital + actions — shared lottery chrome */}
           <div
             style={{
               display: "flex",
@@ -181,7 +213,7 @@ export default function App() {
 
             <div style={{ flex: "1 1 auto", minWidth: 150 }}>
               <Eyebrow size={9} style={{ marginBottom: 6 }}>
-                {chain.length ? "Ends with" : "Pick legs to begin"}
+                {activeChain.length ? "Ends with" : "Pick legs to begin"}
               </Eyebrow>
               <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
                 <Odometer
@@ -189,12 +221,12 @@ export default function App() {
                   format={formatCurrency}
                   style={{
                     fontFamily: MONO, fontSize: compact ? 26 : 32, fontWeight: 600,
-                    color: chain.length ? "#F4B728" : "rgba(255,255,255,0.25)",
-                    textShadow: chain.length ? "0 0 24px rgba(244,183,40,0.35)" : "none",
+                    color: activeChain.length ? "#F4B728" : "rgba(255,255,255,0.25)",
+                    textShadow: activeChain.length ? "0 0 24px rgba(244,183,40,0.35)" : "none",
                     transition: "color 0.3s ease",
                   }}
                 />
-                {chain.length > 0 && (
+                {activeChain.length > 0 && (
                   <span style={{ fontFamily: MONO, fontSize: 14, color: "rgba(255,255,255,0.4)" }}>
                     {formatMultiple(result.multiple)}
                   </span>
@@ -202,14 +234,12 @@ export default function App() {
               </div>
             </div>
 
-            {tab !== "leverage" && (
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                <Button onClick={solve} color="#00E5FF" filled disabled={solving}>
-                  {solving ? "Solving…" : "Solve"}
-                </Button>
-                <Button onClick={deal} color="#FF4FD8">Deal me a hand</Button>
-              </div>
-            )}
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <Button onClick={solve} color="#00E5FF" filled disabled={solving}>
+                {solving ? "Solving…" : "Solve"}
+              </Button>
+              <Button onClick={deal} color="#FF4FD8">Deal me a hand</Button>
+            </div>
           </div>
 
           <nav aria-label="Sections">
@@ -253,7 +283,8 @@ export default function App() {
           {tab === "ladder" && <Ladder chain={chain} capital={capital} onSolve={solve} />}
           {tab === "leaderboard" && <Leaderboard capital={capital} setChain={setChain} setTab={setTab} />}
           {tab === "assets" && <AssetCards chain={chain} setChain={setChain} />}
-          {tab === "leverage" && <ExchangeBook capital={capital} />}
+          {tab === "leverage" && <ExchangeBook chain={bookChain} setChain={setBookChain} capital={capital} />}
+          {tab === "funded" && <KrakenFunded chain={fundedChain} setChain={setFundedChain} capital={capital} />}
           {tab === "about" && <AboutAssets />}
           {tab === "reality" && <RealityCheck chain={chain} capital={capital} onSolve={solve} />}
           {tab === "learn" && <Learn />}

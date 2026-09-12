@@ -91,10 +91,11 @@ corrected pivot propagates everywhere instead of drifting out of sync.
 | Tab | What it does |
 |-----|-------------|
 | **Lottery** | The timeline. Click legs to chain them; conflicts dim out. *Solve* animates the optimum, *Deal me a hand* draws a random valid chain. Starting-capital presets: $1K, $5K, $10K, $50K, $100K. |
+| **3× Book** | The Coinbase borrow book as a rotation lottery: twenty-eight names, isolated 3× (`3m − 2`), same click-to-chain timeline as Lottery. Listing-month prints are stripped. Solve finds `SOL-1 → CRV-1 → ZEC-2 → ZEC-3` at ~2.47 million×. |
+| **Funded** | The Kraken Funded book as a rotation lottery. Official rules stay in view ($90 / $10K / +12% / −3% / 80-20, no added leverage). Lanes are the names that already have a mapped history (3×-book overlap plus Injective). The other app-book names do not have pivots here yet. |
 | **Ladder** | Step-by-step capital progression for the selected chain, including the idle stretches in cash. |
 | **Leaderboard** | Every valid chain ranked, plus the original eight paths checked against the calendar. |
 | **Assets** | Per-asset pivots and legs with individual multipliers. |
-| **3× Book** | The twenty-eight names Coinbase will let you buy with borrowed cash (~3× buying power), plus USDC as the cash rail. Monthly history, spot vs 3× legs, a ranked rotation solver, and a from-here recovery-to-high table. Isolated 3× turns a spot multiple `m` into `3m − 2`; a one-third drop from entry liquidates. Genesis / listing-month prints are stripped so the left-hand launch spike cannot set a pivot or the chart scale. The 3× optimum is `SOL-1 → CRV-1 → ZEC-2 → ZEC-3` at ~2.47 million× — Curve's Aug 2024 flush outruns ZEC's first bounce in the autumn slot. |
 | **About the Assets** | Deep dossiers on what each of the thirteen assets actually is — product, market structure, and why it appears in Lottery Assets. |
 | **Reality Check** | Sliders for move capture, slippage, and per-rotation tax. At 65% capture the $901.5M becomes $4.9M. |
 | **Learn** | Educational guide covering what cryptocurrency is, where to buy it (Coinbase, Kraken, Binance), how to self-custody, security basics, taxes, and key concepts. |
@@ -108,7 +109,7 @@ corrected pivot propagates everywhere instead of drifting out of sync.
 | **Visuals** | Galaxy canvas with shooting-star particles (`src/ui/Cosmos.jsx`) |
 | **Type system** | JetBrains Mono, Space Grotesk, DM Sans via Google Fonts |
 | **Solver** | Weighted interval scheduling via DP, plus exhaustive enumeration for the leaderboard |
-| **Tests** | Node.js built-in test runner, covering solver correctness, claimed-path validation, and the 3× book |
+| **Tests** | Node.js built-in test runner, covering solver correctness, claimed-path validation, the 3× book, and Kraken Funded rules |
 
 ## Project structure
 
@@ -120,17 +121,22 @@ src/
     assets.js              # Price pivots for all 13 assets + claimed paths
     assetAbout.js          # Long-form copy for About the Assets
     exchangeBook.js        # Coinbase 3× book: 28 tradeable names + USDC, monthly closes, pivots
+    krakenFunded.js        # Kraken Funded rules, tiers, and the 58-name app book
   engine/
     solver.js              # buildLegs, conflicts, chainValue, solveOptimal, allChains
     solver.test.js         # 20 tests: multipliers, chain validity, friction model
     leverage.js            # 3× isolated-long math + book legs / solver wrappers
     leverage.test.js       # Book size, 3× formula, SOL→CRV→ZEC optimum
+    funded.js              # Challenge lines, spread haircut, 80/20 payout, pass/fail
+    funded.test.js         # $10K lines, official $10,500 example, 58-name book
   components/
-    Lottery.jsx            # Interactive lottery timeline with conflict dimming
+    Timeline.jsx           # Shared click-to-chain lanes used by Lottery, 3× Book, Funded
+    Lottery.jsx            # Lottery timeline wrapper
     Ladder.jsx             # Step-by-step capital walk
     Leaderboard.jsx        # Ranked valid chains + original 8 paths
     AssetCards.jsx         # Per-asset breakdown
-    ExchangeBook.jsx       # Coinbase 3× book: history, ranked 3× chains, from-here recovery
+    ExchangeBook.jsx       # 3× Book: same timeline, isolated 3× multiples
+    KrakenFunded.jsx       # Funded: same timeline, spot multiples, $10K rules strip
     AboutAssets.jsx        # Deep-dive dossiers for each asset
     RealityCheck.jsx       # Friction sliders (capture, slippage, tax)
     Learn.jsx              # Educational crypto content
@@ -157,7 +163,7 @@ index.html                 # Entry HTML with OG/Twitter meta tags
 ```bash
 npm install
 npm run dev          # http://localhost:5173
-npm test             # solver + 3× book tests
+npm test             # solver + 3× book + Funded tests
 npm run build        # production build → dist/
 ```
 
